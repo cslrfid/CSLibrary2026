@@ -1,0 +1,11 @@
+/home/node/.openclaw/workspace-GithubProject-CSLibrary2026/CSLibrary2026/bin/Release/netstandard2.0/CSLibrary2026.deps.json
+/home/node/.openclaw/workspace-GithubProject-CSLibrary2026/CSLibrary2026/bin/Release/netstandard2.0/CSLibrary2026.dll
+/home/node/.openclaw/workspace-GithubProject-CSLibrary2026/CSLibrary2026/bin/Release/netstandard2.0/CSLibrary2026.pdb
+/home/node/.openclaw/workspace-GithubProject-CSLibrary2026/CSLibrary2026/obj/Release/netstandard2.0/CSLibrary2026.csproj.AssemblyReference.cache
+/home/node/.openclaw/workspace-GithubProject-CSLibrary2026/CSLibrary2026/obj/Release/netstandard2.0/CSLibrary2026.GeneratedMSBuildEditorConfig.editorconfig
+/home/node/.openclaw/workspace-GithubProject-CSLibrary2026/CSLibrary2026/obj/Release/netstandard2.0/CSLibrary2026.AssemblyInfoInputs.cache
+/home/node/.openclaw/workspace-GithubProject-CSLibrary2026/CSLibrary2026/obj/Release/netstandard2.0/CSLibrary2026.AssemblyInfo.cs
+/home/node/.openclaw/workspace-GithubProject-CSLibrary2026/CSLibrary2026/obj/Release/netstandard2.0/CSLibrary2026.csproj.CoreCompileInputs.cache
+/home/node/.openclaw/workspace-GithubProject-CSLibrary2026/CSLibrary2026/obj/Release/netstandard2.0/CSLibrary2026.sourcelink.json
+/home/node/.openclaw/workspace-GithubProject-CSLibrary2026/CSLibrary2026/obj/Release/netstandard2.0/CSLibrary2026.dll
+/home/node/.openclaw/workspace-GithubProject-CSLibrary2026/CSLibrary2026/obj/Release/netstandard2.0/CSLibrary2026.pdb

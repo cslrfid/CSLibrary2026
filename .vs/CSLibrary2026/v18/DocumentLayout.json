@@ -1,0 +1,71 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "\\\\StorageServer\\docker\\convergenceclaw\\data\\workspace-GithubProject-CSLibrary2026\\CSLibrary2026\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{6AFEA2EE-745B-CDD3-ABD1-BC22CF8CEFE5}|CSLibrary2026.csproj|\\\\storageserver\\docker\\convergenceclaw\\data\\workspace-githubproject-cslibrary2026\\cslibrary2026\\source\\hal\\mvvmcross.plugin.ble\\codefileble.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{6AFEA2EE-745B-CDD3-ABD1-BC22CF8CEFE5}|CSLibrary2026.csproj|\\\\storageserver\\docker\\convergenceclaw\\data\\workspace-githubproject-cslibrary2026\\cslibrary2026\\cslibrary2026.csproj||{04B8AB82-A572-4FEF-95CE-5222444B6B64}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{6AFEA2EE-745B-CDD3-ABD1-BC22CF8CEFE5}|CSLibrary2026.csproj|\\\\storageserver\\docker\\convergenceclaw\\data\\workspace-githubproject-cslibrary2026\\cslibrary2026\\cslibrary2026.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 3,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "CSLibrary2026",
+              "DocumentMoniker": "\\\\StorageServer\\docker\\convergenceclaw\\data\\workspace-GithubProject-CSLibrary2026\\CSLibrary2026\\CSLibrary2026.csproj",
+              "RelativeDocumentMoniker": "CSLibrary2026.csproj",
+              "ToolTip": "\\\\StorageServer\\docker\\convergenceclaw\\data\\workspace-GithubProject-CSLibrary2026\\CSLibrary2026\\CSLibrary2026.csproj",
+              "RelativeToolTip": "CSLibrary2026.csproj",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2026-04-02T01:10:28.947Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{aa2115a1-9712-457b-9047-dbb71ca2cdd2}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "CSLibrary2026",
+              "DocumentMoniker": "\\\\StorageServer\\docker\\convergenceclaw\\data\\workspace-GithubProject-CSLibrary2026\\CSLibrary2026\\CSLibrary2026.csproj",
+              "RelativeDocumentMoniker": "CSLibrary2026.csproj",
+              "ToolTip": "\\\\StorageServer\\docker\\convergenceclaw\\data\\workspace-GithubProject-CSLibrary2026\\CSLibrary2026\\CSLibrary2026.csproj",
+              "RelativeToolTip": "CSLibrary2026.csproj",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2026-04-02T01:10:30.899Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "CodeFileBLE.cs",
+              "DocumentMoniker": "\\\\StorageServer\\docker\\convergenceclaw\\data\\workspace-GithubProject-CSLibrary2026\\CSLibrary2026\\Source\\HAL\\MvvmCross.Plugin.BLE\\CodeFileBLE.cs",
+              "RelativeDocumentMoniker": "Source\\HAL\\MvvmCross.Plugin.BLE\\CodeFileBLE.cs",
+              "ToolTip": "\\\\StorageServer\\docker\\convergenceclaw\\data\\workspace-GithubProject-CSLibrary2026\\CSLibrary2026\\Source\\HAL\\MvvmCross.Plugin.BLE\\CodeFileBLE.cs",
+              "RelativeToolTip": "Source\\HAL\\MvvmCross.Plugin.BLE\\CodeFileBLE.cs",
+              "ViewState": "AgIAACcBAAAAAAAAAAAgwLcAAAAoAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-02T01:00:45.28Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
