@@ -21,7 +21,7 @@ CSL RFID Reader Library for .NET — supporting Bluetooth LE and TCP/IP communic
 
 - Bluetooth LE (BLE) communication via [Plugin.BLE](https://github.com/xabre/xamarin-bluetooth-le)
 - TCP/IP connectivity for fixed readers (Windows desktop)
-- Multi-reader support across Rx000 and E710/E910 chipset families
+- Multi-reader support across CSL RFID readers
 - Rich RFID operations: inventory, read/write, lock/kill, filtering
 - Barcode scanning integration
 - Battery & notification management
