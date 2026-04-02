@@ -1,7 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;net10.0;net10.0-windows</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;net10.0;net10.0-windows10.0.22621.0</TargetFrameworks>
+    <EnableWindowsTargeting>true</EnableWindowsTargeting>
     <RootNamespace>CSLibrary</RootNamespace>
     <AssemblyName>CSLibrary2026</AssemblyName>
     <Version>0.0.1</Version>
@@ -29,15 +30,15 @@
   </PropertyGroup>
 
   <!-- TCP symbol for net10.0-windows (enables #if TCP in TCPIP HAL files) -->
-  <PropertyGroup Condition="'$(TargetFramework)' == 'net10.0-windows'">
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net10.0-windows10.0.22621.0'">
     <DefineConstants>TCP</DefineConstants>
   </PropertyGroup>
 
   <!--
     Platform-conditional HAL compilation:
     - Plugin.BLE HAL: included for netstandard2.0 and net10.0 (MAUI/Xamarin)
-    - TCPIP HAL: Windows desktop only (net10.0-windows) — CS203XL Network API
-    - WinFormsBLE HAL: Windows desktop only (net10.0-windows) — Windows.Devices.Bluetooth
+    - TCPIP HAL: Windows desktop only — CS203XL Network API
+    - WinFormsBLE HAL: Windows desktop only — Windows.Devices.Bluetooth WinRT API
     - Legacy HALs (btframework, UWP, MvvmCross, Acr.ble): always excluded
   -->
   <ItemGroup>
@@ -50,13 +51,13 @@
     <Compile Remove="Source/RFIDReader/API_EM4325/**" />
     <Compile Remove="Source/RFIDReader/API_FM13DT160/**" />
     <!-- Plugin.BLE HAL: excluded on Windows desktop (WinFormsBLE handles BLE there) -->
-    <Compile Remove="Source/HAL/Plugin.BLE/**" Condition="'$(TargetFramework)' == 'net10.0-windows'" />
-    <!-- TCPIP HAL: Windows desktop only (CS203XL Network API) -->
-    <Compile Remove="Source/HAL/TCPIP/**" Condition="'$(TargetFramework)' != 'net10.0-windows'" />
+    <Compile Remove="Source/HAL/Plugin.BLE/**" Condition="'$(TargetFramework)' == 'net10.0-windows10.0.22621.0'" />
+    <!-- TCPIP HAL: Windows desktop only -->
+    <Compile Remove="Source/HAL/TCPIP/**" Condition="'$(TargetFramework)' != 'net10.0-windows10.0.22621.0'" />
     <!-- WinFormsBLE HAL: Windows desktop only -->
-    <Compile Remove="Source/HAL/WinFormsBLE/**" Condition="'$(TargetFramework)' != 'net10.0-windows'" />
+    <Compile Remove="Source/HAL/WinFormsBLE/**" Condition="'$(TargetFramework)' != 'net10.0-windows10.0.22621.0'" />
     <!-- TCPIP/ClassDebug.cs excluded on Windows (WinFormsBLE/ClassDebug.cs is used instead) -->
-    <Compile Remove="Source/HAL/TCPIP/ClassDebug.cs" Condition="'$(TargetFramework)' == 'net10.0-windows'" />
+    <Compile Remove="Source/HAL/TCPIP/ClassDebug.cs" Condition="'$(TargetFramework)' == 'net10.0-windows10.0.22621.0'" />
     <EmbeddedResource Remove="Source/HAL/Acr.ble/**" />
     <EmbeddedResource Remove="Source/HAL/btframework/**" />
     <EmbeddedResource Remove="Source/HAL/UWP/**" />
@@ -64,9 +65,9 @@
     <EmbeddedResource Remove="Source/RFIDReader/Antenna/**" />
     <EmbeddedResource Remove="Source/RFIDReader/API_EM4325/**" />
     <EmbeddedResource Remove="Source/RFIDReader/API_FM13DT160/**" />
-    <EmbeddedResource Remove="Source/HAL/Plugin.BLE/**" Condition="'$(TargetFramework)' == 'net10.0-windows'" />
-    <EmbeddedResource Remove="Source/HAL/TCPIP/**" Condition="'$(TargetFramework)' != 'net10.0-windows'" />
-    <EmbeddedResource Remove="Source/HAL/WinFormsBLE/**" Condition="'$(TargetFramework)' != 'net10.0-windows'" />
+    <EmbeddedResource Remove="Source/HAL/Plugin.BLE/**" Condition="'$(TargetFramework)' == 'net10.0-windows10.0.22621.0'" />
+    <EmbeddedResource Remove="Source/HAL/TCPIP/**" Condition="'$(TargetFramework)' != 'net10.0-windows10.0.22621.0'" />
+    <EmbeddedResource Remove="Source/HAL/WinFormsBLE/**" Condition="'$(TargetFramework)' != 'net10.0-windows10.0.22621.0'" />
     <None Remove="Source/HAL/Acr.ble/**" />
     <None Remove="Source/HAL/btframework/**" />
     <None Remove="Source/HAL/UWP/**" />
@@ -74,9 +75,9 @@
     <None Remove="Source/RFIDReader/Antenna/**" />
     <None Remove="Source/RFIDReader/API_EM4325/**" />
     <None Remove="Source/RFIDReader/API_FM13DT160/**" />
-    <None Remove="Source/HAL/Plugin.BLE/**" Condition="'$(TargetFramework)' == 'net10.0-windows'" />
-    <None Remove="Source/HAL/TCPIP/**" Condition="'$(TargetFramework)' != 'net10.0-windows'" />
-    <None Remove="Source/HAL/WinFormsBLE/**" Condition="'$(TargetFramework)' != 'net10.0-windows'" />
+    <None Remove="Source/HAL/Plugin.BLE/**" Condition="'$(TargetFramework)' == 'net10.0-windows10.0.22621.0'" />
+    <None Remove="Source/HAL/TCPIP/**" Condition="'$(TargetFramework)' != 'net10.0-windows10.0.22621.0'" />
+    <None Remove="Source/HAL/WinFormsBLE/**" Condition="'$(TargetFramework)' != 'net10.0-windows10.0.22621.0'" />
   </ItemGroup>
 
   <ItemGroup>
@@ -108,4 +109,14 @@
   <ItemGroup>
     <PackageReference Include="Plugin.BLE" Version="3.0.0" />
   </ItemGroup>
+
+  <!--
+    Microsoft.Windows.CsWinRT: required for .NET 5+ to use WinRT APIs
+    (Windows.Devices.Bluetooth, Windows.Devices.Enumeration)
+    Only needed for net10.0-windows10.0.22621.0
+  -->
+  <ItemGroup Condition="'$(TargetFramework)' == 'net10.0-windows10.0.22621.0'">
+    <PackageReference Include="Microsoft.Windows.CsWinRT" Version="2.0.4" />
+  </ItemGroup>
+
 </Project>
