@@ -10,7 +10,7 @@ CSL RFID Reader Library for .NET — supporting Bluetooth LE and TCP/IP communic
 | **CS468** | Bluetooth LE | CSL CS108 Bluetooth API | Rx000 |
 | **CS710S** | Bluetooth LE | CSL CS710 Bluetooth API | E710 |
 | **CS203XL** | Bluetooth LE | CSL CS710 Bluetooth API | E910 |
-| **CS203XL** | TCP/IP | CSL CS710 TCP API | E910 |
+| **CS203XL** | TCP/IP | CSL CS203XL Network API | E910 |
 
 ## Supported Platforms
 
@@ -63,7 +63,7 @@ await deviceFinder.StartScanAsync();
 await reader.ConnectAsync(adapter, device, MODEL.CS108);
 ```
 
-#### TCP/IP (CS203XL)
+#### TCP/IP (CS203XL — Network API)
 
 ```csharp
 using CSLibrary;
@@ -71,7 +71,7 @@ using CSLibrary;
 // Create the reader instance
 var reader = new HighLevelInterface();
 
-// Connect via TCP/IP
+// Connect via TCP/IP (CS203XL Network API)
 await reader.ConnectAsync("192.168.1.100", 2000);
 ```
 
