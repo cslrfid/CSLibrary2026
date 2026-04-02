@@ -225,6 +225,17 @@ namespace CSLibrary
             _NeedCommandResponseType = BTWAITCOMMANDRESPONSETYPE.NOWAIT;
         }
 
+        /// <summary>
+        /// Unified disconnect — routes to BLE or TCP implementation based on current connection mode.
+        /// </summary>
+        public void DisconnectAsync()
+        {
+            if (_sp != null && _sp.getConnectionMode() == RFIDDEVICE.CONNECTIONMODE.TCP)
+                TCP_DisconnectAsync();
+            else
+                BLE_DisconnectAsync();
+        }
+
         public Version GetVersion ()
         {
             Version ver = new Version(2, 0, 10, 1);

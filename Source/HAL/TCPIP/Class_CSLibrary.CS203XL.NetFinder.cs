@@ -570,7 +570,7 @@ namespace CSLibrary.NetFinder.CS203XL
             }
             catch (System.Exception e)
             {
-                Debug.WriteLine(e.Message);
+                CSLDebug.WriteLine(e.Message);
             }
         }
         
@@ -626,7 +626,7 @@ namespace CSLibrary.NetFinder.CS203XL
             }
             catch (System.Exception e)
             {
-                Debug.WriteLine(e.Message);
+                CSLDebug.WriteLine(e.Message);
                 return false;
             }
             // Check for errors
@@ -634,7 +634,7 @@ namespace CSLibrary.NetFinder.CS203XL
             {
 
                 // Handle Error
-                Debug.WriteLine("Error receiving data");
+                CSLDebug.WriteLine("Error receiving data");
                 return false;
 
             }
@@ -642,7 +642,7 @@ namespace CSLibrary.NetFinder.CS203XL
             {
 
                 // Handle Error
-                Debug.WriteLine("Received Packet");
+                CSLDebug.WriteLine("Received Packet");
             }
 
             //---------------------------------------------------------------
@@ -774,7 +774,7 @@ namespace CSLibrary.NetFinder.CS203XL
 
                 // Add the entry
 
-                Debug.WriteLine(String.Format("add device listdevice_name {0}", entry.DeviceName));
+                CSLDebug.WriteLine(String.Format("add device listdevice_name {0}", entry.DeviceName));
 
                 m_devices.Add(entry);
 
@@ -793,7 +793,7 @@ namespace CSLibrary.NetFinder.CS203XL
             }
             else
             {
-                Debug.WriteLine("Invalid Search Packet Received or Random Number Mismatch");
+                CSLDebug.WriteLine("Invalid Search Packet Received or Random Number Mismatch");
                 return false;
             }
             return false;

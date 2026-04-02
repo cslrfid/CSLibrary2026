@@ -7,6 +7,9 @@
     <AssemblyName>CSLibrary2026</AssemblyName>
     <Version>0.0.1</Version>
 
+    <!-- TCP symbol: enables #if TCP in TCPIP HAL files -->
+    <DefineConstants>TCP</DefineConstants>
+
     <!-- NuGet Package Properties -->
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <PackageId>CSLibrary2026</PackageId>
@@ -32,8 +35,8 @@
   <!--
     HAL compilation:
     - Plugin.BLE HAL: included (BLE for MAUI/Xamarin)
-    - TCPIP HAL: excluded (Windows desktop only — needs separate csproj or Windows-only solution)
-    - WinFormsBLE HAL: excluded (WinRT API rewrite needed for .NET 10)
+    - TCPIP HAL: included (CS203XL Network API via TCP)
+    - WinFormsBLE HAL: excluded (WinRT API needs .NET 10 rewrite)
     - Legacy HALs: always excluded
   -->
   <ItemGroup>
@@ -42,7 +45,6 @@
     <Compile Remove="Source/HAL/btframework/**" />
     <Compile Remove="Source/HAL/UWP/**" />
     <Compile Remove="Source/HAL/MvvmCross.Plugin.BLE/**" />
-    <Compile Remove="Source/HAL/TCPIP/**" />
     <Compile Remove="Source/HAL/WinFormsBLE/**" />
     <Compile Remove="Source/RFIDReader/Antenna/**" />
     <Compile Remove="Source/RFIDReader/API_EM4325/**" />
@@ -51,7 +53,6 @@
     <EmbeddedResource Remove="Source/HAL/btframework/**" />
     <EmbeddedResource Remove="Source/HAL/UWP/**" />
     <EmbeddedResource Remove="Source/HAL/MvvmCross.Plugin.BLE/**" />
-    <EmbeddedResource Remove="Source/HAL/TCPIP/**" />
     <EmbeddedResource Remove="Source/HAL/WinFormsBLE/**" />
     <EmbeddedResource Remove="Source/RFIDReader/Antenna/**" />
     <EmbeddedResource Remove="Source/RFIDReader/API_EM4325/**" />
@@ -60,7 +61,6 @@
     <None Remove="Source/HAL/btframework/**" />
     <None Remove="Source/HAL/UWP/**" />
     <None Remove="Source/HAL/MvvmCross.Plugin.BLE/**" />
-    <None Remove="Source/HAL/TCPIP/**" />
     <None Remove="Source/HAL/WinFormsBLE/**" />
     <None Remove="Source/RFIDReader/Antenna/**" />
     <None Remove="Source/RFIDReader/API_EM4325/**" />

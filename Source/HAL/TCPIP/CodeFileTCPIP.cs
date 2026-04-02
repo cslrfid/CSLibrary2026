@@ -50,7 +50,7 @@ namespace CSLibrary
 
         private void OnTcpDataReceived(byte[] data)
         {
-            CSLibrary.Debug.WriteBytes("TCP receive data ", data);
+            CSLibrary.CSLDebug.WriteBytes("TCP receive data ", data);
             CharacteristicOnValueUpdated(data);
         }
 
@@ -83,7 +83,7 @@ namespace CSLibrary
                 await _tcpipClient.ReconnectAsync();
         }
 
-        public void DisconnectAsync()
+        public void TCP_DisconnectAsync()
         {
             _transport?.Disconnect();
             _transport = null;
