@@ -1,0 +1,6 @@
+\\StorageServer\docker\convergenceclaw\data\workspace-GithubProject-CSLibrary2026\CSLibrary2026\obj\Debug\net10.0-windows\CSLibrary2026.csproj.AssemblyReference.cache
+\\StorageServer\docker\convergenceclaw\data\workspace-GithubProject-CSLibrary2026\CSLibrary2026\obj\Debug\net10.0-windows\CSLibrary2026.GeneratedMSBuildEditorConfig.editorconfig
+\\StorageServer\docker\convergenceclaw\data\workspace-GithubProject-CSLibrary2026\CSLibrary2026\obj\Debug\net10.0-windows\CSLibrary2026.AssemblyInfoInputs.cache
+\\StorageServer\docker\convergenceclaw\data\workspace-GithubProject-CSLibrary2026\CSLibrary2026\obj\Debug\net10.0-windows\CSLibrary2026.AssemblyInfo.cs
+\\StorageServer\docker\convergenceclaw\data\workspace-GithubProject-CSLibrary2026\CSLibrary2026\obj\Debug\net10.0-windows\CSLibrary2026.csproj.CoreCompileInputs.cache
+\\StorageServer\docker\convergenceclaw\data\workspace-GithubProject-CSLibrary2026\CSLibrary2026\obj\Debug\net10.0-windows\CSLibrary2026.sourcelink.json

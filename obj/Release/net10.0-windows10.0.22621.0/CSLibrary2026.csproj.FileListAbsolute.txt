@@ -1,0 +1,6 @@
+/home/node/.openclaw/workspace-GithubProject-CSLibrary2026/CSLibrary2026/obj/Release/net10.0-windows10.0.22621.0/CSLibrary2026.csproj.AssemblyReference.cache
+/home/node/.openclaw/workspace-GithubProject-CSLibrary2026/CSLibrary2026/obj/Release/net10.0-windows10.0.22621.0/CSLibrary2026.GeneratedMSBuildEditorConfig.editorconfig
+/home/node/.openclaw/workspace-GithubProject-CSLibrary2026/CSLibrary2026/obj/Release/net10.0-windows10.0.22621.0/CSLibrary2026.AssemblyInfoInputs.cache
+/home/node/.openclaw/workspace-GithubProject-CSLibrary2026/CSLibrary2026/obj/Release/net10.0-windows10.0.22621.0/CSLibrary2026.AssemblyInfo.cs
+/home/node/.openclaw/workspace-GithubProject-CSLibrary2026/CSLibrary2026/obj/Release/net10.0-windows10.0.22621.0/CSLibrary2026.csproj.CoreCompileInputs.cache
+/home/node/.openclaw/workspace-GithubProject-CSLibrary2026/CSLibrary2026/obj/Release/net10.0-windows10.0.22621.0/CSLibrary2026.sourcelink.json

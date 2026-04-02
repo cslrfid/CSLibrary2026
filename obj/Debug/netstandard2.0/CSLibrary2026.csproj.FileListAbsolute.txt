@@ -1,0 +1,11 @@
+\\StorageServer\docker\convergenceclaw\data\workspace-GithubProject-CSLibrary2026\CSLibrary2026\obj\Debug\netstandard2.0\CSLibrary2026.csproj.AssemblyReference.cache
+\\StorageServer\docker\convergenceclaw\data\workspace-GithubProject-CSLibrary2026\CSLibrary2026\obj\Debug\netstandard2.0\CSLibrary2026.GeneratedMSBuildEditorConfig.editorconfig
+\\StorageServer\docker\convergenceclaw\data\workspace-GithubProject-CSLibrary2026\CSLibrary2026\obj\Debug\netstandard2.0\CSLibrary2026.AssemblyInfoInputs.cache
+\\StorageServer\docker\convergenceclaw\data\workspace-GithubProject-CSLibrary2026\CSLibrary2026\obj\Debug\netstandard2.0\CSLibrary2026.AssemblyInfo.cs
+\\StorageServer\docker\convergenceclaw\data\workspace-GithubProject-CSLibrary2026\CSLibrary2026\obj\Debug\netstandard2.0\CSLibrary2026.csproj.CoreCompileInputs.cache
+\\StorageServer\docker\convergenceclaw\data\workspace-GithubProject-CSLibrary2026\CSLibrary2026\obj\Debug\netstandard2.0\CSLibrary2026.sourcelink.json
+\\StorageServer\docker\convergenceclaw\data\workspace-GithubProject-CSLibrary2026\CSLibrary2026\bin\Debug\netstandard2.0\CSLibrary2026.deps.json
+\\StorageServer\docker\convergenceclaw\data\workspace-GithubProject-CSLibrary2026\CSLibrary2026\bin\Debug\netstandard2.0\CSLibrary2026.dll
+\\StorageServer\docker\convergenceclaw\data\workspace-GithubProject-CSLibrary2026\CSLibrary2026\bin\Debug\netstandard2.0\CSLibrary2026.pdb
+\\StorageServer\docker\convergenceclaw\data\workspace-GithubProject-CSLibrary2026\CSLibrary2026\obj\Debug\netstandard2.0\CSLibrary2026.dll
+\\StorageServer\docker\convergenceclaw\data\workspace-GithubProject-CSLibrary2026\CSLibrary2026\obj\Debug\netstandard2.0\CSLibrary2026.pdb

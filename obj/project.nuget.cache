@@ -1,0 +1,13 @@
+{
+  "version": 2,
+  "dgSpecHash": "0S6H8SAbdGU=",
+  "success": true,
+  "projectFilePath": "/home/node/.openclaw/workspace-GithubProject-CSLibrary2026/CSLibrary2026/CSLibrary2026.csproj",
+  "expectedPackageFiles": [
+    "/home/node/.nuget/packages/microsoft.netcore.platforms/1.1.0/microsoft.netcore.platforms.1.1.0.nupkg.sha512",
+    "/home/node/.nuget/packages/netstandard.library/2.0.3/netstandard.library.2.0.3.nupkg.sha512",
+    "/home/node/.nuget/packages/plugin.ble/3.0.0/plugin.ble.3.0.0.nupkg.sha512",
+    "/home/node/.nuget/packages/microsoft.windowsdesktop.app.ref/10.0.5/microsoft.windowsdesktop.app.ref.10.0.5.nupkg.sha512"
+  ],
+  "logs": []
+}

@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
+  <metadata>
+    <id>CSLibrary2026</id>
+    <version>0.0.1</version>
+    <title>CSL RFID Reader Library</title>
+    <authors>CSL RFID</authors>
+    <license type="expression">MIT</license>
+    <licenseUrl>https://licenses.nuget.org/MIT</licenseUrl>
+    <readme>README.md</readme>
+    <projectUrl>https://github.com/cslrfid/CSLRFIDReader-C-Sharp-MAUIAPP</projectUrl>
+    <description>CSL RFID Reader Library for .NET - Supports Bluetooth LE communication with CSL RFID readers</description>
+    <copyright>Copyright © Convergence Systems Limited</copyright>
+    <tags>RFID CSL Bluetooth BLE Reader UHF</tags>
+    <repository type="git" url="https://github.com/cslrfid/CSLibrary" commit="038cdc093d765486db16a4bba3ef3a26311f400d" />
+    <dependencies>
+      <group targetFramework="net10.0">
+        <dependency id="Plugin.BLE" version="3.0.0" exclude="Build,Analyzers" />
+      </group>
+      <group targetFramework=".NETStandard2.0">
+        <dependency id="Plugin.BLE" version="3.0.0" exclude="Build,Analyzers" />
+      </group>
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="/home/node/.openclaw/workspace-GithubProject-CSLibrary2026/CSLibrary2026/bin/Release/net10.0/CSLibrary2026.dll" target="lib/net10.0/CSLibrary2026.dll" />
+    <file src="/home/node/.openclaw/workspace-GithubProject-CSLibrary2026/CSLibrary2026/bin/Release/netstandard2.0/CSLibrary2026.dll" target="lib/netstandard2.0/CSLibrary2026.dll" />
+    <file src="/home/node/.openclaw/workspace-GithubProject-CSLibrary2026/CSLibrary2026/README.md" target="/README.md" />
+  </files>
+</package>
