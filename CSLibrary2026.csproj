@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;net10.0</TargetFrameworks>
@@ -28,43 +28,58 @@
     <Optimize>true</Optimize>
   </PropertyGroup>
 
+  <!--
+    Platform-conditional HAL compilation:
+    - Plugin.BLE HAL: included for netstandard2.0 and net10.0 (MAUI/Xamarin)
+    - TCPIP HAL: Windows desktop only — excluded on non-Windows
+    - WinFormsBLE HAL: Windows desktop only — excluded on non-Windows
+    - Legacy HALs (btframework, UWP, MvvmCross, Acr.ble): always excluded
+    Note: TCPIP and WinFormsBLE need a Windows target framework to be enabled.
+          Add net10.0-windows to TargetFrameworks on a Windows dev machine.
+  -->
   <ItemGroup>
-    <Compile Remove="Source\HAL\Acr.ble\**" />
-    <Compile Remove="Source\HAL\btframework\**" />
-    <Compile Remove="Source\HAL\Plugin.BLE\**" />
-    <Compile Remove="Source\HAL\TCPIP\**" />
-    <Compile Remove="Source\HAL\UWP\**" />
-    <Compile Remove="Source\RFIDReader\Antenna\**" />
-    <Compile Remove="Source\RFIDReader\API_EM4325\**" />
-    <Compile Remove="Source\RFIDReader\API_FM13DT160\**" />
-    <EmbeddedResource Remove="Source\HAL\Acr.ble\**" />
-    <EmbeddedResource Remove="Source\HAL\btframework\**" />
-    <EmbeddedResource Remove="Source\HAL\Plugin.BLE\**" />
-    <EmbeddedResource Remove="Source\HAL\TCPIP\**" />
-    <EmbeddedResource Remove="Source\HAL\UWP\**" />
-    <EmbeddedResource Remove="Source\RFIDReader\Antenna\**" />
-    <EmbeddedResource Remove="Source\RFIDReader\API_EM4325\**" />
-    <EmbeddedResource Remove="Source\RFIDReader\API_FM13DT160\**" />
-    <None Remove="Source\HAL\Acr.ble\**" />
-    <None Remove="Source\HAL\btframework\**" />
-    <None Remove="Source\HAL\Plugin.BLE\**" />
-    <None Remove="Source\HAL\TCPIP\**" />
-    <None Remove="Source\HAL\UWP\**" />
-    <None Remove="Source\RFIDReader\Antenna\**" />
-    <None Remove="Source\RFIDReader\API_EM4325\**" />
-    <None Remove="Source\RFIDReader\API_FM13DT160\**" />
+    <!-- Always exclude legacy/alternate HALs -->
+    <Compile Remove="Source/HAL/Acr.ble/**" />
+    <Compile Remove="Source/HAL/btframework/**" />
+    <Compile Remove="Source/HAL/UWP/**" />
+    <Compile Remove="Source/HAL/MvvmCross.Plugin.BLE/**" />
+    <Compile Remove="Source/RFIDReader/Antenna/**" />
+    <Compile Remove="Source/RFIDReader/API_EM4325/**" />
+    <Compile Remove="Source/RFIDReader/API_FM13DT160/**" />
+    <!-- TCPIP HAL: Windows desktop only -->
+    <Compile Remove="Source/HAL/TCPIP/**" Condition="'$(TargetFramework)' != 'net10.0-windows'" />
+    <!-- WinFormsBLE HAL: Windows desktop only -->
+    <Compile Remove="Source/HAL/WinFormsBLE/**" Condition="'$(TargetFramework)' != 'net10.0-windows'" />
+    <EmbeddedResource Remove="Source/HAL/Acr.ble/**" />
+    <EmbeddedResource Remove="Source/HAL/btframework/**" />
+    <EmbeddedResource Remove="Source/HAL/UWP/**" />
+    <EmbeddedResource Remove="Source/HAL/MvvmCross.Plugin.BLE/**" />
+    <EmbeddedResource Remove="Source/RFIDReader/Antenna/**" />
+    <EmbeddedResource Remove="Source/RFIDReader/API_EM4325/**" />
+    <EmbeddedResource Remove="Source/RFIDReader/API_FM13DT160/**" />
+    <EmbeddedResource Remove="Source/HAL/TCPIP/**" Condition="'$(TargetFramework)' != 'net10.0-windows'" />
+    <EmbeddedResource Remove="Source/HAL/WinFormsBLE/**" Condition="'$(TargetFramework)' != 'net10.0-windows'" />
+    <None Remove="Source/HAL/Acr.ble/**" />
+    <None Remove="Source/HAL/btframework/**" />
+    <None Remove="Source/HAL/UWP/**" />
+    <None Remove="Source/HAL/MvvmCross.Plugin.BLE/**" />
+    <None Remove="Source/RFIDReader/Antenna/**" />
+    <None Remove="Source/RFIDReader/API_EM4325/**" />
+    <None Remove="Source/RFIDReader/API_FM13DT160/**" />
+    <None Remove="Source/HAL/TCPIP/**" Condition="'$(TargetFramework)' != 'net10.0-windows'" />
+    <None Remove="Source/HAL/WinFormsBLE/**" Condition="'$(TargetFramework)' != 'net10.0-windows'" />
   </ItemGroup>
 
   <ItemGroup>
     <Compile Remove="CSLibrary.cs" />
-    <Compile Remove="Properties\AssemblyInfo.cs" />
-    <Compile Remove="Properties\Resources.Designer.cs" />
-    <Compile Remove="Source\SystemInformation\ClassdBm2dBV.cs" />
-    <Compile Remove="Source\Tools\ClassFIFIQueue.cs" />
+    <Compile Remove="Properties/AssemblyInfo.cs" />
+    <Compile Remove="Properties/Resources.Designer.cs" />
+    <Compile Remove="Source/SystemInformation/ClassdBm2dBV.cs" />
+    <Compile Remove="Source/Tools/ClassFIFIQueue.cs" />
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Remove="Properties\Resources.resx" />
+    <EmbeddedResource Remove="Properties/Resources.resx" />
   </ItemGroup>
 
   <ItemGroup>
@@ -73,12 +88,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="Readme.md" Pack="true" PackagePath="\" />
+    <None Include="README.md" Pack="true" PackagePath="\" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Properties\" />
-    <Folder Include="Source\RFIDReader\Comm_Protocol\" />
+    <Folder Include="Properties/" />
+    <Folder Include="Source/RFIDReader/Comm_Protocol/" />
   </ItemGroup>
 
   <ItemGroup>
