@@ -64,13 +64,27 @@ namespace CSLibrary
             if (adapter == null || device == null)
                 throw new ArgumentException("BLETransport: invalid argument types");
 
+            // Validate MODEL — only CS108, CS468, CS710S, CS203XL are supported
+            switch (model)
+            {
+                case MODEL.CS108:
+                case MODEL.CS468:
+                case MODEL.CS710S:
+                case MODEL.CS203XL:
+                    break;
+                default:
+                    Debug.WriteLine($"BLETransport: unsupported MODEL {model}. Supported: CS108, CS468, CS710S, CS203XL");
+                    return false;
+            }
+
             _adapter = adapter;
             _device = device;
             _deviceType = model;
             _isConnected = false;
 
             // Discover the primary service UUID based on model
-            // CS108 and CS468 both use the CSL CS108 BLE service UUID
+            // CS108 / CS468 → CSL CS108 BLE API (service UUID 00009800)
+            // CS710S / CS203XL → CSL CS710 BLE API (service UUID 00009802)
             switch (_deviceType)
             {
                 case MODEL.CS108:
