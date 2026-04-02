@@ -26,31 +26,26 @@ using System.Net;
 
 namespace CSLibrary
 {
-    public static class Debug
+    public static class CSLDebug
     {
         public static void WriteBytes(string header, byte[] data, int len = -1)
         {
             if (len == -1)
-                len = data.Length;  
+                len = data.Length;
             string str = "";
             for (int cnt = 0; cnt < len; cnt++)
                 str += data[cnt].ToString("X2") + " ";
-            WriteLine ("CSLibrary : " + header + " {0}:{1}", len, str);
+            WriteLine("CSLibrary : " + header + " {0}:{1}", len, str);
         }
 
         public static void WriteLine(string format, params object[] args)
         {
             System.Diagnostics.Debug.WriteLine(string.Format(format, args));
-
-            //Console.WriteLine(string.Format(format, args));
-            //Plugin.BLE.Abstractions.Trace.Message(string.Format(format, args));
         }
 
         public static void Write(string format, params object[] args)
         {
             System.Diagnostics.Debug.Write(string.Format(format, args));
-            //Console.Write(string.Format(format, args));
-            //Plugin.BLE.Abstractions.Trace.Message(string.Format(format, args));
         }
     }
 }

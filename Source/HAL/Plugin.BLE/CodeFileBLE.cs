@@ -91,7 +91,7 @@ namespace CSLibrary
         /// <summary>
         /// Disconnect BLE — delegates to BLETransport.
         /// </summary>
-        public void DisconnectAsync()
+        public void BLE_DisconnectAsync()
         {
             try
             {

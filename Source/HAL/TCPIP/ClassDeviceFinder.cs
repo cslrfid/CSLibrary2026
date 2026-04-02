@@ -226,7 +226,7 @@ namespace CSLibrary
 
         static private async void DeviceWatcher_Added(DeviceWatcher sender, Windows.Devices.Enumeration.DeviceInformation deviceInfo)
         {
-            Debug.WriteLine(String.Format("Added {0}{1}", deviceInfo.Id, deviceInfo.Name));
+            CSLDebug.WriteLine(String.Format("Added {0}{1}", deviceInfo.Id, deviceInfo.Name));
 
             // Protect against race condition if the task runs after the app stopped the deviceWatcher.
             if (sender == deviceWatcher)
