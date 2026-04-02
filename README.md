@@ -9,8 +9,7 @@ CSL RFID Reader Library for .NET — supporting Bluetooth LE and TCP/IP communic
 | **CS108** | Bluetooth LE | CSL CS108 BT API |
 | **CS468** | Bluetooth LE | CSL CS108 BT API |
 | **CS710S** | Bluetooth LE | CSL CS710 BT API |
-| **CS203XL** | Bluetooth LE | CSL CS710 BT API |
-| **CS203XL** | TCP/IP | CSL CS203XL Network API |
+| **CS203XL** | Bluetooth LE / TCP/IP | CSL CS710 BT API / CSL CS203XL Network API |
 
 ## Supported Platforms
 
