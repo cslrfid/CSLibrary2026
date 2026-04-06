@@ -16,7 +16,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyDescriptionAttribute(("CSL RFID Reader Library for .NET - Supports Bluetooth LE communication with CSL R" +
     "FID readers"))]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("0.0.1.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("0.0.1+038cdc093d765486db16a4bba3ef3a26311f400d")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("0.0.1+9597d5d6d605a77772dd49b181e909691a40d0b9")]
 [assembly: System.Reflection.AssemblyProductAttribute("CSLibrary2026")]
 [assembly: System.Reflection.AssemblyTitleAttribute("CSLibrary2026")]
 [assembly: System.Reflection.AssemblyVersionAttribute("0.0.1.0")]
