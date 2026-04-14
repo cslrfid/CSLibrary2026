@@ -1,0 +1,10 @@
+# Build artifacts
+bin/
+obj/
+
+# Visual Studio
+.vs/
+*.user
+
+# NuGet packages (local feeds)
+nupkg/
