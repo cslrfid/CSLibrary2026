@@ -8,7 +8,7 @@
     <Version>0.0.1</Version>
 
     <!-- TCP symbol: enables #if TCP in TCPIP HAL files -->
-    <DefineConstants>TCP</DefineConstants>
+    <DefineConstants>TCP;BLE</DefineConstants>
 
     <!-- NuGet Package Properties -->
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
