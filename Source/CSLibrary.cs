@@ -20,6 +20,7 @@ SOFTWARE.
 */
 
 using CSLibrary.Constants;
+using CSLibrary.NetFinder;
 using System;
 using System.Collections.Generic;
 using System.Linq;
