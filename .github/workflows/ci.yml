@@ -19,9 +19,12 @@ jobs:
       matrix:
         include:
           - target: netstandard2.0
-            dotnet-version: "2.0"
-            prerelease: false
+            dotnet-version: "10.0"
+            prerelease: true
           - target: net10.0
+            dotnet-version: "10.0"
+            prerelease: true
+          - target: net10.0-windows
             dotnet-version: "10.0"
             prerelease: true
 
@@ -36,17 +39,17 @@ jobs:
           include-prerelease: ${{ matrix.prerelease }}
 
       - name: Restore
-        run: dotnet restore CSLibrary2026/CSLibrary2026.csproj
+        run: dotnet restore CSLibrary2026.csproj
 
       - name: Build
         run: >
-          dotnet build CSLibrary2026/CSLibrary2026.csproj
+          dotnet build CSLibrary2026.csproj
           -c Release
           --framework ${{ matrix.target }}
 
       - name: Pack
         run: >
-          dotnet pack CSLibrary2026/CSLibrary2026.csproj
+          dotnet pack CSLibrary2026.csproj
           -c Release
           -o ./nupkg
           --no-build
@@ -72,14 +75,14 @@ jobs:
           include-prerelease: true
 
       - name: Restore tests
-        run: dotnet restore CSLibrary2026/Tests/CSLibrary2026.Tests/CSLibrary2026.Tests.csproj
+        run: dotnet restore Tests/CSLibrary2026.Tests/CSLibrary2026.Tests.csproj
 
       - name: Build tests
-        run: dotnet build CSLibrary2026/Tests/CSLibrary2026.Tests/CSLibrary2026.Tests.csproj -c Release
+        run: dotnet build Tests/CSLibrary2026.Tests/CSLibrary2026.Tests.csproj -c Release
 
       - name: Run tests
         run: >
-          dotnet test CSLibrary2026/Tests/CSLibrary2026.Tests/CSLibrary2026.Tests.csproj
+          dotnet test Tests/CSLibrary2026.Tests/CSLibrary2026.Tests.csproj
           -c Release
           --filter "Category!=integration"
           --logger "trx;LogFileName=results.trx"
