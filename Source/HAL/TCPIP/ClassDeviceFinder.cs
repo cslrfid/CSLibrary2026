@@ -1,4 +1,4 @@
-﻿/*
+/*
 Copyright (c) 2018 Convergence Systems Limited
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -21,14 +21,8 @@ SOFTWARE.
 
 #if TCP
 
-#if __MwwmCrossPluginBLE
-
 using System;
 using System.Collections.Generic;
-
-using Plugin.BLE.Abstractions;
-using Plugin.BLE.Abstractions.Contracts;
-using Plugin.BLE.Abstractions.EventArgs;
 
 namespace CSLibrary
 {
@@ -39,13 +33,13 @@ namespace CSLibrary
         /// </summary>
         public class DeviceFinderArgs : EventArgs
         {
-            private DeviceInfomation _data;
+            private CSLibrary.NetFinder.DeviceInfo _data;
 
             /// <summary>
             /// Device Finder 
             /// </summary>
             /// <param name="data"></param>
-            public DeviceFinderArgs(DeviceInfomation data)
+            public DeviceFinderArgs(CSLibrary.NetFinder.DeviceInfo data)
             {
                 _data = data;
             }
@@ -53,7 +47,7 @@ namespace CSLibrary
             /// <summary>
             /// Device finder information
             /// </summary>
-            public DeviceInfomation Found
+            public CSLibrary.NetFinder.DeviceInfo Found
             {
                 get { return _data; }
                 set { _data = value; }
@@ -147,60 +141,31 @@ namespace CSLibrary
             */
         }
 
-        static private Windows.Devices.Enumeration.DeviceWatcher deviceWatcher;
-	    static List<Windows.Devices.Enumeration.DeviceInformation> _deviceDB = new List<Windows.Devices.Enumeration.DeviceInformation>();
+        static private CSLibrary.NetFinder.NetFinder _netFinder;
+        static private DeviceFinderArgs _lastArgs;
+        static List<DeviceInfomation> _deviceDB = new List<DeviceInfomation>();
 
         static public event EventHandler<DeviceFinderArgs> OnSearchCompleted;
 
         static public void SearchDevice()
         {
-            // Additional properties we would like about the device.
-            // Property strings are documented here https://msdn.microsoft.com/en-us/library/windows/desktop/ff521659(v=vs.85).aspx
-            string[] requestedProperties = { "System.Devices.Aep.DeviceAddress", "System.Devices.Aep.IsConnected", "System.Devices.Aep.Bluetooth.Le.IsConnectable", "System.Devices.Aep.AepId", "System.Devices.Aep.Category" };
-
-            // BT_Code: Example showing paired and non-paired in a single query.
-            string aqsAllBluetoothLEDevices = "(System.Devices.Aep.ProtocolId:=\"{bb7bb05e-5972-42b5-94fc-76eaa7084d49}\")";
-
-            deviceWatcher =
-                    DeviceInformation.CreateWatcher(
-                        aqsAllBluetoothLEDevices,
-                        requestedProperties,
-                        DeviceInformationKind.AssociationEndpoint);
-
-            // Register event handlers before starting the watcher.
-            deviceWatcher.Added += DeviceWatcher_Added;
-            deviceWatcher.Updated += DeviceWatcher_Updated;
-            deviceWatcher.Removed += DeviceWatcher_Removed;
-            deviceWatcher.EnumerationCompleted += DeviceWatcher_EnumerationCompleted;
-            deviceWatcher.Stopped += DeviceWatcher_Stopped;
-
-            // Start the watcher.
-            deviceWatcher.Start();
+            _deviceDB.Clear();
+            CSLibrary.NetFinder.NetFinder.ClearDeviceList();
+            CSLibrary.NetFinder.NetFinder.SearchDevice();
         }
-
 
         static public void Stop()
         {
-            /// <summary>
-            /// Stops watching for all nearby Bluetooth devices.
-            /// </summary>
-            if (deviceWatcher != null)
-            {
-                // Unregister the event handlers.
-                deviceWatcher.Added -= DeviceWatcher_Added;
-
-                // Stop the watcher.
-                deviceWatcher.Stop();
-                deviceWatcher = null;
-            }
+            CSLibrary.NetFinder.NetFinder.StopSearch();
         }
 
-	    static public void ClearDeviceList()
-	    {
-		    _deviceDB.Clear ();
-	    }
+        static public void ClearDeviceList()
+        {
+            _deviceDB.Clear();
+            CSLibrary.NetFinder.NetFinder.ClearDeviceList();
+        }
 
-        static public DeviceInformation GetDeviceInformation(int id)
+        static public DeviceInfomation GetDeviceInformation(int id)
         {
             if (id < _deviceDB.Count)
                 return _deviceDB[id];
@@ -208,54 +173,35 @@ namespace CSLibrary
             return null;
         }
 
-        static public DeviceInformation GetDeviceInformation (string readername)
-	    {
-		    foreach (DeviceInformation item in _deviceDB)
-		    {
-			    if (item.Id == readername)
-				    return item;
-		    }
-
-		    return null;		
-	    }
-
-	    static public List<DeviceInformation> GetAllDeviceInformation ()
-	    {
-		    return _deviceDB;
-	    }
-
-        static private async void DeviceWatcher_Added(DeviceWatcher sender, Windows.Devices.Enumeration.DeviceInformation deviceInfo)
+        static public DeviceInfomation GetDeviceInformation(string readername)
         {
-            CSLDebug.WriteLine(String.Format("Added {0}{1}", deviceInfo.Id, deviceInfo.Name));
-
-            // Protect against race condition if the task runs after the app stopped the deviceWatcher.
-            if (sender == deviceWatcher)
+            foreach (DeviceInfomation item in _deviceDB)
             {
-                CSLibrary.DeviceFinder.DeviceInfomation di = new CSLibrary.DeviceFinder.DeviceInfomation();
-                di.deviceName = deviceInfo.Name;
-                di.ID = (uint)_deviceDB.Count;
-                di.nativeDeviceInformation = (object)deviceInfo;
-
-                _deviceDB.Add(deviceInfo); 
-
-                RaiseEvent<DeviceFinderArgs>(OnSearchCompleted, new DeviceFinderArgs(di));
+                if (item.deviceName == readername)
+                    return item;
             }
+
+            return null;
         }
 
-        static private async void DeviceWatcher_Updated(DeviceWatcher sender, DeviceInformationUpdate deviceInfoUpdate)
+        static public List<DeviceInfomation> GetAllDeviceInformation()
         {
+            return _deviceDB;
         }
 
-        static private async void DeviceWatcher_Removed(DeviceWatcher sender, DeviceInformationUpdate deviceInfoUpdate)
+        static private void OnNetFinderSearchCompleted(object sender, CSLibrary.NetFinder.DeviceFinderArgs e)
         {
-        }
+            CSLibrary.NetFinder.DeviceInfo deviceInfo = e.Device;
 
-        static private async void DeviceWatcher_EnumerationCompleted(DeviceWatcher sender, object e)
-        {
-        }
+            DeviceInfomation di = new DeviceInfomation();
+            di.deviceName = deviceInfo.DeviceName;
+            di.ID = (uint)_deviceDB.Count;
+            di.nativeDeviceInformation = (object)deviceInfo;
 
-        static private async void DeviceWatcher_Stopped(DeviceWatcher sender, object e)
-        {
+            _deviceDB.Add(di);
+
+            _lastArgs = new DeviceFinderArgs(deviceInfo);
+            RaiseEvent<DeviceFinderArgs>(OnSearchCompleted, _lastArgs);
         }
 
         static private void RaiseEvent<T>(EventHandler<T> eventHandler, T e)
@@ -267,9 +213,13 @@ namespace CSLibrary
             }
             return;
         }
+
+        static DeviceFinder()
+        {
+            CSLibrary.NetFinder.NetFinder.OnSearchCompleted += OnNetFinderSearchCompleted;
+        }
     }
 
 }
 
-#endif
 #endif
