@@ -36,7 +36,9 @@ jobs:
           include-prerelease: ${{ matrix.prerelease }}
 
       - name: Restore
-        run: dotnet restore CSLibrary2026/CSLibrary2026.csproj
+        run: >
+          dotnet restore CSLibrary2026/CSLibrary2026.csproj
+          --framework ${{ matrix.target }}
 
       - name: Build
         run: >
