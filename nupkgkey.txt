@@ -1,0 +1,7 @@
+export PATH="/home/node/.dotnet:$PATH"
+cd /home/node/.openclaw/workspace-GithubProject-CSLibrary2026/CSLibrary2026
+dotnet pack -c Release -o ../nupkg
+
+<SEE ~/.openclaw/secrets/vault.md>
+
+dotnet nuget push \\StorageServer\docker\convergenceclaw\data\workspace-GithubProject-CSLibrary2026\nupkg\CSLibrary2026.0.0.1.nupkg --api-key <SEE ~/.openclaw/secrets/vault.md> --source https://api.nuget.org/v3/index.json
