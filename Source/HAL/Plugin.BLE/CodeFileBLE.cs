@@ -35,15 +35,6 @@ namespace CSLibrary
 
     public partial class HighLevelInterface
     {
-        // for bluetooth Connection
-        // for bluetooth Connectiond
-        IAdapter _adapter;
-        IDevice _device;
-        IService _service;
-        IService _serviceDeviceInfo;
-        ICharacteristic _characteristicWrite;
-        ICharacteristic _characteristicUpdate;
-        ICharacteristic _characteristicDeviceInfoRead;
         // BLE transport — encapsulates BLE connection state
         private readonly BLETransport _bleTransport = new BLETransport();
 
@@ -79,8 +70,18 @@ namespace CSLibrary
             _sp._ConnectionMode = CONNECTIONMODE.BLUETOOTH;
             _readerState = READERSTATE.IDLE;
 
-            // Wire BLE receive → HighLevelInterface packet processor
-            _bleTransport.SetReceiveCallback(data => CharacteristicOnValueUpdated(data));
+            // Wire BLE receive → HighLevelInterface packet processor.
+            // A null payload is the transport's "connection lost" signal.
+            _bleTransport.SetReceiveCallback(data =>
+            {
+                if (data == null)
+                {
+                    ConnectLostAsync();
+                    return;
+                }
+
+                CharacteristicOnValueUpdated(data);
+            });
 
             BTTimer = new Timer(TimerFunc, this, 0, 1000);
             HardwareInit();
@@ -99,6 +100,7 @@ namespace CSLibrary
                     BARCODEPowerOff();
 
                 _bleTransport.Disconnect();
+                _transport = null;
             }
             catch (Exception ex)
             {
@@ -107,105 +109,44 @@ namespace CSLibrary
         }
 
         /// <summary>
-        /// return error code
+        /// Handles a connection loss reported by the transport.
         /// </summary>
-        /// <returns></returns>
-        private async Task<int> BLE_Send (byte[] data)
-        {
-            return await _characteristicWrite.WriteAsync(data);
-        }
-
-        private async void BLE_Recv(object sender, CharacteristicUpdatedEventArgs characteristicUpdatedEventArgs)
-        {
-            try
-            {
-                byte[] data = characteristicUpdatedEventArgs.Characteristic.Value;
-                if (data == null)
-                    return;
- 
-                CSLibrary.Debug.WriteBytes("BT data received", data);
-                CharacteristicOnValueUpdated(data);
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine("Program execption error, please check!!! error message : " + ex.Message);
-            }
-        }
-
-        private void CharacteristicOnWriteUpdated(object sender, CharacteristicUpdatedEventArgs characteristicUpdatedEventArgs)
-        {
-            CSLibrary.Debug.WriteBytes("BT: Write data success updated", characteristicUpdatedEventArgs.Characteristic.Value);
-        }
-
-        private void OnStateChanged(object sender, BluetoothStateChangedArgs e)
-        {
-        }
-
-        private void OnDeviceConnectionLost(object sender, DeviceErrorEventArgs e)
-        {
-            if (e.Device.Id == _device.Id)
-            {
-                //DisconnectAsync();
-                ConnectLostAsync();
-            }
-        }
-
-        public async void ConnectLostAsync()
+        public void ConnectLostAsync()
         {
             _readerState = READERSTATE.READYFORDISCONNECT;
 
-            _characteristicUpdate.ValueUpdated -= BLE_Recv;
-            _adapter.DeviceConnectionLost -= OnDeviceConnectionLost;
-
-            _characteristicUpdate = null;
-            _characteristicWrite = null;
-            _service = null;
-
             try
             {
-
-                if (_device.State == DeviceState.Connected)
-                {
-                    await _adapter.DisconnectDeviceAsync(_device);
-                }
+                _bleTransport.Disconnect();
             }
             catch (Exception ex)
             {
                 Debug.WriteLine("Program execption error, please check!!! error message : " + ex.Message);
             }
-            _device = null;
 
+            _transport = null;
             _readerState = READERSTATE.DISCONNECT;
 
             FireReaderStateChangedEvent(new Events.OnReaderStateChangedEventArgs(null, Constants.ReaderCallbackType.CONNECTION_LOST));
         }
 
-        async Task ClearConnection()
+        /// <summary>
+        /// Releases the BLE link without raising the connection lost event.
+        /// </summary>
+        void ClearConnection()
         {
             _readerState = READERSTATE.READYFORDISCONNECT;
-            // Stop Timer;
-            await _characteristicUpdate.StopUpdatesAsync();
-
-            _characteristicUpdate.ValueUpdated -= BLE_Recv;
-            _adapter.DeviceConnectionLost -= OnDeviceConnectionLost;
-
-            _characteristicUpdate = null;
-            _characteristicWrite = null;
-            _service = null;
 
             try
             {
-                if (_device.State == DeviceState.Connected)
-                {
-                    await _adapter.DisconnectDeviceAsync(_device);
-                }
+                _bleTransport.Disconnect();
             }
             catch (Exception ex)
             {
                 Debug.WriteLine("Program execption error, please check!!! error message : " + ex.Message);
             }
-            _device = null;
 
+            _transport = null;
             _readerState = READERSTATE.DISCONNECT;
         }
 

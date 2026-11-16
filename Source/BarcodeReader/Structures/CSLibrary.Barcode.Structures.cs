@@ -1,4 +1,4 @@
-using System;
+ï»¿using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -415,7 +415,7 @@ namespace CSLibrary.Barcode.Structures
         /// the amount of data to transfer but can reduce image quality 
         /// (Lossy compression) and does take a finite length of time.
         /// </summary>
-        public Compression compressionMode;
+        public CSLibrary.Barcode.Constants.Compression compressionMode;
         /// <summary>
         /// Lossy compression is JPEG lossy.  If lossy compression, this 
         /// value specifies the image quality percentage from 100 (virtually 
@@ -447,7 +447,7 @@ namespace CSLibrary.Barcode.Structures
         /// </summary>
         public bool bInfinityFilter;
         /// <summary>
-        /// This is a boolean flag (TRUE or FALSE) that flips the image 180¡ã 
+        /// This is a boolean flag (TRUE or FALSE) that flips the image 180ï¿½ï¿½ 
         /// </summary>
         public bool bFlipImage;
         /// <summary>

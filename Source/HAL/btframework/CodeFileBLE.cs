@@ -27,7 +27,7 @@ namespace CSLibrary
         wclGattCharacteristic UpdateCharacteristic;
         wclGattCharacteristic WriteCharacteristic;
         wclGattCharacteristic ReadCharacteristic;
-        MODEL _deviceType = MODEL.UNKNOWN;
+        // _deviceType is declared by the shared core (Source/CSLibrary.cs)
 
         IDevice _device = new IDevice();
 
@@ -167,14 +167,16 @@ namespace CSLibrary
         }
 
 
-        public async Task<bool> DisconnectAsync()
+        /// <summary>
+        /// Disconnect BLE — btframework HAL implementation of the unified disconnect.
+        /// </summary>
+        public void BLE_DisconnectAsync()
         {
             if (Status != READERSTATE.IDLE)
                 _handlerRFIDReader.StopOperation();
 
             BARCODEPowerOff();
             WhenBLEFinish(ClearConnection);
-            return true;
         }
 
         private async Task<bool> BLE_Send(byte[] data)

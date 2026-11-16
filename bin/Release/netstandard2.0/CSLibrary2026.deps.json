@@ -7,7 +7,7 @@
   "targets": {
     ".NETStandard,Version=v2.0": {},
     ".NETStandard,Version=v2.0/": {
-      "CSLibrary2026/0.0.1": {
+      "CSLibrary2026/2.0.0-beta.3": {
         "dependencies": {
           "Plugin.BLE": "3.0.0"
         },
@@ -19,14 +19,15 @@
         "runtime": {
           "lib/netstandard2.0/Plugin.BLE.dll": {
             "assemblyVersion": "3.0.0.0",
-            "fileVersion": "3.0.0.0"
+            "fileVersion": "3.0.0.0",
+            "localPath": "Plugin.BLE.dll"
           }
         }
       }
     }
   },
   "libraries": {
-    "CSLibrary2026/0.0.1": {
+    "CSLibrary2026/2.0.0-beta.3": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

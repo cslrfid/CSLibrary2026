@@ -8,3 +8,7 @@ obj/
 
 # NuGet packages (local feeds)
 nupkg/
+
+# NuGet API key (never commit - see nuget/api-key.txt.template)
+nuget/api-key.txt
+/UITest

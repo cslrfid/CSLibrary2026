@@ -23,6 +23,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using static CSLibrary.BarcodeReader;
 
@@ -31,6 +32,8 @@ namespace CSLibrary
     using static RFIDDEVICE;
     using static FrequencyBand;
     using static CSLibrary.RFIDReader;
+    using static FrequencyBand;
+    using static RFIDDEVICE;
 
     public partial class RFIDReader
     {
@@ -115,6 +118,71 @@ namespace CSLibrary
             public UInt16 Get()
             {
                 return value;
+            }
+        }
+
+        internal class RealRegInt16
+        {
+            private RFIDReader _handler;
+            public UInt16 regAdd;
+            public Int16 value;
+            public REGPRIVATE Private;
+
+            private readonly object _sync = new object();
+            private TaskCompletionSource<Int16> _pendingReadTcs;
+
+            public RealRegInt16(RFIDReader handler, UInt16 add, REGPRIVATE Private)
+            {
+                this._handler = handler;
+                regAdd = add;
+                this.Private = Private;
+            }
+
+            public void Set(Int16 value)
+            {
+                if (Private == REGPRIVATE.READONLY)
+                    return;
+
+                _handler.WriteRegister(this.regAdd, (UInt16)value);
+            }
+
+            public void Default(Int16 value)
+            {
+                this.value = value;
+
+                TaskCompletionSource<Int16> tcs = null;
+                lock (_sync)
+                {
+                    tcs = _pendingReadTcs;
+                    _pendingReadTcs = null;
+                }
+
+                tcs?.TrySetResult(value);
+            }
+
+            public async Task<Int16> GetAsync(int timeoutMs = 1000)
+            {
+                READREGISTERSET reg = new READREGISTERSET(this.regAdd, 2);
+                var tcs = new TaskCompletionSource<Int16>(TaskCreationOptions.RunContinuationsAsynchronously);
+
+                lock (_sync)
+                {
+                    _pendingReadTcs = tcs;
+                    _addrofread = this.regAdd;
+                }
+
+                _handler.ReadRegister(reg);
+
+                var completed = await Task.WhenAny(tcs.Task, Task.Delay(timeoutMs)).ConfigureAwait(false);
+                if (completed == tcs.Task)
+                    return await tcs.Task.ConfigureAwait(false);
+
+                return value; // timeout: return last known value
+            }
+
+            public Int16 Get()
+            {
+                return GetAsync(10000).ConfigureAwait(false).GetAwaiter().GetResult();
             }
         }
 
@@ -799,6 +867,14 @@ namespace CSLibrary
 
                     _handler.WriteRegister((UInt16)(regAdd + dataAdd), data[port].rfMode);
                 }
+            }
+
+            internal int GetRfMode(int port)
+            {
+                if (port > 0 || port < 15)
+                    return data[port].rfMode;
+
+                return int.MinValue;
             }
 
             internal void SetInventoryRoundControl(int port, UInt32 value)
@@ -1547,6 +1623,10 @@ namespace CSLibrary
             internal RegUInt32 EFB0;
             internal RegUInt32 EFB4;
             internal Regbyte PowerBoost;
+            internal Regbyte AntennaDetect;
+            internal RegUInt32 NoiseFloorFrequency;
+            internal RealRegInt16 NoiseFloorValue;
+
 
             public CSLRFIDREGISTER(RFIDReader _deviceHandler)
             {
@@ -1648,6 +1728,9 @@ namespace CSLibrary
                 EFB0 = new RegUInt32(_deviceHandler, 0xefb0, REGPRIVATE.READONLY);
                 EFB4 = new RegUInt32(_deviceHandler, 0xefb4, REGPRIVATE.READONLY);
                 PowerBoost = new Regbyte(_deviceHandler, 0x3950, REGPRIVATE.READWRITE);
+                AntennaDetect = new Regbyte(_deviceHandler, 0x3954, REGPRIVATE.READWRITE);
+                NoiseFloorFrequency = new RegUInt32(_deviceHandler, 0x3956, REGPRIVATE.READWRITE);
+                NoiseFloorValue = new RealRegInt16(_deviceHandler, 0x395a, REGPRIVATE.READWRITE);
             }
         }
 
@@ -1824,6 +1907,22 @@ namespace CSLibrary
             }
         }
 
+
+        static UInt16 _addrofread = 0;
+        void SaveRegisters(byte[] data, int size)
+        {
+            switch (_addrofread)
+            { 
+                case 0x395a:
+                    {
+                        int value = (data[17] << 8) + (data[18]);
+                        RFIDRegister.NoiseFloorValue.Default((Int16)value);
+                    }
+                    break;
+            }
+
+            _addrofread = UInt16.MaxValue;
+        }
 
         /// <summary>
         /// return : data length

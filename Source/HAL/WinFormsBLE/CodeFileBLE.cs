@@ -22,6 +22,7 @@ SOFTWARE.
 
 using System;
 using System.Linq;
+using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
 using Windows.Devices.Bluetooth;
 using Windows.Devices.Bluetooth.GenericAttributeProfile;
@@ -47,18 +48,12 @@ namespace CSLibrary
         private GattCharacteristic _characteristicUpdate;
         private GattCharacteristic _characteristicDeviceInfoRead;
 
-        // BLE transport — encapsulates BLE connection state
-        private readonly BLETransport _bleTransport = new BLETransport();
+        // Note: this HAL talks to the reader through the WinRT GATT stack
+        // (Windows.Devices.Bluetooth) and therefore does not use the Plugin.BLE based
+        // BLETransport. Keep the WinRT handles above as the single source of truth.
 
         #endregion
 
-        /// <summary>
-        /// Returns the BLE transport instance for this connection.
-        /// </summary>
-        BLETransport BLE_Init()
-        {
-            return _bleTransport;
-        }
 
         /// <summary>
         /// Connect via BLE using Windows.Devices.Bluetooth async API.
@@ -87,15 +82,9 @@ namespace CSLibrary
 
                 case MODEL.CS710S:
                 case MODEL.CS203XL:
-                    // Request max MTU for BLE 5.0
-                    try
-                    {
-                        await device.RequestMtuAsync(255);
-                    }
-                    catch
-                    {
-                        // MTU negotiation may fail on some devices
-                    }
+                    // Note: the Windows Runtime GATT stack has no MTU request API
+                    // (RequestMtuAsync is a Plugin.BLE extension), the negotiated MTU is
+                    // handled by the stack itself.
                     _serviceUpdate = device.GetGattService(Guid.Parse("00009802-0000-1000-8000-00805f9b34fb"));
                     break;
             }
@@ -141,7 +130,7 @@ namespace CSLibrary
                     if (result.Status == GattCommunicationStatus.Success &&
                         result.Value.Length == 8)
                     {
-                        var bytes = result.Value.ToArray();
+                        var bytes = BufferToArray(result.Value);
                         _MacAdd =
                             bytes[7].ToString("X2") +
                             bytes[6].ToString("X2") +
@@ -181,7 +170,11 @@ namespace CSLibrary
         /// <summary>
         /// Disconnect BLE — cleans up all GATT resources.
         /// </summary>
-        public void DisconnectAsync()
+        /// <remarks>
+        /// Named BLE_DisconnectAsync() to match the other HALs: the shared core owns the
+        /// unified DisconnectAsync() and routes to the HAL implementation.
+        /// </remarks>
+        public void BLE_DisconnectAsync()
         {
             try
             {
@@ -226,6 +219,21 @@ namespace CSLibrary
         }
 
         /// <summary>
+        /// Copies a Windows Runtime buffer into a byte array.
+        /// </summary>
+        /// <remarks>
+        /// Uses the WindowsRuntimeBufferExtensions of the Windows Runtime projection
+        /// (System.Runtime.InteropServices.WindowsRuntime).
+        /// </remarks>
+        private static byte[] BufferToArray(Windows.Storage.Streams.IBuffer buffer)
+        {
+            if (buffer == null || buffer.Length == 0)
+                return Array.Empty<byte>();
+
+            return buffer.ToArray();
+        }
+
+        /// <summary>
         /// Write data to the BLE characteristic (send command to reader).
         /// </summary>
         private async Task<int> BLE_Send(byte[] data)
@@ -235,9 +243,14 @@ namespace CSLibrary
 
             try
             {
+                // DataWriter.DetachBuffer() replaces the removed
+                // Buffer.CreateFromArray() / DataWriter.FromBuffer() pair
+                var writer = new Windows.Storage.Streams.DataWriter();
+                writer.WriteBytes(data);
+                var buffer = writer.DetachBuffer();
+
                 var result = await _characteristicWrite.WriteValueAsync(
-                    Windows.Storage.Streams.DataWriter.FromBuffer(
-                        Windows.Storage.Streams.Buffer.CreateFromArray(data)),
+                    buffer,
                     GattWriteOption.WriteWithResponse);
                 return result == GattCommunicationStatus.Success ? data.Length : -1;
             }
@@ -255,9 +268,11 @@ namespace CSLibrary
         {
             try
             {
-                var data = args.CharacteristicValue.ToArray();
-                if (data == null || data.Length == 0)
+                var buffer = args.CharacteristicValue;
+                if (buffer == null || buffer.Length == 0)
                     return;
+
+                var data = BufferToArray(buffer);
 
                 Debug.WriteBytes("WinFormsBLE recv", data);
                 CharacteristicOnValueUpdated(data);

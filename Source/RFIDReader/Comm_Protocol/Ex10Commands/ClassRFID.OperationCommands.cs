@@ -35,6 +35,8 @@ namespace CSLibrary
             SCSLRFIDStartMBInventory = 0x10A4,
             SCSLRFIDStartSelectMBInventory = 0x10A5,
             SCSLRFIDStartSelectCompactInventory = 0x10A6,
+            SCSLRFIDStartAccessInventory	= 0x10A7,
+            SCSLRFIDStartSelectAccessInventory	= 0x10A8,
             SCSLRFIDStopOperation = 0x10AE,
             SCSLRFIDReadMB = 0x10B1,
             SCSLRFIDWriteMB = 0x10B2,
@@ -49,6 +51,7 @@ namespace CSLibrary
             SCSLRFIDRegisterReset = 0x10D5,
             SCSLEx10Reset = 0x10D6,
             SCSLRFIDCircuitReset = 0x10D7,
+            SCSLRFIDGetNoiseFloor	= 0x10D8,
             SCSLReadRegister = 0x1471,
             SCSLWriteRegister = 0x9a06,
         }
@@ -337,6 +340,11 @@ namespace CSLibrary
         internal void RFIDWriteRegister()
         {
             RunShortOperation(SCSLRFIDCMD.SCSLWriteRegister, HighLevelInterface.BTWAITCOMMANDRESPONSETYPE.COMMANDENDRESPONSE);
+        }
+
+        internal void RFIDGetNoiseFloor()
+        {
+            RunShortOperation(SCSLRFIDCMD.SCSLRFIDGetNoiseFloor, HighLevelInterface.BTWAITCOMMANDRESPONSETYPE.CSL_OPERATION_COMPLETE);
         }
     }
 }

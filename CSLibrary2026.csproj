@@ -1,11 +1,80 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
+  <!--
+    Target framework matrix:
+    - netstandard2.0 / netstandard2.1 : consumable by the legacy Xamarin (Android/iOS/UWP) UI apps
+    - net48                           : consumable by the .NET Framework 4.8 WinForms desktop app
+                                      (uses the btframework HAL - Plugin.BLE 3.x cannot run there)
+    - net10.0*                        : .NET 10 / MAUI consumers
+
+    The net10.0 target frameworks require a .NET 10 SDK. Visual Studio 2022 is the only
+    Visual Studio that still ships the legacy Xamarin.Android targets used by the UI test
+    apps, but it resolves to the .NET 9 SDK, which cannot even evaluate net10.0-android
+    (NU1012 "Platform version is not present ..." / NETSDK1045). Therefore the .NET 10
+    targets are only added when the SDK in use is .NET 10 or newer.
+  -->
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;net10.0;net10.0-windows;net10.0-android;net10.0-ios;net10.0-maccatalyst</TargetFrameworks>
+    <NetStandardTargetFrameworks>netstandard2.0;netstandard2.1</NetStandardTargetFrameworks>
+    <!--
+      net10.0-windows carries an explicit platform version so that the Windows Runtime
+      projections (Windows.Devices.Bluetooth) are referenced. Without it NuGet resolves
+      Plugin.BLE's netstandard2.0 stub, which throws NotImplementedInReferenceAssembly at
+      runtime instead of using the real Windows implementation.
+    -->
+    <!--
+      Mac Catalyst is deliberately not a target: the CS710S/CS203XL app line only ships
+      Android, iOS and Windows (the MAUI apps' net10.0-maccatalyst head therefore resolves
+      the platform-neutral net10.0 assembly).
+    -->
+    <Net10TargetFrameworks>net10.0;net10.0-windows10.0.19041.0;net10.0-android;net10.0-ios</Net10TargetFrameworks>
+    <Net10SdkAvailable Condition="'$(NETCoreSdkVersion)' != '' AND $([MSBuild]::VersionGreaterThanOrEquals($(NETCoreSdkVersion.Split('-')[0]), '10.0'))">true</Net10SdkAvailable>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <TargetFrameworks>$(NetStandardTargetFrameworks);net48</TargetFrameworks>
+    <TargetFrameworks Condition="'$(Net10SdkAvailable)' == 'true'">$(NetStandardTargetFrameworks);net48;$(Net10TargetFrameworks)</TargetFrameworks>
     <EnableWindowsTargeting>true</EnableWindowsTargeting>
+    <!--
+      The Apple (.NET 10) SDK defaults BundleOriginalResources to true for libraries
+      (Xamarin.Shared.props: when TargetFrameworkVersion >= 10.0), which makes the build run
+      the _CollectPackLibraryResources target - "this library's resources are packaged by the
+      consuming app". That target turns MSBuild item specs into file paths with
+      Path.GetFullPath, and the default Apple resource patterns it handles
+      ( **/*.atlas/*.png, **/*.mlmodel, **/*.xcassets/**/*.*, **/*.storyboard, **/*.xib )
+      contain '*' - which .NET Framework throws on with "Illegal characters in path"
+      (MSB4018), so building this project from Visual Studio (MSBuild.exe) failed for
+      net10.0-ios and net10.0-maccatalyst while `dotnet build` (.NET Core MSBuild) succeeded.
+      This library carries no Apple resources, so it does not need that mode.
+    -->
+    <BundleOriginalResources Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios' Or $([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">false</BundleOriginalResources>
     <RootNamespace>CSLibrary</RootNamespace>
     <AssemblyName>CSLibrary2026</AssemblyName>
-    <Version>0.0.1</Version>
+    <!--
+      Fallback package version. The published versions are 0.0.1, 1.0.0-beta.1 ...
+      1.0.0-beta.13, 2.0.0-beta.1 and 2.0.0-beta.2. A release passes its version
+      explicitly (-p:Version=... / PACK_TARGET_FRAMEWORKS), see nuget/README.md.
+    -->
+    <Version>2.0.0-beta.3</Version>
+
+    <!--
+      Target framework selection for packaging.
+
+      MSBuild's command line treats ';' as a property separator, so
+      "-p:TargetFrameworks=a;b" fails with MSB1006 ("Property is not valid").
+      The pack target frameworks are therefore selected through the
+      PACK_TARGET_FRAMEWORKS environment variable (or the equivalent MSBuild
+      property), which carries the ';' list verbatim.
+
+      Examples:
+        PowerShell : $env:PACK_TARGET_FRAMEWORKS='netstandard2.0;net10.0'
+        bash       : PACK_TARGET_FRAMEWORKS='netstandard2.0;net10.0' dotnet pack ...
+        GitHub CI  : see .github/workflows/publish-nuget.yml
+
+      When it is not set, the default matrix above is used (every TFM the current
+      SDK supports).
+    -->
+    <PackTargetFrameworks Condition="'$(PackTargetFrameworks)' == ''">$(PACK_TARGET_FRAMEWORKS)</PackTargetFrameworks>
+    <TargetFrameworks Condition="'$(PackTargetFrameworks)' != ''">$(PackTargetFrameworks)</TargetFrameworks>
 
     <!-- TCP symbol: enables #if TCP in TCPIP HAL files -->
     <DefineConstants>TCP</DefineConstants>
@@ -67,6 +136,35 @@
     <None Remove="Source/RFIDReader/API_FM13DT160/**" />
   </ItemGroup>
 
+  <!--
+    UITest/ holds reference UI apps used to validate this library. It also contains a
+    junction back to this repository root (UITest/.../Library/CSLibrary2026), so it must
+    never be picked up by the default globs - otherwise the library would compile the
+    app sources (and the Java files generated by the Xamarin.Android build).
+  -->
+  <ItemGroup>
+    <Compile Remove="UITest/**" />
+    <EmbeddedResource Remove="UITest/**" />
+    <None Remove="UITest/**" />
+    <AndroidJavaSource Remove="UITest/**" />
+    <JavaCompile Remove="UITest/**" />
+    <AndroidResource Remove="UITest/**" />
+    <AndroidAsset Remove="UITest/**" />
+    <!--
+      The .NET for Android SDK globs **/*.jar into @(AndroidLibrary) and **/*.so into
+      @(AndroidNativeLibrary). The legacy Xamarin.Android builds of the UI test apps leave
+      AndroidX jars (mono.android.jar), mono runtime libraries (libxamarin-app.so) and
+      proguard files in UITest/.../BLE.Client.Droid/obj. Those would be bound into this
+      library (or break the AAR creation with XACAAR7004 "Illegal characters in path").
+    -->
+    <AndroidLibrary Remove="UITest/**" />
+    <AndroidAarLibrary Remove="UITest/**" />
+    <AndroidNativeLibrary Remove="UITest/**" />
+    <EmbeddedNativeLibrary Remove="UITest/**" />
+    <JavaSourceJar Remove="UITest/**" />
+    <ProguardConfiguration Remove="UITest/**" />
+  </ItemGroup>
+
   <ItemGroup>
     <Compile Remove="CSLibrary.cs" />
     <Compile Remove="Properties/AssemblyInfo.cs" />
@@ -93,8 +191,83 @@
     <Folder Include="Source/RFIDReader/Comm_Protocol/" />
   </ItemGroup>
 
+  <!--
+    BLE HAL per target framework (the HALs are mutually exclusive - they define the same
+    HighLevelInterface partial members and the same CSLibrary.DeviceFinder API):
+      netstandard2.0 / netstandard2.1 / net10.0 / net10.0-android / -ios
+          -> Source/HAL/Plugin.BLE    (Xamarin + MAUI)
+      net48                         -> Source/HAL/btframework  (WCL / 32feet, .NET Framework)
+
+    The .NET 10 Windows target also uses Plugin.BLE. Source/HAL/WinFormsBLE/ (Windows
+    Runtime GATT, no third party dependency) is implemented and compiles, but it cannot
+    ship in the same package: a MAUI app and a WinForms app both resolve
+    net10.0-windows*, so NuGet cannot hand out a different HAL per UI framework.
+    Serving the Windows Runtime HAL requires a separate package id.
+  -->
+  <!--
+    The net48 flavour (btframework HAL) is NOT published to NuGet: the package ships
+    the TCP/IP + Plugin.BLE flavours only. A .NET Framework 4.8 consumer builds the
+    library from source instead (see README.md, "BLE HAL selection"), because that
+    flavour needs the WCL assemblies from Source/HAL/btframework and a different HAL.
+    The same applies to Source/HAL/WinFormsBLE, which is not compiled into the project
+    at all (see the HAL compile items above).
+
+    Two settings are needed to keep net48 out of the package:
+    - IncludeBuildOutput=false         : no lib/net48 folder (the DLL is not packed)
+    - SuppressDependenciesWhenPacking  : no empty .NETFramework4.8 dependency group
+
+    Without them NuGet emits NU5128 ("some target frameworks declared in the
+    dependencies group ... do not have exact matches"), because the dependency group
+    exists while the lib folder does not.
+
+    The net48 target itself still builds normally - only the package is affected.
+  -->
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'net48' ">
+    <IncludeBuildOutput>false</IncludeBuildOutput>
+    <SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
+  </PropertyGroup>
+
   <ItemGroup>
-    <PackageReference Include="Plugin.BLE" Version="3.0.0" />
+    <PackageReference Include="Plugin.BLE" Version="3.0.0" Condition=" '$(TargetFramework)' != 'net48'" />
   </ItemGroup>
+
+  <!--
+    .NET Framework 4.8 (WinForms desktop app):
+    Plugin.BLE 3.x cannot run on .NET Framework (its Windows implementation needs WinRT),
+    so this target uses the btframework HAL instead. Both HALs provide the same
+    HighLevelInterface partial members and the same CSLibrary.DeviceFinder API, therefore
+    they are mutually exclusive.
+  -->
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net48' ">
+    <!-- btframework HAL in, Plugin.BLE HAL out -->
+    <Compile Remove="Source/HAL/Plugin.BLE/**" />
+    <Compile Include="Source/HAL/btframework/**/*.cs" />
+    <!-- BLETransport is built on Plugin.BLE and is not available on .NET Framework -->
+    <Compile Remove="Source/Transport/BLETransport.cs" />
+
+    <!-- Reference assemblies so the net48 target also builds on non-Windows hosts -->
+    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.3" PrivateAssets="all" />
+
+    <!-- WCL Bluetooth framework (32feet derived) used by the btframework HAL -->
+    <Reference Include="wclBluetoothFramework">
+      <HintPath>Source\HAL\btframework\wclBluetoothFramework.dll</HintPath>
+      <Private>true</Private>
+    </Reference>
+    <Reference Include="wclCommon">
+      <HintPath>Source\HAL\btframework\wclCommon.dll</HintPath>
+      <Private>true</Private>
+    </Reference>
+    <Reference Include="wclCommunication">
+      <HintPath>Source\HAL\btframework\wclCommunication.dll</HintPath>
+      <Private>true</Private>
+    </Reference>
+  </ItemGroup>
+
+  <!--
+    The net48 flavour is not part of the NuGet package (see the IncludeBuildOutput
+    note above), so the WCL assemblies are not packed either. They are copied next to
+    CSLibrary2026.dll in the net48 build output by the <Reference Private="true">
+    items above, which is what a source build of the WinForms app consumes.
+  -->
 
 </Project>

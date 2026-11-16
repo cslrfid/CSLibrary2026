@@ -1,0 +1,8 @@
+Your NuGet.org API key goes here.
+
+This file is a template - copy it to "api-key.txt" and paste the key.
+"api-key.txt" is listed in .gitignore and is never committed.
+
+Create the key at https://www.nuget.org/account/apikeys.
+It needs "Push" rights on the CSLibrary2026 package (or "NuGet.org" owner rights
+if the package does not exist yet).

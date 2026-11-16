@@ -1,0 +1,165 @@
+name: Publish NuGet
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Package version to publish (e.g. 2.0.0-beta.3). Required for workflow_dispatch.'
+        required: true
+        type: string
+      dry_run:
+        description: 'Build and merge the package, but do not push it to NuGet.org'
+        required: false
+        default: false
+        type: boolean
+
+env:
+  DOTNET_NOLOGO: 1
+  DOTNET_CLI_TELEMETRY_OPTOUT: 1
+
+jobs:
+  # The package is built in two parts, because net10.0-ios can only be built on macOS:
+  #   linux : netstandard2.0, netstandard2.1, net10.0, net10.0-windows, net10.0-android
+  #   macos : net10.0-ios
+  # Both parts are merged into a single .nupkg by the "merge" job.
+  build-linux:
+    name: Pack (Linux target frameworks)
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "10.0"
+          include-prerelease: true
+
+      - name: Install Android workload
+        run: dotnet workload install maui-android
+
+      - name: Resolve version
+        id: version
+        run: |
+          if [ -n "${{ inputs.version }}" ]; then
+            echo "version=${{ inputs.version }}" >> "$GITHUB_OUTPUT"
+          else
+            echo "version=${GITHUB_REF_NAME#v}" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Pack
+        env:
+          # MSBuild's command line treats ';' as a property separator, so the target
+          # framework list is passed through the environment variable instead.
+          PACK_TARGET_FRAMEWORKS: "netstandard2.0;netstandard2.1;net10.0;net10.0-windows10.0.19041.0;net10.0-android"
+        run: >
+          dotnet pack CSLibrary2026.csproj
+          -c Release
+          -o ./nupkg
+          -p:Version=${{ steps.version.outputs.version }}
+
+      - name: Upload package
+        uses: actions/upload-artifact@v4
+        with:
+          name: nupkg-linux
+          path: ./nupkg/*.nupkg
+
+  build-macos:
+    name: Pack (iOS target framework)
+    runs-on: macos-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "10.0"
+          include-prerelease: true
+
+      - name: Resolve version
+        id: version
+        run: |
+          if [ -n "${{ inputs.version }}" ]; then
+            echo "version=${{ inputs.version }}" >> "$GITHUB_OUTPUT"
+          else
+            echo "version=${GITHUB_REF_NAME#v}" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Pack
+        env:
+          # MSBuild's command line treats ';' as a property separator, so the target
+          # framework list is passed through the environment variable instead.
+          PACK_TARGET_FRAMEWORKS: "net10.0-ios"
+        run: >
+          dotnet pack CSLibrary2026.csproj
+          -c Release
+          -o ./nupkg
+          -p:Version=${{ steps.version.outputs.version }}
+
+      - name: Upload package
+        uses: actions/upload-artifact@v4
+        with:
+          name: nupkg-macos
+          path: ./nupkg/*.nupkg
+
+  merge:
+    name: Merge packages
+    needs: [build-linux, build-macos]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Download packages
+        uses: actions/download-artifact@v4
+        with:
+          path: ./artifacts
+
+      - name: Merge
+        shell: pwsh
+        run: |
+          $packages = (Get-ChildItem -Recurse ./artifacts -Filter *.nupkg | ForEach-Object { $_.FullName }) -join ','
+          ./nuget/scripts/Merge-NuGetPackages.ps1 `
+            -PackagePath $packages `
+            -OutputPath "./nupkg/CSLibrary2026.${{ needs.build-linux.outputs.version }}.nupkg"
+
+      - name: Show package contents
+        shell: pwsh
+        run: |
+          Add-Type -AssemblyName System.IO.Compression.FileSystem
+          $package = (Get-ChildItem ./nupkg -Filter *.nupkg | Select-Object -First 1).FullName
+          [System.IO.Compression.ZipFile]::OpenRead($package).Entries | ForEach-Object { $_.FullName }
+
+      - name: Upload merged package
+        uses: actions/upload-artifact@v4
+        with:
+          name: nupkg-merged
+          path: ./nupkg/*.nupkg
+
+  publish:
+    name: Publish to NuGet.org
+    needs: [merge]
+    runs-on: ubuntu-latest
+    # Only push when the workflow was triggered manually without the dry-run flag.
+    if: ${{ github.event_name == 'release' || (github.event_name == 'workflow_dispatch' && !inputs.dry_run) }}
+    steps:
+      - name: Download merged package
+        uses: actions/download-artifact@v4
+        with:
+          name: nupkg-merged
+          path: ./nupkg
+
+      - name: Push to NuGet.org
+        env:
+          NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
+        run: >
+          dotnet nuget push ./nupkg/*.nupkg
+          --api-key $NUGET_API_KEY
+          --source https://api.nuget.org/v3/index.json
+          --skip-duplicate
+          --no-symbols

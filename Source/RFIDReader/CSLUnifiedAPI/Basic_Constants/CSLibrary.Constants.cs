@@ -494,8 +494,8 @@ ISO 18000-7 (Savi)	48	0001 0001	0000 0100	xxxx xxxx xxxx xxxx xxxx xxxx  xxxx xx
 ISO 18000-2, Type A (7816-6)	56 + AC	1110 0000	xxxx xxxx    (per 7816-6)	xxxx xxxx xxxx xxxx xxxx xxxx  xxxx xxxx xxxx xxxx xxxx xxxx 
 ISO 18000-3m3 (non-EPC)	16 - 496	1110 0000	xxxx xxxx xxxx - xxxx xxxx xxxx	Maximum 496 bits
 ISO 18000-3m3 (EPC)	16 - 496 	1110 0010	xxxx xxxx xxxx -xxxx xxxx xxxx	Maximum 496 bits
-ISO 18000-4 (Intermec �C 7816-6)	56	1110 0000	xxxx xxxx    (per 7816-6) 	xxxx xxxx xxxx xxxx xxxx xxxx  xxxx xxxx xxxx xxxx xxxx xxxx  
-ISO 18000-4 (Intermec �C 256)	56	0001 0010	xxxx xxxx  (Unassigned)	xxxx xxxx xxxx xxxx xxxx xxxx  xxxx xxxx xxxx xxxx xxxx xxxx 
+ISO 18000-4 (Intermec ¨C 7816-6)	56	1110 0000	xxxx xxxx    (per 7816-6) 	xxxx xxxx xxxx xxxx xxxx xxxx  xxxx xxxx xxxx xxxx xxxx xxxx  
+ISO 18000-4 (Intermec ¨C 256)	56	0001 0010	xxxx xxxx  (Unassigned)	xxxx xxxx xxxx xxxx xxxx xxxx  xxxx xxxx xxxx xxxx xxxx xxxx 
 ISO 18000-4 (Siemens/Nedap 7816-6) (see 18000-4 for details)	32	N/A	xxxx xxxx    (per 7816-6)	xxxx xxxx xxxx xxxx xxxx xxxx
 xxxx xxxx xxxx xxxx xxxx xxxx
 ISO 18000-6A	64	1110 0010	xxxx xxxx xxxx - xxxx xxxx xxxx	xxxx xxxx xxxx xxxx xxxx xxxx xxxx xxxx

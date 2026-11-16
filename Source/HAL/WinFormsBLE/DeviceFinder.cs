@@ -75,9 +75,14 @@ namespace CSLibrary
             _scanTokenSource = new CancellationTokenSource();
             _isScanning = true;
 
-            // Use DeviceWatcher to find all Bluetooth LE devices
+            // Use DeviceWatcher to find all Bluetooth LE devices.
+            // Fully qualified: the nested DeviceInformation of this class shadows
+            // Windows.Devices.Enumeration.DeviceInformation.
             string aqsFilter = "System.Devices.Aep.ProtocolId:={bb7bb05e-5972-42b5-94ff-8465b1f172ea} AND System.Devices.Aep.IsConnected:=False";
-            _deviceWatcher = DeviceInformation.CreateWatcher(aqsFilter, null, DeviceWatcherStatus鞋.None);
+            _deviceWatcher = Windows.Devices.Enumeration.DeviceInformation.CreateWatcher(
+                aqsFilter,
+                null,
+                Windows.Devices.Enumeration.DeviceInformationKind.AssociationEndpoint);
 
             _deviceWatcher.Added += OnDeviceAdded;
             _deviceWatcher.Updated += OnDeviceUpdated;
@@ -157,7 +162,7 @@ namespace CSLibrary
 
         #region Private Methods
 
-        private static async void OnDeviceAdded(DeviceWatcher sender, DeviceInformation args)
+        private static async void OnDeviceAdded(DeviceWatcher sender, Windows.Devices.Enumeration.DeviceInformation args)
         {
             try
             {

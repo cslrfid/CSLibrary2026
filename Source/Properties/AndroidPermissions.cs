@@ -20,10 +20,6 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#if ANDROID
-using Android.Runtime;
-
-#endif
 using System.Runtime.CompilerServices;
 
 // Android permissions required for CSLibrary2026 NetFinder (UDP broadcast on port 3000).
@@ -35,15 +31,18 @@ using System.Runtime.CompilerServices;
 // to ensure they are present regardless of how the library is built.
 
 #if ANDROID
-[assembly: Android.Runtime.UsesPermission(Android.Manifest.Permission.AccessWifiState)]
-[assembly: Android.Runtime.UsesPermission(Android.Manifest.Permission.AccessNetworkState)]
-[assembly: Android.Runtime.UsesPermission(Android.Manifest.Permission.AccessChangeWifiState)]
-[assembly: Android.Runtime.UsesPermission(Android.Manifest.Permission.Internet)]
-[assembly: Android.Runtime.UsesPermission(Android.Manifest.Permission.ChangeWifiMulticastState)]
+// NOTE: On .NET for Android the attribute lives in Android.App (it was Android.Runtime
+// up to .NET 8). Android.Manifest.Permission no longer exposes AccessChangeWifiState,
+// so that one is declared by its raw permission name.
+[assembly: Android.App.UsesPermission(Android.Manifest.Permission.AccessWifiState)]
+[assembly: Android.App.UsesPermission(Android.Manifest.Permission.AccessNetworkState)]
+[assembly: Android.App.UsesPermission("android.permission.CHANGE_WIFI_STATE")]
+[assembly: Android.App.UsesPermission(Android.Manifest.Permission.Internet)]
+[assembly: Android.App.UsesPermission(Android.Manifest.Permission.ChangeWifiMulticastState)]
 // Plugin.BLE typically declares BLUETOOTH permissions, included here for completeness
-[assembly: Android.Runtime.UsesPermission(Android.Manifest.Permission.Bluetooth)]
-[assembly: Android.Runtime.UsesPermission(Android.Manifest.Permission.BluetoothAdmin)]
-[assembly: Android.Runtime.UsesPermission(Android.Manifest.Permission.BluetoothConnect)]
-[assembly: Android.Runtime.UsesPermission(Android.Manifest.Permission.BluetoothScan)]
-[assembly: Android.Runtime.UsesPermission(Android.Manifest.Permission.BluetoothAdvertise)]
+[assembly: Android.App.UsesPermission(Android.Manifest.Permission.Bluetooth)]
+[assembly: Android.App.UsesPermission(Android.Manifest.Permission.BluetoothAdmin)]
+[assembly: Android.App.UsesPermission(Android.Manifest.Permission.BluetoothConnect)]
+[assembly: Android.App.UsesPermission(Android.Manifest.Permission.BluetoothScan)]
+[assembly: Android.App.UsesPermission(Android.Manifest.Permission.BluetoothAdvertise)]
 #endif

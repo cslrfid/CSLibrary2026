@@ -26,6 +26,31 @@ namespace CSLibrary
 {
     public partial class RFIDReader
     {
+        internal void ReadRegister(READREGISTERSET readset)
+        {
+            int payloadlen = 1 * 3 + 1;
+            byte[] sendpacket = new byte[7 + payloadlen];
+
+            sendpacket[0] = 0x80;
+            sendpacket[1] = 0xb3;
+            sendpacket[2] = 0x14;
+            sendpacket[3] = 0x71;
+            sendpacket[4] = 0x00;
+            sendpacket[5] = (byte)(payloadlen >> 8);
+            sendpacket[6] = (byte)(payloadlen);
+
+            int index = 8;
+            sendpacket[7] = (byte)1;
+            for (int cnt = 0; cnt < 1; cnt++)
+            {
+                sendpacket[index++] = (byte)(readset.address >> 8);
+                sendpacket[index++] = (byte)(readset.address);
+                sendpacket[index++] = (byte)(readset.size);
+            }
+
+            _deviceHandler.SendAsync(0, 0, DOWNLINKCMD.RFIDCMD, sendpacket, HighLevelInterface.BTWAITCOMMANDRESPONSETYPE.WAIT_BTAPIRESPONSE_DATA1);
+        }
+
         internal void ReadRegister(READREGISTERSET[] readset)
         {
             int payloadlen = readset.Length * 3 + 1;

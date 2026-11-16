@@ -2,9 +2,9 @@ name: CI
 
 on:
   push:
-    branches: [main, develop]
+    branches: [main]
   pull_request:
-    branches: [main, develop]
+    branches: [main]
 
 env:
   DOTNET_NOLOGO: 1
@@ -19,7 +19,10 @@ jobs:
       matrix:
         include:
           - target: netstandard2.0
-            dotnet-version: "2.0"
+            dotnet-version: "8.0"
+            prerelease: false
+          - target: netstandard2.1
+            dotnet-version: "8.0"
             prerelease: false
           - target: net10.0
             dotnet-version: "10.0"
@@ -37,32 +40,57 @@ jobs:
 
       - name: Restore
         run: >
-          dotnet restore CSLibrary2026/CSLibrary2026.csproj
+          dotnet restore CSLibrary2026.csproj
           --framework ${{ matrix.target }}
 
       - name: Build
         run: >
-          dotnet build CSLibrary2026/CSLibrary2026.csproj
+          dotnet build CSLibrary2026.csproj
           -c Release
           --framework ${{ matrix.target }}
 
+  pack:
+    name: Pack (all target frameworks)
+    runs-on: ubuntu-latest
+    # One package with every lib/<tfm> folder; NuGet picks the matching one per consumer.
+    # net10.0-ios can only be built on a macOS agent, so it is not part of this package -
+    # publish from macOS (see .github/workflows/publish-nuget.yml) to include it.
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "10.0"
+          include-prerelease: true
+
+      - name: Install Android workload
+        run: dotnet workload install maui-android
+
       - name: Pack
+        env:
+          # MSBuild's command line treats ';' as a property separator, so the target
+          # framework list is passed through the environment variable instead.
+          PACK_TARGET_FRAMEWORKS: "netstandard2.0;netstandard2.1;net10.0;net10.0-windows10.0.19041.0;net10.0-android"
         run: >
-          dotnet pack CSLibrary2026/CSLibrary2026.csproj
+          dotnet pack CSLibrary2026.csproj
           -c Release
           -o ./nupkg
-          --no-build
 
       - name: Upload NuGet package
         uses: actions/upload-artifact@v4
         with:
-          name: nupkg-${{ matrix.target }}
+          name: nupkg-all
           path: ./nupkg/*.nupkg
 
   test:
     name: Test (net10.0)
     runs-on: ubuntu-latest
     # Hardware integration tests are excluded in CI per constitution §6.2
+    # The test project does not exist in the repository yet, so the job is skipped
+    # until it is added.
+    if: hashFiles('Tests/CSLibrary2026.Tests/CSLibrary2026.Tests.csproj') != ''
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -74,14 +102,14 @@ jobs:
           include-prerelease: true
 
       - name: Restore tests
-        run: dotnet restore CSLibrary2026/Tests/CSLibrary2026.Tests/CSLibrary2026.Tests.csproj
+        run: dotnet restore Tests/CSLibrary2026.Tests/CSLibrary2026.Tests.csproj
 
       - name: Build tests
-        run: dotnet build CSLibrary2026/Tests/CSLibrary2026.Tests/CSLibrary2026.Tests.csproj -c Release
+        run: dotnet build Tests/CSLibrary2026.Tests/CSLibrary2026.Tests.csproj -c Release
 
       - name: Run tests
         run: >
-          dotnet test CSLibrary2026/Tests/CSLibrary2026.Tests/CSLibrary2026.Tests.csproj
+          dotnet test Tests/CSLibrary2026.Tests/CSLibrary2026.Tests.csproj
           -c Release
           --filter "Category!=integration"
           --logger "trx;LogFileName=results.trx"

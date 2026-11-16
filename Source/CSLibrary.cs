@@ -31,7 +31,6 @@ namespace CSLibrary
 {
     using static RFIDDEVICE;
     using Constants;
-    using Plugin.BLE.Abstractions.Contracts;
     public partial class HighLevelInterface
     {
         #region Constant
@@ -200,7 +199,9 @@ namespace CSLibrary
 
         ~HighLevelInterface()
         {
-            DisconnectAsync();
+            // Call the synchronous path directly: the finalizer must not start an
+            // asynchronous operation that nobody can await.
+            DisconnectInternal();
         }
 
         public void CancelEventOnReaderStateChanged()
@@ -229,7 +230,23 @@ namespace CSLibrary
         /// <summary>
         /// Unified disconnect — routes to BLE or TCP implementation based on current connection mode.
         /// </summary>
+        /// <remarks>
+        /// The unified API is deliberately <c>void</c>: the BLE and TCP implementations are
+        /// selected internally, so the caller cannot tell (and does not need to know) which
+        /// transport is in use. Note that this differs from the previous CSLibrary2026
+        /// implementation, where the HAL exposed <c>public async Task&lt;bool&gt; DisconnectAsync()</c>;
+        /// applications written against that version have to drop the <c>_ =</c> discard
+        /// (<c>reader.DisconnectAsync();</c>).
+        /// </remarks>
         public void DisconnectAsync()
+        {
+            DisconnectInternal();
+        }
+
+        /// <summary>
+        /// Synchronous disconnect implementation shared by <see cref="DisconnectAsync"/> and the finalizer.
+        /// </summary>
+        private void DisconnectInternal()
         {
             if (_sp != null && _sp.getConnectionMode() == RFIDDEVICE.CONNECTIONMODE.TCP)
                 TCP_DisconnectAsync();

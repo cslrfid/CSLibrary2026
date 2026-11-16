@@ -387,6 +387,10 @@ namespace CSLibrary
                                 _currentCmdRemark = _sendBuffer[0].cmdRemark;
                                 _NeedCommandResponseType = _sendBuffer[0].dataRemark;
                                 CheckRFIDCommand();
+
+                                // Send through the active transport (BLE or TCP/IP).
+                                // The transport is assigned by the HAL connect path
+                                // (BLE: CodeFileBLE.cs, TCP/IP: CodeFileTCPIP.cs).
                                 _ = _transport?.SendAsync(_sendBuffer[0].packetData);
 
                                 if (_NeedCommandResponseType == BTWAITCOMMANDRESPONSETYPE.NOWAIT)

@@ -399,5 +399,15 @@ namespace CSLibrary
             return m_AntennaList.Count;
 		}
 
+        public bool GetAntennaDetect()
+        {
+            return RFIDRegister.AntennaDetect.Get() != 0;
+        }
+
+        public void SetAntennaDetect(bool detect)
+        {
+            RFIDRegister.AntennaDetect.Set((byte)(detect ? 1 : 0));
+        }
+
     }
 }
