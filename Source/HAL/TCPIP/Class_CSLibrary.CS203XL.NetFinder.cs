@@ -350,6 +350,9 @@ namespace CSLibrary.NetFinder.CS203XL
             get { lock (m_lock) { return m_devices; } }
         }
 
+        /// <summary>
+        /// Gets the number of devices discovered so far.
+        /// </summary>
         public int Count
         {
             get { return m_devices.Count; }

@@ -6,20 +6,53 @@ using System.Text;
 
 namespace CSLibrary
 {
+    /// <summary>
+    /// Provides access to the barcode scanner of a CSL reader equipped with an integrated scanner module.
+    /// </summary>
+    /// <remarks>
+    /// The instance is reached through <see cref="HighLevelInterface.barcode"/>; readers without a scanner module simply never report a ready scanner.
+    /// </remarks>
     public partial class BarcodeReader
     {
+        /// <summary>
+        /// Defines the availability state of the barcode scanner module.
+        /// </summary>
         public enum STATE
         {
+            /// <summary>
+            /// The state of the barcode scanner module is not known.
+            /// </summary>
             UNKNOWN,            // unknown
+            /// <summary>
+            /// The barcode scanner module is present and has answered the hardware check.
+            /// </summary>
             READY,              // hardware exists
+            /// <summary>
+            /// The barcode scanner module is missing or did not answer the hardware check.
+            /// </summary>
             NOTVALID,           // hardware fail
+            /// <summary>
+            /// The barcode scanner module is present but runs a firmware version that is not supported.
+            /// </summary>
             OLDVERSION          // not update 
         }
 
+        /// <summary>
+        /// Defines the event that triggers the vibration motor of the reader.
+        /// </summary>
         public enum VIBRATORMODE
         {
+            /// <summary>
+            /// The vibration motor runs continuously until it is switched off.
+            /// </summary>
             NORMAL,
+            /// <summary>
+            /// The vibration motor runs while the RFID inventory is running.
+            /// </summary>
             INVENTORYON,
+            /// <summary>
+            /// The vibration motor runs each time a barcode is decoded successfully.
+            /// </summary>
             BAROCDEGOODREAD
         }
 
@@ -36,12 +69,36 @@ namespace CSLibrary
 
         private HighLevelInterface _deviceHandler;
 
+        /// <summary>
+        /// Represents the serial number reported by the barcode scanner module.
+        /// </summary>
+        /// <remarks>
+        /// The value is <see langword="null"/> until the reader answers the serial number query sent during the hardware check.
+        /// </remarks>
         public string _SN;
+        /// <summary>
+        /// Represents the equipment serial number reported by the barcode scanner module.
+        /// </summary>
+        /// <remarks>
+        /// The value is <see langword="null"/> until the reader answers the ESN query sent during the hardware check.
+        /// </remarks>
         public string _ESN;
+        /// <summary>
+        /// Represents the prefix configured in the barcode scanner module as a space separated hexadecimal string.
+        /// </summary>
         public string _Prefix;
+        /// <summary>
+        /// Represents the suffix configured in the barcode scanner module as a space separated hexadecimal string.
+        /// </summary>
         public string _Suffix;
 
         STATE _state = STATE.NOTVALID;
+        /// <summary>
+        /// Gets the current state of the barcode scanner module.
+        /// </summary>
+        /// <returns>
+        /// The <see cref="STATE"/> of the barcode scanner module.
+        /// </returns>
         public STATE state { get { return _state; } }
 
 
@@ -56,6 +113,9 @@ namespace CSLibrary
             _deviceHandler = handler;
         }
 
+        /// <summary>
+        /// Removes all subscribers of the <see cref="OnCapturedNotify"/> event.
+        /// </summary>
         public void ClearEventHandler()
         {
             //OnCapturedNotify = delegate { };
@@ -364,6 +424,12 @@ namespace CSLibrary
 
 
 
+        /// <summary>
+        /// Occurs when the barcode scanner has decoded a barcode.
+        /// </summary>
+        /// <remarks>
+        /// The event argument is a <see cref="CSLibrary.Barcode.BarcodeEventArgs"/> whose <see cref="CSLibrary.Barcode.BarcodeEventArgs.MessageType"/> is <c>DEC_MSG</c> and whose message carries the decoded text in <see cref="CSLibrary.Barcode.Structures.DecodeMessage.pchMessage"/>.
+        /// </remarks>
         public event EventHandler<CSLibrary.Barcode.BarcodeEventArgs> OnCapturedNotify;
 
         private BarcodeState m_state = BarcodeState.IDLE;
@@ -430,6 +496,12 @@ namespace CSLibrary
             return rc;
         }
 
+        /// <summary>
+        /// Switches the vibration motor of the reader on.
+        /// </summary>
+        /// <returns>
+        /// <see langword="true"/> when the command has been sent to the reader.
+        /// </returns>
         public bool VibratorOn()
         {
             //if (_state != STATE.READY)
@@ -439,6 +511,14 @@ namespace CSLibrary
             return true;
         }
 
+        /// <summary>
+        /// Switches the vibration motor of the reader on for a limited time.
+        /// </summary>
+        /// <param name="mode">The event that triggers the vibration motor, see <see cref="VIBRATORMODE"/>.</param>
+        /// <param name="time">The vibration duration, sent to the reader as a 16-bit big-endian value.</param>
+        /// <returns>
+        /// <see langword="true"/> when the command has been sent to the reader.
+        /// </returns>
         public bool VibratorOn(VIBRATORMODE mode, uint time)
         {
             //if (_state != STATE.READY)
@@ -454,6 +534,12 @@ namespace CSLibrary
             return true;
         }
 
+        /// <summary>
+        /// Switches the vibration motor of the reader off.
+        /// </summary>
+        /// <returns>
+        /// <see langword="true"/> when the command has been sent to the reader.
+        /// </returns>
         public bool VibratorOff()
         {
             //if (_state != STATE.READY)
@@ -464,6 +550,13 @@ namespace CSLibrary
             return true;
         }
 
+        /// <summary>
+        /// Enables or disables the fast barcode scanning mode of the scanner module.
+        /// </summary>
+        /// <param name="enable"><see langword="true"/> to enable fast scanning, <see langword="false"/> to return to the normal scanning mode.</param>
+        /// <returns>
+        /// <see langword="true"/> when the command has been sent to the reader, <see langword="false"/> when the scanner module is not available.
+        /// </returns>
         public bool FastBarcodeMode (bool enable)
         {
             if (_state == STATE.NOTVALID)
@@ -553,6 +646,12 @@ namespace CSLibrary
         }
 
         // public barcode function
+        /// <summary>
+        /// Restores the barcode scanner module to its factory default settings.
+        /// </summary>
+        /// <remarks>
+        /// The module is re-programmed with the factory trigger mode, data formats and prefix and suffix settings; the command is skipped when the scanner module is not available.
+        /// </remarks>
         public void FactoryReset()
         {
             if (_state == STATE.NOTVALID)

@@ -65,6 +65,11 @@ namespace CSLibrary
             return Result.OK;
         }
 
+        /// <summary>
+        /// CS710S-specific implementation of <see cref="SetPowerLevel(uint, int)"/>.
+        /// </summary>
+        /// <param name="pwrlevel">The transmit power level in 0.1 dBm units, for example 300 for 30.0 dBm; values above 330 are clamped to 330.</param>
+        /// <param name="port">The logical antenna port index the power level is applied to, or -1 to apply it to every enabled antenna port.</param>
         public Result SetPowerLevel_CS710S(uint pwrlevel, int port = -1)
         {
             if (pwrlevel < 0)
@@ -84,6 +89,10 @@ namespace CSLibrary
         }
 */
 
+        /// <summary>
+        /// CS710S-specific implementation of <see cref="SetPowerLevel(uint[])"/>.
+        /// </summary>
+        /// <param name="pwrlevel">The transmit power level of each antenna port in 0.1 dBm units; the array index is the antenna port index.</param>
         public Result SetPowerLevel_CS710S(UInt32 [] pwrlevel)
         {
             Result r;
@@ -107,10 +116,11 @@ namespace CSLibrary
         /// <summary>
         /// Set Power Sequencing (only for CS108)
         /// </summary>
-        /// <param name="numberofPower"></param>
-        /// <param name="power"></param>
-        /// <param name="dwell"></param>
-        /// <returns></returns>
+        /// <param name="numberofPower">The number of antenna ports in the power sequence.</param>
+        /// <param name="power">The output power of each antenna port, in units of 0.01 dBm.</param>
+        /// <param name="dwell">The dwell time of each antenna port, in milliseconds.</param>
+        /// <param name="CloneAntenna0Setting">Whether the antenna 0 settings are copied to the other ports.</param>
+        /// <returns>The result of the operation.</returns>
         public Result SetPowerSequencing_CS710S(int numberofPower, uint[] power = null, uint[] dwell = null, bool CloneAntenna0Setting = true)
         {
             int i;

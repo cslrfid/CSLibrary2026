@@ -6,6 +6,9 @@ namespace CSLibrary
 {
     using static FrequencyBand;
 
+    /// <summary>
+    /// Provides the country and region data of the CSL RFID readers.
+    /// </summary>
     public static class DEVICE
     {
         class COUNTRY
@@ -47,6 +50,17 @@ namespace CSLibrary
             country.Add(new COUNTRY(9, 0x0, "", RegionCode.ETSIUPPERBAND));
         }
 
+        /// <summary>
+        /// Returns the country suffix of the reader model name.
+        /// </summary>
+        /// <param name="countryCode">The country code reported by the reader.</param>
+        /// <param name="specialCountryCode">The special country code reported by the reader.</param>
+        /// <returns>
+        /// The country suffix of the model name, for example <c>-2 RW</c>.
+        /// </returns>
+        /// <exception cref="ArgumentOutOfRangeException">
+        /// Thrown when the country code pair is not known.
+        /// </exception>
         public static string GetModelName (int countryCode, int specialCountryCode)
         {
             foreach (var i in country)
@@ -57,6 +71,14 @@ namespace CSLibrary
         }
 
         // for old API
+        /// <summary>
+        /// Returns the default frequency region of the reader country.
+        /// </summary>
+        /// <param name="countryCode">The country code reported by the reader.</param>
+        /// <param name="specialCountryCode">The special country code reported by the reader.</param>
+        /// <returns>
+        /// The default region code, or <see cref="FrequencyBand.RegionCode.UNKNOWN"/> when the country code pair is not known.
+        /// </returns>
         public static RegionCode GetDefauleRegion(int countryCode, int specialCountryCode)
         {
             foreach (var i in country)

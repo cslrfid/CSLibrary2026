@@ -13,6 +13,12 @@ namespace CSLibrary
 #if NETCFDESIGNTIME
     [System.ComponentModel.TypeConverter(typeof(AntennaListTypeConverter))]
 #endif
+    /// <summary>
+    /// Represents the list of antenna ports configured on a reader.
+    /// </summary>
+    /// <remarks>
+    /// Each <see cref="Antenna"/> in the list describes the status and the configuration of one logical antenna port.
+    /// </remarks>
     public class AntennaList
         :
         List<Antenna>
@@ -122,6 +128,10 @@ namespace CSLibrary
             }
         }
 
+        /// <summary>
+        /// Replaces the antennas in the list with copies of the antennas in the given collection.
+        /// </summary>
+        /// <param name="from">The antennas to copy into the list.</param>
         public void Copy(IEnumerable<Antenna> from)
         {
             this.Clear();
@@ -135,6 +145,13 @@ namespace CSLibrary
 
         // Attempt to locate antenna with matching ( logical ) port
 
+        /// <summary>
+        /// Finds the antenna that uses the given logical port number.
+        /// </summary>
+        /// <param name="port">The logical antenna port number to search for.</param>
+        /// <returns>
+        /// The matching <see cref="Antenna"/>, or <c>null</c> when the list contains no antenna with that port number.
+        /// </returns>
         public Antenna FindByPort(UInt32 port)
         {
             Antenna Result = this.Find

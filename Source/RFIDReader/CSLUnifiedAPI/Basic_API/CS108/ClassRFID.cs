@@ -36,12 +36,21 @@ namespace CSLibrary
 
     public partial class RFIDReader
     {
+        /// <summary>
+        /// Gets or sets the last MAC layer error code reported by the reader.
+        /// </summary>
         public UInt32 LastMacErrorCode = 0;
+        /// <summary>
+        /// Gets or sets the last result code reported by the reader.
+        /// </summary>
         public UInt16 LastResultCode = 0;
 
         //private CSLibrary.Tools.Queue _dataBuffer = new Tools.Queue(16 * 1024 * 1024);
         private CSLibrary.Tools.FIFOQueue _dataBuffer = new Tools.FIFOQueue(16 * 1024 * 1024);
 
+        /// <summary>
+        /// Gets or sets the chipset identifier reported by the reader.
+        /// </summary>
         public ChipSetID OEMChipSetID
         {
             get
@@ -540,11 +549,19 @@ namespace CSLibrary
             return true;
         }
 
+        /// <summary>
+        /// Clears the buffered tag data of the reader.
+        /// </summary>
         public void ClearBuffer()
         {
             _dataBuffer.Clear();
         }
 
+        /// <summary>
+        /// Checks whether the buffered data contains a valid RFID packet.
+        /// </summary>
+        /// <param name="packetHeader">The buffered data to check.</param>
+        /// <returns><see langword="true"/> when the buffer holds a valid RFID packet.</returns>
         public bool CheckValidRFIDPacket(ref byte [] packetHeader)
         {
             byte pkt_ver = packetHeader[0];
@@ -1693,6 +1710,10 @@ namespace CSLibrary
 			return Result.OK;
 		}
 
+        /// <summary>
+        /// CS108-specific implementation that sets the inventory duration of each antenna port.
+        /// </summary>
+        /// <param name="duration">The inventory duration of each antenna port, in milliseconds.</param>
         public Result SetInventoryDuration_CS108(uint [] duration)
         {
             Result r;

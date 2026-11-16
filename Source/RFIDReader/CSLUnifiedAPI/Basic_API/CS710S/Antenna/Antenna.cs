@@ -57,9 +57,18 @@ namespace CSLibrary
         public static readonly UInt32 POWER_MAXIMUM = 300;
 
 
+        /// <summary>
+        /// Stores the logical antenna port number of the antenna.
+        /// </summary>
+        /// <remarks>
+        /// Use the read-only <see cref="Port"/> property to read the port number.
+        /// </remarks>
         public UInt32 port = 0;
         AntennaPortStatus antennaStatus;
 
+        /// <summary>
+        /// Gets or sets the status of the logical antenna port, such as its state, the EAS alarm flag and the local inventory, link profile and frequency settings.
+        /// </summary>
         public AntennaPortStatus AntennaStatus
         {
             get { return antennaStatus; }
@@ -67,6 +76,9 @@ namespace CSLibrary
         }
         AntennaPortConfig antennaConfig;
 
+        /// <summary>
+        /// Gets or sets the configuration parameters of the logical antenna port, such as the power level, the dwell time and the number of inventory cycles.
+        /// </summary>
         public AntennaPortConfig AntennaConfig
         {
             get { return antennaConfig; }
@@ -438,7 +450,7 @@ namespace CSLibrary
         /// antenna-sense resistor for the logical antenna port's 
         /// physical transmit antenna port.  The last measurement 
         /// taken occurred the last time that the carrier wave was 
-        /// turned on for this antenna port ¨C note that this means that 
+        /// turned on for this antenna port Â¨C note that this means that 
         /// when retrieving the logical antenna port's status, this does 
         /// not Result in an active measurement of the antenna-sense 
         /// resistor.  This value is specified in ohms. 

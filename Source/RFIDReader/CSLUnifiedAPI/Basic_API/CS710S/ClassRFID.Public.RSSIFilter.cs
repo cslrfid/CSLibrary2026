@@ -35,6 +35,9 @@ namespace CSLibrary
     {
         private RSSIFILTEROPTION _saveOption;
 
+        /// <summary>
+        /// CS710S-specific implementation of <see cref="SetRSSIFilter(RSSIFILTERTYPE)"/>.
+        /// </summary>
         public Result SetRSSIFilter_CS710S(RSSIFILTERTYPE type)
         {
             if (type == RSSIFILTERTYPE.DISABLE)

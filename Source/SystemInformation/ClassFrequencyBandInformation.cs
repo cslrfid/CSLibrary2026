@@ -10,6 +10,9 @@ namespace CSLibrary
     using static CSLibrary.FrequencyBand;
     using static CSLibrary.RFIDDEVICE;
 
+    /// <summary>
+    /// Provides the frequency region profiles supported by the CSL RFID readers.
+    /// </summary>
     public static class FrequencyBand
     {
         /// <summary>
@@ -186,13 +189,35 @@ namespace CSLibrary
             CURRENT = -1
         }
 
+        /// <summary>
+        /// Describes a frequency region profile: its region code, display name and hopping capability.
+        /// </summary>
         public class FREQUENCYSET
         {
+            /// <summary>
+            /// Holds the region code of the frequency set.
+            /// </summary>
             public RegionCode code;
+            /// <summary>
+            /// Holds the display name of the frequency set, for example <c>USA/Canada</c>.
+            /// </summary>
             public string name;
+            /// <summary>
+            /// Holds the year the frequency set was introduced; 0 when the year is not known.
+            /// </summary>
             public int year;
+            /// <summary>
+            /// Holds true when the region supports frequency hopping and false when it uses a fixed frequency.
+            /// </summary>
             public bool hopping;
 
+            /// <summary>
+            /// Creates a frequency set description.
+            /// </summary>
+            /// <param name="code">The region code of the frequency set.</param>
+            /// <param name="name">The display name of the frequency set.</param>
+            /// <param name="year">The year the frequency set was introduced, or 0 when it is not known.</param>
+            /// <param name="hopping">True when the region supports frequency hopping.</param>
             public FREQUENCYSET(RegionCode code, string name, int year, bool hopping)
             {
                 this.code = code; // RegionCode
@@ -203,6 +228,9 @@ namespace CSLibrary
 
         }
 
+        /// <summary>
+        /// Holds the list of the frequency sets supported by the readers.
+        /// </summary>
         public static List<FREQUENCYSET> frequencySet;
         static List<RegionCode> m_save_country_list;
 
@@ -252,6 +280,13 @@ namespace CSLibrary
             frequencySet.Add(new FREQUENCYSET(RegionCode.VI, "Vietnam", 0, true));
         }
 
+        /// <summary>
+        /// Returns the region code of the named frequency set.
+        /// </summary>
+        /// <param name="name">The display name of the frequency set, for example <c>USA/Canada</c>.</param>
+        /// <returns>
+        /// The matching region code, or <see cref="FrequencyBand.RegionCode.UNKNOWN"/> when the name is not found.
+        /// </returns>
         public static RegionCode GetRegionCode(string name)
         {
             foreach (var i in frequencySet)
@@ -262,6 +297,13 @@ namespace CSLibrary
             //return ((frequencySet.Find(item => item.name == name)).code);
         }
 
+        /// <summary>
+        /// Returns the display name of the given region code.
+        /// </summary>
+        /// <param name="code">The region code to look up.</param>
+        /// <returns>
+        /// The display name of the region, or null when the region code is not known.
+        /// </returns>
         public static string GetRegionName(RegionCode code)
         {
             foreach (var i in frequencySet)
@@ -272,6 +314,13 @@ namespace CSLibrary
             //return ((frequencySet.Find(item => item.code == code)).name);
         }
 
+        /// <summary>
+        /// Tells whether the given region supports frequency hopping.
+        /// </summary>
+        /// <param name="code">The region code to look up.</param>
+        /// <returns>
+        /// True when the region supports frequency hopping, false otherwise.
+        /// </returns>
         public static bool HoppingAvalibable(RegionCode code)
         {
             foreach (var i in frequencySet)
@@ -282,6 +331,12 @@ namespace CSLibrary
             //return ((frequencySet.Find(item => item.code == code)).hopping);
         }
 
+        /// <summary>
+        /// Returns the region codes of all the supported frequency sets.
+        /// </summary>
+        /// <returns>
+        /// An array holding the region code of every supported frequency set.
+        /// </returns>
         public static RegionCode[] GetRegionCodeList()
         {
             RegionCode[] list = new RegionCode[frequencySet.Count];
@@ -292,6 +347,12 @@ namespace CSLibrary
             return list;
         }
 
+        /// <summary>
+        /// Returns the display names of all the supported frequency sets.
+        /// </summary>
+        /// <returns>
+        /// An array holding the display name of every supported frequency set.
+        /// </returns>
         public static string[] GetRegionNameList()
         {
             string[] list = new string[frequencySet.Count];
@@ -302,6 +363,13 @@ namespace CSLibrary
             return list;
         }
 
+        /// <summary>
+        /// Returns the display names of the given region codes.
+        /// </summary>
+        /// <param name="code">The region codes to look up.</param>
+        /// <returns>
+        /// An array holding the display name of each region code, in the same order as the given codes.
+        /// </returns>
         public static string[] GetRegionNameList(RegionCode[] code)
         {
             string[] list = new string[code.Length];
@@ -312,6 +380,13 @@ namespace CSLibrary
             return list;
         }
 
+        /// <summary>
+        /// Returns the display names of the given region codes.
+        /// </summary>
+        /// <param name="code">The region codes to look up.</param>
+        /// <returns>
+        /// An array holding the display name of each region code, in the same order as the given codes.
+        /// </returns>
         public static string[] GetRegionNameList(List <RegionCode> code)
         {
             string[] list = new string[code.Count];
@@ -323,22 +398,75 @@ namespace CSLibrary
         }
     }
     
+    /// <summary>
+    /// Provides the frequency region profiles of the CS710S reader, which uses the Impinj E710 chipset.
+    /// </summary>
     public static class FrequencyBand_CS710S
     {
+        /// <summary>
+        /// Describes a CS710S frequency region profile: its index, name, model code and channel plan.
+        /// </summary>
         public class FREQUENCYSET
         {
+            /// <summary>
+            /// Holds the country index of the E710 chipset country enum.
+            /// </summary>
             public int index;                  // CSL E710 Country Enum
+            /// <summary>
+            /// Holds the display name of the country, for example <c>HongKong2</c>.
+            /// </summary>
             public string name;                // CSL E710 Country Name
+            /// <summary>
+            /// Holds the reader model code suffix of the country, for example <c>-2 OFCA</c>.
+            /// </summary>
             public string modelCode;           // CSL Reader Model Code(Region Code)
+            /// <summary>
+            /// Holds the number of frequency channels of the region.
+            /// </summary>
             public int totalFrequencyChannel;  // Frequency Channel #
+            /// <summary>
+            /// Holds <c>Hop</c> when the region uses frequency hopping and <c>Fixed</c> when it uses a single channel.
+            /// </summary>
             public string hopping;             // Fixed or Hop
+            /// <summary>
+            /// Holds the hop time, in milliseconds, that the reader stays on each channel.
+            /// </summary>
             public int onTime;                 // Hop Time or On Time
+            /// <summary>
+            /// Holds the off time, in milliseconds, between two channels; -1 when the region does not hop.
+            /// </summary>
             public int offTime;                // Off Time
+            /// <summary>
+            /// Holds the channel separation, in kilohertz.
+            /// </summary>
             public int channelSepatration;     // Channel separation
+            /// <summary>
+            /// Holds the frequency, in megahertz, of the first channel of the region.
+            /// </summary>
             public double firstChannel;        // First Channel
+            /// <summary>
+            /// Holds the frequency, in megahertz, of the last channel of the region.
+            /// </summary>
             public double lastChannel;         // Last Channel
+            /// <summary>
+            /// Holds an optional note about the region, for example the ERP power limit; empty when there is no note.
+            /// </summary>
             public string note;                // Note
 
+            /// <summary>
+            /// Creates a CS710S frequency set description.
+            /// </summary>
+            /// <param name="index">The country index of the E710 chipset country enum.</param>
+            /// <param name="name">The display name of the country.</param>
+            /// <param name="modelCode">The reader model code suffix of the country.</param>
+            /// <param name="totalFrequencyChannel">The number of frequency channels of the region.</param>
+            /// <param name="hopping">Either <c>Hop</c> or <c>Fixed</c>.</param>
+            /// <param name="onTime">The hop time, in milliseconds, spent on each channel.</param>
+            /// <param name="offTime">The off time, in milliseconds, between two channels; -1 when the region does not hop.</param>
+            /// <param name="channelSepatration">The channel separation, in kilohertz.</param>
+            /// <param name="firstChannel">The frequency, in megahertz, of the first channel.</param>
+            /// <param name="lastChannel">The frequency, in megahertz, of the last channel.</param>
+            /// <param name="note">An optional note about the region.</param>
             public FREQUENCYSET(int index, string name, string modelCode, int totalFrequencyChannel, string hopping, int onTime, int offTime, int channelSepatration, double firstChannel, double lastChannel, string note)
             {
                 this.index = index;
@@ -355,6 +483,9 @@ namespace CSLibrary
             }
         }
 
+        /// <summary>
+        /// Holds the list of the frequency sets supported by the CS710S reader.
+        /// </summary>
         public static List<FREQUENCYSET> frequencySet;
         static List<RegionCode> m_save_country_list;
 

@@ -59,6 +59,9 @@ namespace CSLibrary
         UInt32[] _0f00_f05 = null;
         UInt32[] _0f0f = null;
 
+        /// <summary>
+        /// Initialises the Rx000 MAC register access layer.
+        /// </summary>
         public bool MacRegisterInitialize()
         {
             /*
@@ -406,6 +409,11 @@ namespace CSLibrary
             return 0;
         }
 
+        /// <summary>
+        /// Stores a value in the local shadow copy of a MAC register.
+        /// </summary>
+        /// <param name="address">The register address.</param>
+        /// <param name="data">The value to store.</param>
         public bool SaveMacRegister (UInt16 address, UInt32 data)
         {
             if (address > 0x0001)
@@ -417,6 +425,11 @@ namespace CSLibrary
             return true;
         }
 
+        /// <summary>
+        /// Writes a value to a MAC register of the reader.
+        /// </summary>
+        /// <param name="address">The register address.</param>
+        /// <param name="data">The value to write.</param>
         public void WriteMacRegister(UInt16 address, UInt32 data)
         {
             UInt16 addressBench = (UInt16)(address & 0x0f00U);

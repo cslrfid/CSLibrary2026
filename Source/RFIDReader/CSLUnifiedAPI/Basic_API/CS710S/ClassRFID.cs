@@ -217,6 +217,9 @@ namespace CSLibrary
             return result;
         }
 
+        /// <summary>
+        /// CS710S-specific implementation that removes all tag selection criteria.
+        /// </summary>
         public Result CancelAllSelectCriteria_CS710S()
         {
             if (RFIDRegister == null)
@@ -285,6 +288,10 @@ namespace CSLibrary
 		}
 #endregion
 
+        /// <summary>
+        /// CS710S-specific implementation that sets the intra packet delay time.
+        /// </summary>
+        /// <param name="ms">The delay in milliseconds.</param>
         public bool SetTagDelayTime_CS710S(UInt32 ms)
         {
             if (ms > 0xff)
@@ -490,6 +497,10 @@ namespace CSLibrary
 
             //ReadReaderOEMData();
         }
+        /// <summary>
+        /// CS710S-specific implementation that returns the reader firmware version as a string.
+        /// </summary>
+        /// <returns>The firmware version string.</returns>
         public string GetFirmwareVersionString_CS710S()
         {
             return RFIDRegister.VersionString.Get();
@@ -513,10 +524,11 @@ namespace CSLibrary
 		}
 
         /// <summary>
-        /// This is used to set inventory duration
+        /// Sets the dwell time of an antenna port.
         /// </summary>
-        /// <param name="duration"></param>
-        /// <returns></returns>
+        /// <param name="duration">The dwell time in milliseconds.</param>
+        /// <param name="antennaPort">The antenna port the dwell time applies to, or 0 for every port.</param>
+        /// <returns>The result of the operation.</returns>
         public Result SetInventoryDuration_CS710S(uint duration, uint antennaPort = 0)
 		{
             RFIDRegister.AntennaPortConfig.SetDwell((UInt16)duration, (byte)antennaPort);
@@ -524,6 +536,10 @@ namespace CSLibrary
 			return Result.OK;
 		}
 
+        /// <summary>
+        /// CS710S-specific implementation that sets the inventory duration of each antenna port.
+        /// </summary>
+        /// <param name="duration">The inventory duration of each antenna port, in milliseconds.</param>
         public Result SetInventoryDuration_CS710S(uint [] duration)
         {
             Result r;

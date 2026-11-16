@@ -71,10 +71,19 @@ namespace CSLibrary
         /// </summary>
         public class DeviceInfomation
         {
+            /// <summary>
+            /// Represents the zero-based index of the device within the current search result list.
+            /// </summary>
             public uint ID;
 
+            /// <summary>
+            /// Represents the name reported by the discovered device.
+            /// </summary>
             public string deviceName;
 
+            /// <summary>
+            /// Represents the underlying <see cref="CSLibrary.NetFinder.DeviceInfo"/> object of the discovered device.
+            /// </summary>
             public object nativeDeviceInformation;
 
             /*
@@ -157,8 +166,20 @@ namespace CSLibrary
         static private DeviceFinderArgs _lastArgs;
         static List<DeviceInfomation> _deviceDB = new List<DeviceInfomation>();
 
+        /// <summary>
+        /// Occurs each time a reader is found on the network.
+        /// </summary>
+        /// <remarks>
+        /// The event argument is a <see cref="DeviceFinderArgs"/> whose <see cref="DeviceFinderArgs.Found"/> property holds the information of the reader that has just been found, including its IP address, MAC address, name and UDP port.
+        /// </remarks>
         static public event EventHandler<DeviceFinderArgs> OnSearchCompleted;
 
+        /// <summary>
+        /// Starts a search for readers on the network.
+        /// </summary>
+        /// <remarks>
+        /// The device list is cleared before the search starts and every reader that answers the UDP broadcast raises <see cref="OnSearchCompleted"/>.
+        /// </remarks>
         static public void SearchDevice()
         {
             _deviceDB.Clear();
@@ -166,17 +187,30 @@ namespace CSLibrary
             CSLibrary.NetFinder.NetFinder.SearchDevice();
         }
 
+        /// <summary>
+        /// Stops the network search for readers.
+        /// </summary>
         static public void Stop()
         {
             CSLibrary.NetFinder.NetFinder.StopSearch();
         }
 
+        /// <summary>
+        /// Removes all readers from the search result list.
+        /// </summary>
         static public void ClearDeviceList()
         {
             _deviceDB.Clear();
             CSLibrary.NetFinder.NetFinder.ClearDeviceList();
         }
 
+        /// <summary>
+        /// Gets the information of the reader at the given position of the search result list.
+        /// </summary>
+        /// <param name="id">The zero-based index of the reader in the search result list.</param>
+        /// <returns>
+        /// The <see cref="DeviceInfomation"/> of the reader, or <see langword="null"/> when the index is out of range.
+        /// </returns>
         static public DeviceInfomation GetDeviceInformation(int id)
         {
             if (id < _deviceDB.Count)
@@ -185,6 +219,13 @@ namespace CSLibrary
             return null;
         }
 
+        /// <summary>
+        /// Gets the information of the reader with the given name.
+        /// </summary>
+        /// <param name="readername">The name of the reader to look for.</param>
+        /// <returns>
+        /// The <see cref="DeviceInfomation"/> of the first reader with that name, or <see langword="null"/> when no reader matches.
+        /// </returns>
         static public DeviceInfomation GetDeviceInformation(string readername)
         {
             foreach (DeviceInfomation item in _deviceDB)
@@ -196,6 +237,12 @@ namespace CSLibrary
             return null;
         }
 
+        /// <summary>
+        /// Gets the list of the readers found during the last search.
+        /// </summary>
+        /// <returns>
+        /// The list of <see cref="DeviceInfomation"/> objects collected during the search.
+        /// </returns>
         static public List<DeviceInfomation> GetAllDeviceInformation()
         {
             return _deviceDB;

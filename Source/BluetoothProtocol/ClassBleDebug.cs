@@ -27,11 +27,23 @@ using System.Threading.Tasks;
 
 namespace CSLibrary
 {
+    /// <summary>
+    /// Collects inventory packet counters used to diagnose Bluetooth LE packet loss.
+    /// </summary>
     static public class InventoryDebug
     {
+        /// <summary>
+        /// The number of inventory packets received from the reader.
+        /// </summary>
         static public uint _inventoryPacketCount = 0;
+        /// <summary>
+        /// The number of inventory packets that were skipped because of a gap in the packet sequence number.
+        /// </summary>
         static public uint _inventorySkipPacketCount = 0;
 
+        /// <summary>
+        /// Resets the inventory packet counters and writes the current values to the debug output.
+        /// </summary>
         static public void Clear()
         {
             _inventoryPacketCount = 0;
@@ -39,18 +51,28 @@ namespace CSLibrary
             Print();
         }
 
+        /// <summary>
+        /// Increments the received inventory packet counter and writes the current values to the debug output.
+        /// </summary>
         static public void InventoryPackerCountInc ()
         {
             _inventoryPacketCount++;
             Print();
         }
 
+        /// <summary>
+        /// Adds skipped inventory packets to the counter and writes the current values to the debug output.
+        /// </summary>
+        /// <param name="cnt">The number of skipped packets to add.</param>
         static public void InventorySkipPackerAdd(uint cnt)
         {
             _inventorySkipPacketCount += cnt;
             Print();
         }
 
+        /// <summary>
+        /// Writes the current inventory packet counters to the debug output.
+        /// </summary>
         static public void Print ()
         {
             CSLibrary.Debug.WriteLine("BLE stat : Total Inventory Received {0}, Skip packet {1}", _inventoryPacketCount, _inventorySkipPacketCount);

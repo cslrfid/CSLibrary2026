@@ -37,10 +37,22 @@ namespace CSLibrary
 
     public partial class RFIDReader
     {
+        /// <summary>
+        /// Access mode of a reader private register.
+        /// </summary>
         public enum REGPRIVATE
         {
+            /// <summary>
+            /// The register can be read and written.
+            /// </summary>
             READWRITE,
+            /// <summary>
+            /// The register can only be read.
+            /// </summary>
             READONLY,
+            /// <summary>
+            /// The register can only be written.
+            /// </summary>
             WRITEONLY
         }
 
@@ -657,8 +669,8 @@ namespace CSLibrary
             /// <param name="NumMinQCycles"></param>
             /// <param name="QDecreaseUseQuery"></param>
             /// <param name="QIncreaseUseQuery"></param>
-            /// <param name="Session"></param>
             /// <param name="QueryTarget"></param>
+            /// <param name="port"></param>
             /// <returns></returns>
             internal int EnableDynamicQ(uint MinQ, uint MaxQ, uint InitialQ, uint NumMinQCycles, bool QDecreaseUseQuery, bool QIncreaseUseQuery, uint QueryTarget, int port = -1)
             {
@@ -1781,6 +1793,9 @@ namespace CSLibrary
                                                     { 0xefb4, 4 }
     };
 
+        /// <summary>
+        /// CS710S-specific implementation that initialises the reader registers.
+        /// </summary>
         public bool RegisterInitialize_CS710S()
         {
             RFIDRegister = new CSLRFIDREGISTER(this);
@@ -1924,6 +1939,7 @@ namespace CSLibrary
             _addrofread = UInt16.MaxValue;
         }
 
+/*
         /// <summary>
         /// return : data length
         /// </summary>
@@ -1931,7 +1947,6 @@ namespace CSLibrary
         /// <param name="data"></param>
         /// <param name="index"></param>
         /// <returns></returns>
-/*
         int SaveRegister(int add, byte[] data, int index)
         {
             switch (add)

@@ -28,6 +28,11 @@ namespace CSLibrary
     {
         byte _sequencedNumber = 0;
 
+        /// <summary>
+        /// Writes a byte value to a reader register.
+        /// </summary>
+        /// <param name="address">The register address.</param>
+        /// <param name="value">The value to write.</param>
         public void WriteRegister(UInt16 address, byte value)
         {
             byte[] data = new byte[1];
@@ -37,6 +42,11 @@ namespace CSLibrary
             WriteRegister(address, data);
         }
 
+        /// <summary>
+        /// Writes an array of byte values to a range of reader registers.
+        /// </summary>
+        /// <param name="address">The register addresses.</param>
+        /// <param name="value">The values to write.</param>
         public void WriteRegister(UInt16 [] address, byte [] value)
         {
             byte[][] data = new byte[value.Length][];
@@ -50,6 +60,11 @@ namespace CSLibrary
             WriteRegister(address, data);
         }
 
+        /// <summary>
+        /// Writes a 16-bit value to a reader register.
+        /// </summary>
+        /// <param name="address">The register address.</param>
+        /// <param name="value">The value to write.</param>
         public void WriteRegister(UInt16 address, UInt16 value)
         {
             byte[] data = new byte[2];
@@ -60,6 +75,11 @@ namespace CSLibrary
             WriteRegister (address, data);
         }
 
+        /// <summary>
+        /// Writes a 32-bit value to a reader register.
+        /// </summary>
+        /// <param name="address">The register address.</param>
+        /// <param name="value">The value to write.</param>
         public void WriteRegister(UInt16 address, UInt32 value)
         {
             byte[] data = new byte[4];
@@ -72,6 +92,11 @@ namespace CSLibrary
             WriteRegister(address, data);
         }
 
+        /// <summary>
+        /// Writes an array of 32-bit values to a range of reader registers.
+        /// </summary>
+        /// <param name="address">The register addresses.</param>
+        /// <param name="value">The values to write.</param>
         public void WriteRegister(UInt16[] address, UInt32[] value)
         {
             byte[][] data = new byte[value.Length][];
@@ -88,6 +113,11 @@ namespace CSLibrary
             WriteRegister(address, data);
         }
 
+        /// <summary>
+        /// Writes a 64-bit value to a reader register.
+        /// </summary>
+        /// <param name="address">The register address.</param>
+        /// <param name="value">The value to write.</param>
         public void WriteRegister(UInt16 address, UInt64 value)
         {
             byte[] data = new byte[8];
@@ -106,6 +136,11 @@ namespace CSLibrary
 
         byte _SequencedNumber = 0;
 
+        /// <summary>
+        /// Writes a byte array to a range of reader registers.
+        /// </summary>
+        /// <param name="address">The first register address.</param>
+        /// <param name="data">The data to write.</param>
         public void WriteRegister(UInt16 address, byte[] data)
         {
             if (data == null)
@@ -131,6 +166,11 @@ namespace CSLibrary
             _deviceHandler.SendAsync(0, 0, DOWNLINKCMD.RFIDCMD, payload, HighLevelInterface.BTWAITCOMMANDRESPONSETYPE.COMMANDENDRESPONSE);
         }
 
+        /// <summary>
+        /// Writes several byte arrays to a range of reader registers.
+        /// </summary>
+        /// <param name="address">The register addresses.</param>
+        /// <param name="data">The data to write.</param>
         public void WriteRegister(UInt16 [] address, byte[][] data)
         {
             if (address == null || data == null || address.Length > data.Length)

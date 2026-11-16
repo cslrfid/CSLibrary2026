@@ -35,16 +35,34 @@ namespace CSLibrary
 
     public partial class RFIDReader
     {
+        /// <summary>
+        /// Gets the model name of the connected reader.
+        /// </summary>
+        /// <returns>
+        /// The reader model name, for example <c>CS108</c> or <c>CS710S</c>.
+        /// </returns>
         public string GetModelName()
         {
             return m_oem_machine.ToString();
         }
 
+        /// <summary>
+        /// Gets the country and regulatory version part of the reader model name.
+        /// </summary>
+        /// <returns>
+        /// The country part of the model name, for example <c>-2 RW</c>.
+        /// </returns>
         public string GetModelCountry()
         {
             return DEVICE.GetModelName((int)m_oem_country_code, (int)m_oem_special_country_version);
         }
 
+        /// <summary>
+        /// Gets the full model name of the connected reader, including the country and regulatory version part.
+        /// </summary>
+        /// <returns>
+        /// The model name followed by the country part, for example <c>CS108-2 RW</c>.
+        /// </returns>
         public string GetFullModelName()
         {
             return m_oem_machine.ToString() + DEVICE.GetModelName((int)m_oem_country_code, (int)m_oem_special_country_version);
@@ -68,6 +86,9 @@ namespace CSLibrary
             return ActiveCountryNameList.ToArray();
         }
 
+        /// <summary>
+        /// CS710S-specific implementation that reports whether the country with the given name uses frequency hopping.
+        /// </summary>
         public bool IsHopping_CS710S(string CountryName)
         {
             var item = FrequencyBand_CS710S.frequencySet.Find(i => i.name.Equals(CountryName));
@@ -80,11 +101,17 @@ namespace CSLibrary
             return (item.hopping == "Hop");
         }
 
+        /// <summary>
+        /// CS710S-specific implementation that reports whether the country at the given index uses frequency hopping.
+        /// </summary>
         public bool IsHopping_CS710S(int index)
         {
             return (FrequencyBand_CS710S.frequencySet[index].hopping == "Hop");
         }
 
+        /// <summary>
+        /// CS710S-specific implementation that reports whether the country with the given name uses a fixed frequency channel instead of channel hopping.
+        /// </summary>
         public bool IsFixed_CS710S(string CountryName)
         {
             var item = FrequencyBand_CS710S.frequencySet.Find(i => i.name.Equals(CountryName));
@@ -97,6 +124,9 @@ namespace CSLibrary
             return (item.hopping == "Fixed");
         }
 
+        /// <summary>
+        /// CS710S-specific implementation that reports whether the country at the given index uses a fixed frequency channel instead of channel hopping.
+        /// </summary>
         public bool IsFixed_CS710S(int index)
         {
             return (FrequencyBand_CS710S.frequencySet[index].hopping == "Fixed");
@@ -112,6 +142,11 @@ namespace CSLibrary
             return SetCountry(item.index, Channel);
         }
 
+        /// <summary>
+        /// CS710S-specific implementation that selects the country and the frequency channel used by the reader.
+        /// </summary>
+        /// <param name="CountryIndex">The index of the country in the reader country table.</param>
+        /// <param name="Channel">The channel to use when the country is a fixed channel country; it is ignored for hopping countries.</param>
         public Result SetCountry_CS710S(int CountryIndex, int Channel = 0)                                        // Select Country Frequency with channel if fixed
         {
             RFIDRegister.CountryEnum.Set((UInt16)CountryIndex);
@@ -124,6 +159,13 @@ namespace CSLibrary
             return Result.OK;
         }
 
+        /// <summary>
+        /// CS710S-specific implementation that gets the frequencies available in the country with the given name.
+        /// </summary>
+        /// <param name="CountryName">The name of the country as listed in the reader country table.</param>
+        /// <returns>
+        /// The available frequencies in MHz, or <c>null</c> when the country name is not found.
+        /// </returns>
         public double[] GetAvailableFrequencyTable_CS710S(string CountryName)									// Get Available frequency table with country code
         {
             var item = FrequencyBand_CS710S.frequencySet.Find(i => i.name.Equals(CountryName));
@@ -163,6 +205,15 @@ namespace CSLibrary
             return FreqTable;
         }
 
+        /// <summary>
+        /// CS710S-specific implementation that gets the frequencies available in the currently selected country.
+        /// </summary>
+        /// <returns>
+        /// The available frequencies in MHz, or <c>null</c> when the frequency table is not available.
+        /// </returns>
+        /// <remarks>
+        /// The current implementation always returns <c>null</c>.
+        /// </remarks>
         public List<double> GetCurrentFrequencyTable_CS710S()														// Get frequency table on current selected region
         {
             //return GetAvailableFrequencyTable_CS710S(1m_save_region);
@@ -170,11 +221,23 @@ namespace CSLibrary
             return null;
         }
 
+        /// <summary>
+        /// CS710S-specific implementation that gets the name of the currently selected country.
+        /// </summary>
+        /// <returns>
+        /// The name of the country selected in the reader country register.
+        /// </returns>
         public string GetCurrentCountry_CS710S()
         {
             return FrequencyBand_CS710S.frequencySet[RFIDRegister.CountryEnum.Get()].name;
         }
 
+        /// <summary>
+        /// CS710S-specific implementation that gets the index of the currently selected country.
+        /// </summary>
+        /// <returns>
+        /// The country index currently selected in the reader country register.
+        /// </returns>
         public int GetCurrentCountryIndex_CS710S()
         {
             return RFIDRegister.CountryEnum.Get();

@@ -16,12 +16,11 @@ namespace CSLibrary
         /// IF LNA Gain = 6, 12, 18, 24
         /// AGC Gain = -12, -6, 0, 6
         /// </summary>
-        /// <param name="rflna_high_comp_norm"></param>
-        /// <param name="rflna_gain_norm"></param>
-        /// <param name="iflna_gain_norm"></param>
-        /// <param name="ifagc_gain_norm"></param>
-        /// <param name="ifagc_gain_norm"></param>
-        /// <returns></returns>
+        /// <param name="rflna_high_comp">The RF LNA compression mode: 0 or 1.</param>
+        /// <param name="rflna_gain">The RF LNA gain: 1, 7 or 13.</param>
+        /// <param name="iflna_gain">The IF LNA gain: 6, 12, 18 or 24.</param>
+        /// <param name="ifagc_gain">The IF AGC gain: -12, -6, 0 or 6.</param>
+        /// <returns>The result of the operation.</returns>
         public Result SetLNA(int rflna_high_comp, int rflna_gain, int iflna_gain, int ifagc_gain)
         {
             switch (_deviceType)

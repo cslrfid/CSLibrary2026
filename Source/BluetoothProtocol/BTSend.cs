@@ -454,6 +454,9 @@ namespace CSLibrary
 
         #region ---- Public function ----
 
+        /// <summary>
+        /// Gets a value indicating whether the Bluetooth send buffer still holds pending data.
+        /// </summary>
         public bool BLEBusy
         {
             get { return (_sendBuffer.Count != 0); }

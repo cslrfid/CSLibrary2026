@@ -31,15 +31,40 @@ namespace CSLibrary
 {
     using static RFIDDEVICE;
     using Constants;
+    /// <summary>
+    /// Entry point of the CSL RFID reader library.
+    /// </summary>
+    /// <remarks>
+    /// An instance represents one reader connection. Create an instance, attach it to a
+    /// reader over Bluetooth LE or TCP/IP, then drive the reader through the subsystem
+    /// properties: <see cref="rfid"/>, <see cref="barcode"/>, <see cref="notification"/>,
+    /// <see cref="battery"/>, <see cref="bluetoothIC"/> and <see cref="siliconlabIC"/>.
+    /// </remarks>
     public partial class HighLevelInterface
     {
         #region Constant
         // CS108 State
+        /// <summary>
+        /// Connection state of the reader.
+        /// </summary>
         public enum READERSTATE
         {
+            /// <summary>
+            /// The reader is not connected. No command can be sent.
+            /// </summary>
             DISCONNECT,
+            /// <summary>
+            /// The reader is connected and ready to accept commands.
+            /// </summary>
             IDLE,
+            /// <summary>
+            /// The reader is busy executing an operation and cannot accept a new command.
+            /// </summary>
             BUSY,
+            /// <summary>
+            /// The connection was lost or is being closed, and the reader is about to become
+            /// disconnected.
+            /// </summary>
             READYFORDISCONNECT
         }
 
@@ -101,6 +126,10 @@ namespace CSLibrary
         #region internal variable
 
         private READERSTATE _readerState = READERSTATE.DISCONNECT;
+        /// <summary>
+        /// Gets the current connection state of the reader.
+        /// </summary>
+        /// <value>The current <see cref="READERSTATE"/> of the reader.</value>
         public READERSTATE Status { get { return _readerState; } }
 
         /// <summary>
@@ -126,40 +155,69 @@ namespace CSLibrary
         internal Battery _handleBattery = null;
         private ITransport _transport = null;
 
+        /// <summary>
+        /// Gets the Silicon Labs microcontroller interface, which exposes the reader hardware
+        /// and firmware information.
+        /// </summary>
         public SiliconLabIC siliconlabIC
         {
             get { return _handleSiliconLabIC; }
         }
 
+        /// <summary>
+        /// Gets the RFID radio interface, used to run inventory, tag access and radio
+        /// configuration operations.
+        /// </summary>
         public RFIDReader rfid
         {
             get { return _handlerRFIDReader; }
             //set { _handlerRFIDReader = value; }
         }
 
+        /// <summary>
+        /// Gets the barcode scanner interface.
+        /// </summary>
+        /// <remarks>
+        /// Only readers with an integrated barcode scanner support this subsystem.
+        /// </remarks>
         public BarcodeReader barcode
         {
             get { return _handleBarCodeReader; }
             //set { _handleBarCodeReader = value; }
         }
 
+        /// <summary>
+        /// Gets the notification interface, which reports battery voltage changes and
+        /// hardware key presses.
+        /// </summary>
         public Notification notification
         {
             get { return _handleNotification; }
             //set { _handleNotification = value; }
         }
 
+        /// <summary>
+        /// Gets the Bluetooth controller interface, used to read and set the reader's
+        /// Bluetooth device name and firmware version.
+        /// </summary>
         public BluetoothIC bluetoothIC
         {
             get { return _handleBluetoothIC; }
             //set { _handleBluetoothIC = value; }
         }
 
+        /// <summary>
+        /// Gets the battery interface, which reports the battery level and controls the
+        /// battery polling interval.
+        /// </summary>
         public Battery battery
         {
             get { return _handleBattery; }
         }
 
+        /// <summary>
+        /// Gets the Bluetooth device name of the reader.
+        /// </summary>
         public string ReaderName
         {
             get
@@ -174,6 +232,13 @@ namespace CSLibrary
         }
 
         internal string _MacAdd = null;
+        /// <summary>
+        /// Gets the Bluetooth MAC address of the connected reader.
+        /// </summary>
+        /// <returns>
+        /// The reader MAC address, or <see langword="null"/> when the reader is not
+        /// connected over Bluetooth.
+        /// </returns>
         public string GetMacAddress()
         {
             return _MacAdd;
@@ -182,6 +247,13 @@ namespace CSLibrary
 
         #endregion
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="HighLevelInterface"/> class.
+        /// </summary>
+        /// <remarks>
+        /// The instance is not connected yet. Use one of the <c>ConnectAsync</c> overloads to
+        /// attach it to a reader.
+        /// </remarks>
         public HighLevelInterface()
         {
             // Basic Module
@@ -197,6 +269,13 @@ namespace CSLibrary
 
 
 
+        /// <summary>
+        /// Releases the connection to the reader when the instance is garbage collected.
+        /// </summary>
+        /// <remarks>
+        /// Applications should call <see cref="DisconnectAsync"/> explicitly instead of
+        /// relying on the finalizer.
+        /// </remarks>
         ~HighLevelInterface()
         {
             // Call the synchronous path directly: the finalizer must not start an
@@ -204,6 +283,10 @@ namespace CSLibrary
             DisconnectInternal();
         }
 
+        /// <summary>
+        /// Removes every handler registered for the <see cref="OnReaderStateChanged"/>
+        /// event.
+        /// </summary>
         public void CancelEventOnReaderStateChanged()
         {
             OnReaderStateChanged = null;
@@ -254,6 +337,10 @@ namespace CSLibrary
                 BLE_DisconnectAsync();
         }
 
+        /// <summary>
+        /// Gets the version of the CSLibrary assembly.
+        /// </summary>
+        /// <returns>The library version.</returns>
         public Version GetVersion ()
         {
             Version ver = new Version(2, 0, 10, 1);
@@ -306,9 +393,11 @@ namespace CSLibrary
         }
 
         /// <summary>
-        /// 
+        /// Processes a raw packet received from the reader and dispatches it to the
+        /// subsystem that owns it.
         /// </summary>
-        /// <param name="packetData"></param>
+        /// <param name="recData">The complete packet received from the reader.</param>
+        /// <returns><see langword="true"/> when the packet was handled.</returns>
         public bool ProcessAPIPacket (byte [] recData)
         {
             byte [] data = (byte [])recData.Clone();

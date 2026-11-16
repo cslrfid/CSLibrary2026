@@ -10,21 +10,66 @@ using CSLibrary.Tools;
 
 namespace CSLibrary
 {
+	/// <summary>
+	/// Provides access to the FM13DT160 passive tag module built into the reader.
+	/// </summary>
+	/// <remarks>
+	/// The instance is reached through <see cref="RFIDReader.FM13DT160"/>; the parameters of a request are set in <see cref="Options"/> before the operation is started.
+	/// </remarks>
 	public class ClassFM13DT160
 	{
+		/// <summary>
+		/// Defines the operations that can be performed on the FM13DT160 tag.
+		/// </summary>
 		public enum Operation
 		{
+			/// <summary>
+			/// Reads a block of memory from the tag.
+			/// </summary>
 			READMEMORY,		// Read memory
+			/// <summary>
+			/// Writes a block of memory to the tag.
+			/// </summary>
 			WRITEMEMORY,	// Write memory
+			/// <summary>
+			/// Reads a configuration register of the tag.
+			/// </summary>
 			READREGISTER,	// Read Register
+			/// <summary>
+			/// Writes a configuration register of the tag.
+			/// </summary>
 			WRITEREGISTER,	// Write Register
+			/// <summary>
+			/// Authenticates the tag so that its protected content can be accessed.
+			/// </summary>
 			AUTH,			// Auth
+			/// <summary>
+			/// Reads the temperature measured by the tag.
+			/// </summary>
 			GETTEMP,		// Get Temp
+			/// <summary>
+			/// Starts the logging of the sensor measurements in the memory of the tag.
+			/// </summary>
 			STARTLOG,		// Start Log
+			/// <summary>
+			/// Stops the logging of the sensor measurements in the memory of the tag.
+			/// </summary>
 			STOPLOG,		// Stop Log
+			/// <summary>
+			/// Puts the tag into its deep sleep mode.
+			/// </summary>
 			DEEPSLEEP,		// Reset to sleep mode
+			/// <summary>
+			/// Reads the operating mode status of the tag.
+			/// </summary>
 			OPMODECHK,		// Operation
+			/// <summary>
+			/// Initializes the register file of the tag.
+			/// </summary>
 			INITIALREGFILE,	// Init Tag
+			/// <summary>
+			/// Turns the LED of the tag on for one second.
+			/// </summary>
 			LEDCTRL			// Tuen on LED 1s
 		}
 
@@ -35,8 +80,20 @@ namespace CSLibrary
 		/// </summary>
 		public class ReadMemoryParms
 		{
+			/// <summary>
+			/// Represents the start address of the memory block to read.
+			/// </summary>
 			public UInt16 offset;
+			/// <summary>
+			/// Represents the number of bytes to read; the value must be a multiple of four.
+			/// </summary>
 			public uint count;		// Byte size (divide by 4)
+			/// <summary>
+			/// Represents the memory content returned by the reader.
+			/// </summary>
+			/// <remarks>
+			/// The array holds <c>count</c> bytes once the read operation has completed and is <see langword="null"/> before that.
+			/// </remarks>
 			public byte[] data;
 		}
 
@@ -47,8 +104,17 @@ namespace CSLibrary
 		/// </summary>
 		public class WriteMemoryParms
 		{
+			/// <summary>
+			/// Represents the start address of the memory block to write.
+			/// </summary>
 			public UInt16 offset;
+			/// <summary>
+			/// Represents the number of bytes to write; the value must be even and must not exceed four.
+			/// </summary>
 			public uint count;		// Byte size (max 4)
+			/// <summary>
+			/// Represents the data written to the tag; the first four bytes of the array are sent to the reader.
+			/// </summary>
 			public byte[] data;
 		}
 
@@ -59,7 +125,13 @@ namespace CSLibrary
 		/// </summary>
 		public class ReadRegisterParms
 		{
+			/// <summary>
+			/// Represents the address of the register to read; it must be in the range 0xC000 to 0xC0FF.
+			/// </summary>
 			public UInt16 address;
+			/// <summary>
+			/// Represents the value of the register returned by the reader.
+			/// </summary>
 			public UInt16 value;
 		}
 
@@ -70,7 +142,13 @@ namespace CSLibrary
 		/// </summary>
 		public class WriteRegisterParms
 		{
+			/// <summary>
+			/// Represents the address of the register to write.
+			/// </summary>
 			public UInt16 address;
+			/// <summary>
+			/// Represents the value written to the register.
+			/// </summary>
 			public UInt16 value;
 		}
 
@@ -84,13 +162,28 @@ namespace CSLibrary
 		/// </summary>
 		public class GetTempParms
 		{
+			/// <summary>
+			/// Defines the kind of measurement requested from the tag.
+			/// </summary>
 			public enum CMDCFG : UInt32
 			{
+				/// <summary>
+				/// Requests the temperature measured by the tag.
+				/// </summary>
 				TEMP = 0x86,
+				/// <summary>
+				/// Requests the battery voltage of the tag.
+				/// </summary>
 				BATTERY = 0x92
 			}
 
+			/// <summary>
+			/// Specifies the measurement requested from the tag; it defaults to <see cref="CMDCFG.TEMP"/>.
+			/// </summary>
 			public UInt32 cmd_cfg = (UInt32)CMDCFG.TEMP;
+			/// <summary>
+			/// Specifies the address of the tag memory block where the measurement is stored.
+			/// </summary>
 			public UInt32 ewblock_addr = 0x00;
 		}
 
@@ -104,49 +197,138 @@ namespace CSLibrary
 		/// </summary>
 		public class StopLogParms
 		{
+			/// <summary>
+			/// Represents the password required to stop the logging.
+			/// </summary>
 			public UInt32 password;
 		}
 
+		/// <summary>
+		/// Holds the parameters of the <see cref="Operation.DEEPSLEEP"/> request.
+		/// </summary>
 		public class DeepSleepParms
 		{
+			/// <summary>
+			/// Specifies whether the tag is put into its deep sleep mode.
+			/// </summary>
 			public bool enable;
 		}
 
+		/// <summary>
+		/// Holds the parameters and the results of the <see cref="Operation.OPMODECHK"/> request.
+		/// </summary>
 		public class OpModeChkParms
 		{
+			/// <summary>
+			/// Specifies whether the operating mode check is started.
+			/// </summary>
 			public bool enable;
+			/// <summary>
+			/// Represents whether the user access rights of the tag are valid; the value is filled in when the check completes.
+			/// </summary>
 			public bool user_access_en;
+			/// <summary>
+			/// Represents whether the tag is currently performing an RTC temperature measurement.
+			/// </summary>
 			public bool RTC_logging;
+			/// <summary>
+			/// Represents whether a temperature measurement has been interrupted.
+			/// </summary>
 			public bool vdet_process_flag;
+			/// <summary>
+			/// Represents whether the detected light intensity exceeds the configured threshold.
+			/// </summary>
 			public bool light_chk_flag;
+			/// <summary>
+			/// Represents whether the battery voltage of the tag is above 0.9 V.
+			/// </summary>
 			public bool vbat_pwr_flag;
 		}
 
+		/// <summary>
+		/// Holds the parameters of the <see cref="Operation.LEDCTRL"/> request.
+		/// </summary>
 		public class LedCtrlParms
 		{
+			/// <summary>
+			/// Specifies whether the LED of the tag is switched on.
+			/// </summary>
 			public bool enable;
 		}
 
+		/// <summary>
+		/// Groups the parameters of all FM13DT160 module operations.
+		/// </summary>
 		public class FM13DT160Paras
 		{
+			/// <summary>
+			/// Represents the parameters of the <see cref="Operation.READMEMORY"/> request.
+			/// </summary>
 			public ReadMemoryParms ReadMemory = new ReadMemoryParms();
+			/// <summary>
+			/// Represents the parameters of the <see cref="Operation.WRITEMEMORY"/> request.
+			/// </summary>
 			public WriteMemoryParms WriteMemory = new WriteMemoryParms();
+			/// <summary>
+			/// Represents the parameters of the <see cref="Operation.READREGISTER"/> request.
+			/// </summary>
 			public ReadRegisterParms ReadRegister = new ReadRegisterParms();
+			/// <summary>
+			/// Represents the parameters of the <see cref="Operation.WRITEREGISTER"/> request.
+			/// </summary>
 			public WriteRegisterParms WriteRegister = new WriteRegisterParms();
+			/// <summary>
+			/// Represents the parameters of the <see cref="Operation.AUTH"/> request.
+			/// </summary>
 			public AuthParms Auth = new AuthParms();
+			/// <summary>
+			/// Represents the parameters of the <see cref="Operation.GETTEMP"/> request.
+			/// </summary>
 			public GetTempParms GetTemp = new GetTempParms();
+			/// <summary>
+			/// Represents the parameters of the <see cref="Operation.STARTLOG"/> request.
+			/// </summary>
 			public StartLogParms StartLog = new StartLogParms();
+			/// <summary>
+			/// Represents the parameters of the <see cref="Operation.STOPLOG"/> request.
+			/// </summary>
 			public StopLogParms StopLog = new StopLogParms();
+			/// <summary>
+			/// Represents the parameters of the <see cref="Operation.DEEPSLEEP"/> request.
+			/// </summary>
 			public DeepSleepParms DeepSleep = new DeepSleepParms();
+			/// <summary>
+			/// Represents the parameters of the <see cref="Operation.OPMODECHK"/> request.
+			/// </summary>
 			public OpModeChkParms OpModeChk = new OpModeChkParms();
+			/// <summary>
+			/// Represents the parameters of the <see cref="Operation.LEDCTRL"/> request.
+			/// </summary>
 			public LedCtrlParms LedCtrl = new LedCtrlParms();
 		}
 
+		/// <summary>
+		/// Carries the result of a completed FM13DT160 module operation.
+		/// </summary>
 		public class OnAccessCompletedEventArgs : EventArgs
 		{
+			/// <summary>
+			/// Represents the operation the event belongs to.
+			/// </summary>
 			public Operation operation;
+			/// <summary>
+			/// Represents the outcome of the operation.
+			/// </summary>
+			/// <remarks>
+			/// The value is <see langword="true"/> when the operation completed successfully.
+			/// </remarks>
 			public bool success;
 
+			/// <summary>
+			/// Initializes a new instance of the <see cref="OnAccessCompletedEventArgs"/> class.
+			/// </summary>
+			/// <param name="operation">The operation the event belongs to.</param>
+			/// <param name="success"><see langword="true"/> when the operation completed successfully, <see langword="false"/> otherwise.</param>
 			public OnAccessCompletedEventArgs(Operation operation, bool success)
 			{
 				this.operation = operation;
@@ -154,7 +336,19 @@ namespace CSLibrary
 			}
 		}
 
+		/// <summary>
+		/// Occurs when an FM13DT160 module operation has completed.
+		/// </summary>
+		/// <remarks>
+		/// The event argument tells which operation has finished and whether it succeeded; the result of the operation itself is read back from <see cref="Options"/>.
+		/// </remarks>
 		public event EventHandler<OnAccessCompletedEventArgs> OnAccessCompleted;
+		/// <summary>
+		/// Represents the parameters of the FM13DT160 module operations.
+		/// </summary>
+		/// <remarks>
+		/// Set the parameters before calling <see cref="StartOperation(Operation)"/> and read the results from the same object once the operation has completed.
+		/// </remarks>
 		public FM13DT160Paras Options = new FM13DT160Paras();
 
 		private HighLevelInterface _deviceHandler;
@@ -164,12 +358,22 @@ namespace CSLibrary
 			_deviceHandler = handler;
 		}
 
+		/// <summary>
+		/// Removes all subscribers of the <see cref="OnAccessCompleted"/> event.
+		/// </summary>
 		public void ClearEventHandler()
 		{
 			OnAccessCompleted = null;
 		}
 
 		// call by Application
+		/// <summary>
+		/// Starts the given operation on the FM13DT160 tag.
+		/// </summary>
+		/// <param name="operation">The operation to run.</param>
+		/// <returns>
+		/// The value <c>-1</c> in every case, because the operation runs asynchronously and reports its outcome through the <see cref="OnAccessCompleted"/> event.
+		/// </returns>
 		public int StartOperation(Operation operation)
 		{
 			switch (operation)

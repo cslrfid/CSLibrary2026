@@ -49,6 +49,9 @@ namespace CSLibrary
             }
         }
 
+        /// <summary>
+        /// Starts an ISO/IEC 18000-6C tag read operation.
+        /// </summary>
         public int Start18K6CRead(uint bank, uint offset, uint count, UInt16[] data, uint accessPassword, uint retry, CSLibrary.Constants.SelectFlags flags)
         {
             switch (_deviceType)

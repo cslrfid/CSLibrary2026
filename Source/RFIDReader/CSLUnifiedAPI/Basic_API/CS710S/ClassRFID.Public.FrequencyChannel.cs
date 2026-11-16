@@ -44,6 +44,12 @@ namespace CSLibrary
             return Result.OK;
         }
 
+        /// <summary>
+        /// CS710S-specific implementation that restores the reader to the default frequency channel of the current country.
+        /// </summary>
+        /// <returns>
+        /// <c>Result.FAILURE</c>, which this method always returns because the operation is not implemented for the CS710S.
+        /// </returns>
         public Result SetDefaultChannel_CS710S()
         {
             return Result.FAILURE;

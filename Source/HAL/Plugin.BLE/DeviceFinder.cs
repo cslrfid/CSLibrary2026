@@ -36,6 +36,12 @@ using static CSLibrary.RFIDDEVICE;
 
 namespace CSLibrary
 {
+    /// <summary>
+    /// Discovers the CSL RFID readers that advertise over Bluetooth Low Energy.
+    /// </summary>
+    /// <remarks>
+    /// Call <see cref="Initialize"/> with the Plugin.BLE adapter before calling <see cref="StartDeviceSearch"/>, then handle <see cref="OnDeviceFound"/> and <see cref="OnSearchCompleted"/> to collect the readers and to connect to them.
+    /// </remarks>
     public partial class DeviceFinder
     {
         // =====================================================================
@@ -297,8 +303,18 @@ namespace CSLibrary
         /// </summary>
         public class DeviceFoundEventArgs : EventArgs
         {
+            /// <summary>
+            /// Gets the reader that has just been discovered.
+            /// </summary>
+            /// <returns>
+            /// A <see cref="DeviceInformation"/> describing the discovered reader.
+            /// </returns>
             public DeviceInformation Device { get; }
 
+            /// <summary>
+            /// Initializes a new instance of the <see cref="DeviceFoundEventArgs"/> class.
+            /// </summary>
+            /// <param name="device">The reader that has been discovered.</param>
             public DeviceFoundEventArgs(DeviceInformation device)
             {
                 Device = device;
@@ -315,6 +331,10 @@ namespace CSLibrary
             /// </summary>
             public bool TimedOut { get; }
 
+            /// <summary>
+            /// Initializes a new instance of the <see cref="SearchCompletedEventArgs"/> class.
+            /// </summary>
+            /// <param name="timedOut"><see langword="true"/> when the search ended because the timeout expired, <see langword="false"/> when the application stopped it.</param>
             public SearchCompletedEventArgs(bool timedOut)
             {
                 TimedOut = timedOut;

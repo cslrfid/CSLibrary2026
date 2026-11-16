@@ -24,6 +24,9 @@ using System.Text;
 
 namespace CSLibrary
 {
+    /// <summary>
+    /// Reader partial class that implements the Ex10 administration commands.
+    /// </summary>
     public partial class RFIDReader
     {
 

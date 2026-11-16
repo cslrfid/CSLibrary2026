@@ -29,9 +29,18 @@ namespace CSLibrary
 {
     public partial class SiliconLabIC
     {
+        /// <summary>
+        /// Occurs when the reader reports the result of an access command.
+        /// </summary>
+        /// <remarks>
+        /// The event argument carries the reported information, which is the serial number of the reader, and the kind of information it is.
+        /// </remarks>
         public event EventHandler<CSLibrary.SiliconLabIC.Events.OnAccessCompletedEventArgs> OnAccessCompleted;
 
         uint _firmwareVersion;
+        /// <summary>
+        /// Represents whether the reader runs a firmware older than version 1.0.0.8, as detected during the connection sequence.
+        /// </summary>
         public bool _firmwareOlderT108 = false;
         string _serailNumber = null;
         string _PcbVersion;
@@ -141,11 +150,23 @@ namespace CSLibrary
             return 0;
         }
 
+        /// <summary>
+        /// Gets the firmware version of the Silicon Labs microcontroller of the reader.
+        /// </summary>
+        /// <returns>
+        /// The firmware version as a 24-bit value, or <c>0</c> when the reader did not report one.
+        /// </returns>
         public UInt32 GetFirmwareVersion ()
         {
             return _firmwareVersion;
         }
 
+        /// <summary>
+        /// Raises the <see cref="OnAccessCompleted"/> event with the serial number of the reader.
+        /// </summary>
+        /// <remarks>
+        /// Use <see cref="GetSerialNumberSync"/> to obtain the serial number directly.
+        /// </remarks>
         public void GetSerialNumber()
         {
             if (OnAccessCompleted != null)
@@ -162,16 +183,31 @@ namespace CSLibrary
             }
         }
 
+        /// <summary>
+        /// Gets the serial number of the reader.
+        /// </summary>
+        /// <returns>
+        /// The serial number reported by the reader, or <see langword="null"/> when it has not been received yet.
+        /// </returns>
         public string GetSerialNumberSync()
         {
             return _serailNumber;
         }
 
+        /// <summary>
+        /// Gets the PCB version of the reader.
+        /// </summary>
+        /// <returns>
+        /// The PCB version reported by the reader, or <see langword="null"/> when it has not been received yet.
+        /// </returns>
         public string GetPCBVersion ()
         {
             return _PcbVersion;
         }
 
+        /// <summary>
+        /// Removes all subscribers of the <see cref="OnAccessCompleted"/> event.
+        /// </summary>
         public void ClearEventHandler()
         {
             OnAccessCompleted = delegate { };

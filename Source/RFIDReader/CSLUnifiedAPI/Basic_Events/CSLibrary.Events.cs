@@ -142,6 +142,9 @@ namespace CSLibrary.Events
     }
 
     
+    /// <summary>
+    /// Carries the inventory tag rate reported by the reader to the <see cref="RFIDReader.OnInventoryTagRateCallback"/> callback.
+    /// </summary>
     public class OnInventoryTagRateCallbackEventArgs : EventArgs
     {
         /// <summary>
@@ -151,7 +154,7 @@ namespace CSLibrary.Events
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="state"></param>
+        /// <param name="tagRate"></param>
         public OnInventoryTagRateCallbackEventArgs(uint tagRate)
         {
             this.inventoryTagRate = tagRate;

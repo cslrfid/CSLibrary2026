@@ -27,8 +27,17 @@ using System.Threading.Tasks;
 
 namespace CSLibrary
 {
+    /// <summary>
+    /// Provides access to the Silicon Labs microcontroller of the connected reader.
+    /// </summary>
+    /// <remarks>
+    /// The instance is reached through <see cref="HighLevelInterface.siliconlabIC"/>.
+    /// </remarks>
     public partial class SiliconLabIC
     {
+        /// <summary>
+        /// Groups the constant values of the Silicon Labs microcontroller interface.
+        /// </summary>
         public class Constants
         {
             /// <summary>
@@ -36,18 +45,41 @@ namespace CSLibrary
             /// </summary>
             public enum AccessCompletedCallbackType
             {
+                /// <summary>
+                /// The reported information is the serial number of the reader.
+                /// </summary>
                 SERIALNUMBER,
+                /// <summary>
+                /// The kind of the reported information is not known.
+                /// </summary>
                 UNKNOWN
             }
         }
 
+        /// <summary>
+        /// Groups the event argument types of the Silicon Labs microcontroller interface.
+        /// </summary>
         public class Events
         {
+            /// <summary>
+            /// Carries the information reported by the reader when an access command completes.
+            /// </summary>
             public class OnAccessCompletedEventArgs : EventArgs
             {
+                /// <summary>
+                /// Represents the reported information, which is the serial number of the reader.
+                /// </summary>
                 public readonly object info;
+                /// <summary>
+                /// Represents the kind of information carried by <see cref="info"/>.
+                /// </summary>
                 public readonly Constants.AccessCompletedCallbackType type = Constants.AccessCompletedCallbackType.UNKNOWN;
 
+                /// <summary>
+                /// Initializes a new instance of the <see cref="OnAccessCompletedEventArgs"/> class.
+                /// </summary>
+                /// <param name="info">The reported information, which is the serial number of the reader.</param>
+                /// <param name="type">The kind of information carried by <paramref name="info"/>.</param>
                 public OnAccessCompletedEventArgs(object info, Constants.AccessCompletedCallbackType type)
                 {
                     this.info = info;

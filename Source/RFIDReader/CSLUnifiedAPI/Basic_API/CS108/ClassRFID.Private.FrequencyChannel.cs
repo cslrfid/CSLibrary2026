@@ -2611,6 +2611,10 @@ namespace CSLibrary
         private static uint[] BasicDIVRAT = new uint[] { 0x0010, 0x0018, 0x0030, 0x003c, 0x0048 };
 
 
+        /// <summary>
+        /// Converts a frequency in MHz into the corresponding PLL divider values.
+        /// </summary>
+        /// <param name="freq">The frequency in MHz.</param>
         static public UInt32 FrequenceToPll(double freq)
         {
             UInt32 pll;
@@ -2626,6 +2630,11 @@ namespace CSLibrary
             throw new InvalidOperationException("can not cal pll value, please check BasicDIVRAT");
         }
 
+        /// <summary>
+        /// Converts a frequency in MHz into the corresponding PLL divider values of a channel.
+        /// </summary>
+        /// <param name="freq">The frequency in MHz.</param>
+        /// <param name="divrat">The channel the frequency belongs to.</param>
         static public UInt32 FrequenceToPll(double freq, uint divrat)
         {
             if (divrat == 0)
@@ -2643,6 +2652,10 @@ namespace CSLibrary
             return 0;
         }
 
+        /// <summary>
+        /// Returns the PLL divider values of every given frequency.
+        /// </summary>
+        /// <param name="FrequencyTable">The frequencies in MHz.</param>
         static public UInt32[] GetPllValues(double[] FrequencyTable)
         {
             UInt32[] pllTable = new UInt32[FrequencyTable.Length];

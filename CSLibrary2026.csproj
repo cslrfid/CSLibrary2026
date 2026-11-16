@@ -79,6 +79,20 @@
     <!-- TCP symbol: enables #if TCP in TCPIP HAL files -->
     <DefineConstants>TCP</DefineConstants>
 
+    <!--
+      XML documentation:
+      The public API is documented with /// comments so that the description is
+      available in the IDE (IntelliSense) and is picked up by the API Reference
+      Manual generator (Documents/API_Manual/tools/CslApiDump).
+
+      CS1591 ("missing XML comment for publicly visible type or member") is
+      suppressed: it is reported by the CslApiDump coverage audit instead, which
+      tracks the real documentation coverage of the public API. Suppressing it
+      here keeps the normal build output readable.
+    -->
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn>$(NoWarn);CS1591</NoWarn>
+
     <!-- NuGet Package Properties -->
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <PackageId>CSLibrary2026</PackageId>
@@ -118,6 +132,14 @@
     <Compile Remove="Source/RFIDReader/Antenna/**" />
     <Compile Remove="Source/RFIDReader/API_EM4325/**" />
     <Compile Remove="Source/RFIDReader/API_FM13DT160/**" />
+    <!--
+      Documents/ holds the API Reference Manual (hand-written HTML guides plus the
+      generated API reference pages) and the CslApiDump tool that renders them.
+      The tool has its own .csproj and must never be compiled into the library.
+    -->
+    <Compile Remove="Documents/**" />
+    <EmbeddedResource Remove="Documents/**" />
+    <None Remove="Documents/**" />
     <EmbeddedResource Remove="Source/HAL/Acr.ble/**" />
     <EmbeddedResource Remove="Source/HAL/btframework/**" />
     <EmbeddedResource Remove="Source/HAL/UWP/**" />

@@ -32,14 +32,35 @@ namespace CSLibrary
 {
     using Constants;
 
+    /// <summary>
+    /// Provides the model and connection information of the CSL RFID readers.
+    /// </summary>
     public static class RFIDDEVICE
     {
+        /// <summary>
+        /// Identifies the transport used to communicate with the reader.
+        /// </summary>
         public enum CONNECTIONMODE
         {
+            /// <summary>
+            /// The reader is connected over TCP/IP.
+            /// </summary>
             TCP,
+            /// <summary>
+            /// The reader is connected over Bluetooth.
+            /// </summary>
             BLUETOOTH,
+            /// <summary>
+            /// The reader is connected over a serial (RS-232) port.
+            /// </summary>
             RS232,
+            /// <summary>
+            /// The reader is connected over USB.
+            /// </summary>
             USB,
+            /// <summary>
+            /// The connection mode could not be determined.
+            /// </summary>
             UNKNOWN
         }
 
@@ -50,23 +71,77 @@ namespace CSLibrary
         /// </summary>
         public enum MODEL
         {
+            /// <summary>
+            /// The CS101 handheld UHF RFID reader.
+            /// </summary>
             CS101 = 0,
+            /// <summary>
+            /// The CS203 fixed UHF RFID reader.
+            /// </summary>
             CS203 = 1,
+            /// <summary>
+            /// The CS333 fixed UHF RFID reader.
+            /// </summary>
             CS333 = 2,
+            /// <summary>
+            /// The CS468 fixed UHF RFID reader.
+            /// </summary>
             CS468 = 3,
+            /// <summary>
+            /// The CS468INT fixed UHF RFID reader, international version.
+            /// </summary>
             CS468INT = 5,
+            /// <summary>
+            /// The CS463 fixed UHF RFID reader.
+            /// </summary>
             CS463 = 6,
+            /// <summary>
+            /// The CS469 fixed UHF RFID reader.
+            /// </summary>
             CS469 = 7,
+            /// <summary>
+            /// The CS208 fixed UHF RFID reader.
+            /// </summary>
             CS208 = 8,
+            /// <summary>
+            /// The CS209 fixed UHF RFID reader.
+            /// </summary>
             CS209 = 9,
+            /// <summary>
+            /// The CS103 handheld UHF RFID reader.
+            /// </summary>
             CS103 = 10,
+            /// <summary>
+            /// The CS108 handheld UHF RFID reader.
+            /// </summary>
             CS108 = 11,
+            /// <summary>
+            /// The CS206 fixed UHF RFID reader.
+            /// </summary>
             CS206 = 12,
+            /// <summary>
+            /// The CS468X fixed UHF RFID reader, enhanced version.
+            /// </summary>
             CS468X = 13,
+            /// <summary>
+            /// The CS203X fixed UHF RFID reader.
+            /// </summary>
             CS203X = 14,
+            /// <summary>
+            /// The CS468XJ fixed UHF RFID reader, Japan version.
+            /// </summary>
             CS468XJ = 15,
+            /// <summary>
+            /// The CS710S handheld sled UHF RFID reader.
+            /// </summary>
             CS710S = 32,
+            /// <summary>
+            /// The CS203XL fixed UHF RFID reader.
+            /// </summary>
             CS203XL = 33,
+            /// <summary>
+            /// The reader model could not be determined.
+            /// </summary>
             UNKNOWN = 0xff
         }
 

@@ -37,8 +37,15 @@ namespace CSLibrary
     public partial class RFIDReader
     {
         /// <summary>
-        /// REGISTER NAME/ADDRESS CONSTANTS
+        /// Raw MAC register name and address constants of the Rx000 (R1000/R2000)
+        /// chipset protocol.
         /// </summary>
+        /// <remarks>
+        /// These identifiers are part of the low level reader protocol and are not
+        /// used by applications. The individual register identifiers are documented
+        /// in the Rx000 chipset specification.
+        /// </remarks>
+#pragma warning disable CS1591 // Raw register identifiers, see the remarks above.
         public enum MACREGISTER : UInt16
         {
             MAC_VER = 0x0000,
@@ -351,6 +358,7 @@ namespace CSLibrary
 
             HST_CMD = 0xF000
         }
+#pragma warning restore CS1591
 
         internal enum HST_CMD : uint
         {

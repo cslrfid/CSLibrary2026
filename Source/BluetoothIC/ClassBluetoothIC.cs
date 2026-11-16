@@ -7,6 +7,12 @@ using CSLibrary.Barcode.Structures;
 
 namespace CSLibrary
 {
+    /// <summary>
+    /// Provides access to the Bluetooth controller of the connected reader.
+    /// </summary>
+    /// <remarks>
+    /// The instance is reached through <see cref="HighLevelInterface.bluetoothIC"/>.
+    /// </remarks>
     public partial class BluetoothIC
     {
         string _deviceName;
@@ -80,16 +86,35 @@ namespace CSLibrary
             _deviceHandler.SendAsync(0, 4, DOWNLINKCMD.GETDEVICENAME, null, HighLevelInterface.BTWAITCOMMANDRESPONSETYPE.WAIT_BTAPIRESPONSE);
         }
 
+        /// <summary>
+        /// Gets the firmware version of the Bluetooth controller of the reader.
+        /// </summary>
+        /// <returns>
+        /// The firmware version as a 24-bit value, or <c>0</c> when the reader did not report one.
+        /// </returns>
         public uint GetFirmwareVersion()
         {
             return _firmwareVersion;
         }
 
+        /// <summary>
+        /// Gets the Bluetooth device name of the reader.
+        /// </summary>
+        /// <returns>
+        /// The device name, or <see langword="null"/> when the reader has not reported it yet.
+        /// </returns>
         public string GetDeviceName ()
         {
             return _deviceName;
         }
 
+        /// <summary>
+        /// Sets the Bluetooth device name of the reader.
+        /// </summary>
+        /// <param name="deviceName">The new device name; it must not be longer than 20 characters.</param>
+        /// <returns>
+        /// <see langword="true"/> when the name has been sent to the reader, <see langword="false"/> when the name is longer than 20 characters.
+        /// </returns>
         public bool SetDeviceName (string deviceName)
         {
             if (deviceName.Length > 20)

@@ -1223,32 +1223,92 @@ ISO/IEC 24730 (WhereNet)	48	0000 0000	0000 0000	xxxx xxxx xxxx xxxx xxxx xxxx xx
         /// </summary>
         EM_SPIReqRN,
 
+        /// <summary>
+        /// Selects a tag for a subsequent operation using the general mask based selection configuration.
+        /// </summary>
         TAG_GENERALSELECTED,
 
+        /// <summary>
+        /// Selects a tag for a subsequent operation using the fast selection method, which only programs the EPC mask registers of the radio module.
+        /// </summary>
         TAG_FASTSELECTED,
 
+        /// <summary>
+        /// Applies the pre-filter selection criteria before the tag operation is executed.
+        /// </summary>
         TAG_PREFILTER,
 
+        /// <summary>
+        /// Applies the post-match filter to the tags reported by the radio module.
+        /// </summary>
+        /// <remarks>
+        /// No reader implementation dispatches this operation in the current library.
+        /// </remarks>
         TAG_POSTFILTER,
 
+        /// <summary>
+        /// Performs the ISO 18000-6C authenticate command on the target tag.
+        /// </summary>
         TAG_AUTHENTICATE,
 
+        /// <summary>
+        /// Reads the internal data buffer of the target tag through the reader read buffer command.
+        /// </summary>
         TAG_READBUFFER,
 
+        /// <summary>
+        /// Performs the ISO 18000-6C untraceable command on the target tag.
+        /// </summary>
         TAG_UNTRACEABLE,
 
         // for FM13DT160 
+        /// <summary>
+        /// Reads the memory of an FM13DT160 tag.
+        /// </summary>
         FM13DT_READMEMORY,
+        /// <summary>
+        /// Writes the memory of an FM13DT160 tag.
+        /// </summary>
         FM13DT_WRITEMEMORY,
+        /// <summary>
+        /// Authenticates an FM13DT160 tag with a password.
+        /// </summary>
         FM13DT_AUTH,
+        /// <summary>
+        /// Reads the temperature sensor value of an FM13DT160 tag.
+        /// </summary>
         FM13DT_GETTEMP,
+        /// <summary>
+        /// Starts the data logging of an FM13DT160 tag.
+        /// </summary>
         FM13DT_STARTLOG,
+        /// <summary>
+        /// Stops the data logging of an FM13DT160 tag.
+        /// </summary>
         FM13DT_STOPLOG,
+        /// <summary>
+        /// Writes a register of an FM13DT160 tag.
+        /// </summary>
         FM13DT_WRITEREGISTER,
+        /// <summary>
+        /// Reads a register of an FM13DT160 tag.
+        /// </summary>
         FM13DT_READREGISTER,
+        /// <summary>
+        /// Puts an FM13DT160 tag into deep sleep mode, or wakes it up.
+        /// </summary>
         FM13DT_DEEPSLEEP,
+        /// <summary>
+        /// Queries the operating mode status of an FM13DT160 tag.
+        /// </summary>
         FM13DT_OPMODECHK,
+        /// <summary>
+        /// Initializes the register file of an FM13DT160 tag.
+        /// </summary>
         FM13DT_INITIALREGFILE,
+        /// <summary>
+        /// Switches the indicator LED of an FM13DT160 tag on or off.
+        /// </summary>
         FM13DT_LEDCTRL,
 
         /// <summary>
@@ -1338,20 +1398,62 @@ ISO/IEC 24730 (WhereNet)	48	0000 0000	0000 0000	xxxx xxxx xxxx xxxx xxxx xxxx xx
         UNKNOWN = 0xff
     }
 
+    /// <summary>
+    /// Identifies the FM13DT160 tag access operation that produced an access completed callback.
+    /// </summary>
     public enum FM13DTAccess
     {
+        /// <summary>
+        /// The tag memory was read.
+        /// </summary>
         READMEMORY,
+        /// <summary>
+        /// The tag memory was written.
+        /// </summary>
         WRITEMEMORY,
+        /// <summary>
+        /// A tag register was read.
+        /// </summary>
         READREGISTER,
+        /// <summary>
+        /// A tag register was written.
+        /// </summary>
         WRITEREGISTER,
+        /// <summary>
+        /// The tag was authenticated.
+        /// </summary>
         AUTH,
+        /// <summary>
+        /// The tag temperature was read.
+        /// </summary>
         GETTEMP,
+        /// <summary>
+        /// The tag data logging was started.
+        /// </summary>
         STARTLOG,
+        /// <summary>
+        /// The tag data logging was stopped.
+        /// </summary>
         STOPLOG,
+        /// <summary>
+        /// The tag was put into deep sleep mode.
+        /// </summary>
         DEEPSLEEP,
+        /// <summary>
+        /// The tag operating mode status was queried.
+        /// </summary>
         OPMODECHK,
+        /// <summary>
+        /// The tag register file was initialized.
+        /// </summary>
         INITIALREGFILE,
+        /// <summary>
+        /// The tag indicator LED was switched on or off.
+        /// </summary>
         LEDCTRL,
+        /// <summary>
+        /// The access type could not be determined.
+        /// </summary>
         UNKNOWN
     }
 
@@ -1386,17 +1488,44 @@ ISO/IEC 24730 (WhereNet)	48	0000 0000	0000 0000	xxxx xxxx xxxx xxxx xxxx xxxx xx
 
     public enum ChipSetID
     {
+        /// <summary>
+        /// Denotes the Impinj R1000 chipset of the Rx000 family.
+        /// </summary>
         R1000 = 0,
+        /// <summary>
+        /// Denotes the Impinj R2000 chipset of the Rx000 family.
+        /// </summary>
         R2000 = 1,
+        /// <summary>
+        /// Denotes the Impinj E710 chipset of the Ex10 family.
+        /// </summary>
         E710 = 2,
+        /// <summary>
+        /// Denotes the Impinj E910 chipset of the Ex10 family.
+        /// </summary>
         E910 = 3,
+        /// <summary>
+        /// The chipset could not be determined.
+        /// </summary>
         UNKNOWN = 0xff
     }
 
+    /// <summary>
+    /// Defines the level of the reader API that is used to talk to the device.
+    /// </summary>
     public enum ApiMode
     {
+        /// <summary>
+        /// The reader is driven through the unified high level API.
+        /// </summary>
         HIGHLEVEL,
+        /// <summary>
+        /// The reader is driven through the low level, raw register level API.
+        /// </summary>
         LOWLEVEL,
+        /// <summary>
+        /// The API mode could not be determined.
+        /// </summary>
         UNKNOWN
     }
 

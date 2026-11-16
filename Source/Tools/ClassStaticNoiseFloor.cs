@@ -59,8 +59,7 @@ namespace CSLibrary.Tools
     /// <para>
     /// <b>Unit of measurement:</b> all power values returned by this class
     /// (both the static noise floor entries in <see cref="Table"/> and the
-    /// values returned by <see cref="GetNoiseFloor(int)"/> /
-    /// <see cref="TryGetNoiseFloor(int)"/>) are expressed in
+    /// values returned by <see cref="GetNoiseFloor(int)"/>) are expressed in
     /// <b>dBm</b> (decibels relative to one milliwatt).
     /// </para>
     ///

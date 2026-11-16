@@ -27,6 +27,9 @@ using System.Threading.Tasks;
 
 namespace CSLibrary
 {
+    /// <summary>
+    /// Holds the Bluetooth GATT connection state used by the legacy Bluetooth protocol.
+    /// </summary>
     public class GATT
     {
         enum RESULT
@@ -37,15 +40,25 @@ namespace CSLibrary
         }
 
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="GATT"/> class.
+        /// </summary>
         public GATT()
         {
         }
 
+        /// <summary>
+        /// Releases the resources held by the instance.
+        /// </summary>
         ~GATT ()
         {
 
         }
 
+        /// <summary>
+        /// Closes the GATT connection.
+        /// </summary>
+        /// <returns>Always <see langword="false"/> in this implementation.</returns>
         public bool Disconnect ()
         {
             return false;

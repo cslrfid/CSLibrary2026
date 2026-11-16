@@ -6,6 +6,12 @@ using CSLibrary.Barcode.Structures;
 
 namespace CSLibrary
 {
+    /// <summary>
+    /// Provides the notifications reported by the reader, such as the battery voltage and the state of the hardware key.
+    /// </summary>
+    /// <remarks>
+    /// The instance is reached through <see cref="HighLevelInterface.notification"/>.
+    /// </remarks>
     public partial class Notification
     {
         bool _currentAutoReportStatus = false;
@@ -36,9 +42,26 @@ namespace CSLibrary
             Key m_KeyCode = Key.BUTTON;
             bool m_KeyDown = false;
 
+            /// <summary>
+            /// Gets the key that has been pressed or released.
+            /// </summary>
+            /// <returns>
+            /// The <see cref="Key"/> that generated the event.
+            /// </returns>
             public Key KeyCode { get { return m_KeyCode; } }
+            /// <summary>
+            /// Gets the direction of the key event.
+            /// </summary>
+            /// <returns>
+            /// <see langword="true"/> when the key has just been pressed, <see langword="false"/> when it has just been released.
+            /// </returns>
             public bool KeyDown { get { return m_KeyDown; } }
 
+            /// <summary>
+            /// Initializes a new instance of the <see cref="HotKeyEventArgs"/> class.
+            /// </summary>
+            /// <param name="KeyCode">The key that has been pressed or released.</param>
+            /// <param name="KeyDown"><see langword="true"/> when the key has just been pressed, <see langword="false"/> when it has just been released.</param>
             public HotKeyEventArgs(Key KeyCode, bool KeyDown)
             {
                 m_KeyCode = KeyCode;
@@ -46,19 +69,44 @@ namespace CSLibrary
             }
         }
 
+        /// <summary>
+        /// Carries the battery voltage reported by the reader.
+        /// </summary>
         public class VoltageEventArgs : EventArgs
         {
             uint m_Voltage = 0;
 
+            /// <summary>
+            /// Gets the battery voltage reported by the reader.
+            /// </summary>
+            /// <returns>
+            /// The battery voltage in millivolts.
+            /// </returns>
             public uint Voltage { get { return m_Voltage; } }
 
+            /// <summary>
+            /// Initializes a new instance of the <see cref="VoltageEventArgs"/> class.
+            /// </summary>
+            /// <param name="voltage">The battery voltage in millivolts.</param>
             public VoltageEventArgs(uint voltage)
             {
                 m_Voltage = voltage;
             }
         }
 
+        /// <summary>
+        /// Occurs when the reader reports its battery voltage.
+        /// </summary>
+        /// <remarks>
+        /// The event argument is a <see cref="VoltageEventArgs"/> whose <see cref="VoltageEventArgs.Voltage"/> property holds the measured voltage in millivolts.
+        /// </remarks>
         public event EventHandler<VoltageEventArgs> OnVoltageEvent;
+        /// <summary>
+        /// Occurs when the hardware key of the reader is pressed or released.
+        /// </summary>
+        /// <remarks>
+        /// The event argument is a <see cref="HotKeyEventArgs"/> that identifies the key and tells whether it has been pressed or released.
+        /// </remarks>
         public event EventHandler<HotKeyEventArgs> OnKeyEvent;
 
         /// <summary>
@@ -116,7 +164,16 @@ namespace CSLibrary
         }
 
 
+        /// <summary>
+        /// Represents the command that starts the automatic reporting of the hardware key state.
+        /// </summary>
+        /// <remarks>
+        /// The command carries the reporting interval in seconds as payload; the stop command switches the reporting off.
+        /// </remarks>
         public static readonly byte[] STARTAUTOREIGGERREPORTING = { 0xA0, 0x08 };
+        /// <summary>
+        /// Represents the command that stops the automatic reporting of the hardware key state.
+        /// </summary>
         public static readonly byte[] STOPAUTOREIGGERREPORTING = { 0xA0, 0x09 };
 
 
@@ -164,11 +221,21 @@ namespace CSLibrary
             }
         }
 
+        /// <summary>
+        /// Gets the last battery voltage reported by the reader.
+        /// </summary>
+        /// <returns>
+        /// The battery voltage in millivolts, or <c>0</c> when no voltage has been reported yet.
+        /// </returns>
         public uint GetCurrentBatteryLevel()
         {
             return _batteryLevel;
         }
 
+        /// <summary>
+        /// Configures whether the reader aborts the running RFID inventory when the trigger is released.
+        /// </summary>
+        /// <param name="enable"><see langword="true"/> to abort the inventory on trigger release, <see langword="false"/> to let it run until it is stopped.</param>
         public void SetTriggerReleaseAbortRFID(bool enable)
         {
             if (enable)
@@ -181,6 +248,9 @@ namespace CSLibrary
             }
         }
 
+        /// <summary>
+        /// Removes all subscribers of the <see cref="OnVoltageEvent"/> and <see cref="OnKeyEvent"/> events.
+        /// </summary>
         public void ClearEventHandler()
         {
             //OnVoltageEvent = delegate { };

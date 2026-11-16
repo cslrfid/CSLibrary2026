@@ -14,6 +14,9 @@ namespace CSLibrary
         }
     }
 
+    /// <summary>
+    /// Provides the error codes reported by the CS710S reader together with their descriptions.
+    /// </summary>
     public static class CS710SErrorCodes
     {
         private static List<ErrorCode> ErrorCodes;
@@ -44,6 +47,13 @@ namespace CSLibrary
             };
         }
 
+        /// <summary>
+        /// Returns the description of the given reader error code.
+        /// </summary>
+        /// <param name="errorCode">The error code reported by the reader.</param>
+        /// <returns>
+        /// The description of the error, or <c>Other error</c> when the code is not known.
+        /// </returns>
         public static string GetErrorDescription(int errorCode)
         {
             var error = ErrorCodes.Find(e => e.Code == errorCode);
