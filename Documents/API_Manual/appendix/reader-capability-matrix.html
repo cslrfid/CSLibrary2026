@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Reader capability matrix &ndash; CSLibrary2026 API Reference</title>
+<link rel="stylesheet" href="../assets/docs.css" />
+</head>
+<body>
+<header class="topbar">
+<a class="brand" href="../index.html">CSLibrary2026 API Reference</a>
+<form class="searchbox" action="../search.html" method="get">
+<input type="search" name="q" placeholder="Search the API reference" aria-label="Search" />
+</form>
+</header>
+<div class="layout">
+<nav class="sidebar" id="doc-nav" aria-label="Navigation"></nav>
+<main class="content">
+<h1 id="reader-capability-matrix">Reader capability matrix</h1>
+<p class="lede">What the different reader models support.</p>
+
+<p>The library presents one API for every reader. A call that a reader model does not
+implement returns <code>Result.FAILURE</code> or <code>Result.DEVICE_NOT_SUPPORT</code>
+and has no effect on the reader.</p>
+
+<h2 id="the-features">The features</h2>
+<table class="members">
+<thead><tr>
+<th class="col-member">Feature</th>
+<th>CS108 / CS468</th>
+<th>CS710S</th>
+<th>CS203XL</th>
+</tr></thead>
+<tbody>
+<tr><td><code class="signature">Bluetooth LE</code></td><td>Yes</td><td>Yes</td><td>Yes</td></tr>
+<tr><td><code class="signature">TCP/IP</code></td><td>No</td><td>No</td><td>Yes</td></tr>
+<tr><td><code class="signature">Inventory</code></td><td>Yes</td><td>Yes</td><td>Yes</td></tr>
+<tr><td><code class="signature">Tag read and write</code></td><td>Yes</td><td>Yes</td><td>Yes</td></tr>
+<tr><td><code class="signature">Fixed Q singulation</code></td><td>Yes</td><td>Yes</td><td>Yes</td></tr>
+<tr><td><code class="signature">Dynamic Q singulation</code></td><td>Yes</td><td>Yes</td><td>Yes</td></tr>
+<tr><td><code class="signature">Post match criteria</code></td><td>Yes</td><td>No</td><td>No</td></tr>
+<tr><td><code class="signature">Power sequencing</code></td><td>Yes</td><td>Yes</td><td>Yes</td></tr>
+<tr><td><code class="signature">Power boost</code></td><td>No</td><td>Yes</td><td>Yes</td></tr>
+<tr><td><code class="signature">RSSI filter</code></td><td>Yes</td><td>Yes</td><td>Yes</td></tr>
+<tr><td><code class="signature">Noise floor measurement</code></td><td>No</td><td>Yes</td><td>Yes</td></tr>
+<tr><td><code class="signature">Set country</code></td><td>Yes</td><td>Yes</td><td>Yes</td></tr>
+<tr><td><code class="signature">Set LNA</code></td><td>Yes</td><td>Yes</td><td>Yes</td></tr>
+<tr><td><code class="signature">Carrier wave</code></td><td>Yes</td><td>Yes</td><td>Yes</td></tr>
+<tr><td><code class="signature">Antenna port configuration</code></td><td>Yes</td><td>Yes</td><td>Yes</td></tr>
+<tr><td><code class="signature">Barcode scanner</code></td><td>No</td><td>Yes</td><td>No</td></tr>
+<tr><td><code class="signature">Battery</code></td><td>Yes</td><td>Yes</td><td>No</td></tr>
+<tr><td><code class="signature">FM13DT160 sensor</code></td><td>Yes</td><td>Yes</td><td>Yes</td></tr>
+<tr><td><code class="signature">EM4325 sensor</code></td><td>Yes</td><td>Yes</td><td>Yes</td></tr>
+</tbody>
+</table>
+
+<h2 id="the-reader-models">The reader models</h2>
+<table class="members">
+<thead><tr><th class="col-member">Model</th><th class="col-description">Description</th></tr></thead>
+<tbody>
+<tr><td><code class="signature">MODEL.CS108</code></td><td>Handheld reader with a single internal antenna.</td></tr>
+<tr><td><code class="signature">MODEL.CS468</code></td><td>Handheld reader of the CS468 family.</td></tr>
+<tr><td><code class="signature">MODEL.CS463</code></td><td>Handheld reader of the CS463 family.</td></tr>
+<tr><td><code class="signature">MODEL.CS710S</code></td><td>Handheld reader of the CS710S family.</td></tr>
+<tr><td><code class="signature">MODEL.CS203XL</code></td><td>Fixed reader that is connected over TCP/IP.</td></tr>
+<tr><td><code class="signature">MODEL.UNKNOWN</code></td><td>The model of the reader is not known.</td></tr>
+</tbody>
+</table>
+
+<p>See <a href="../api/constants.html">Constants and enumerations</a> for the full list of
+the model codes.</p>
+</main>
+</div>
+<script src="../assets/nav.js"></script>
+<script src="../assets/docs.js"></script>
+</body>
+</html>

@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    Renders the API reference pages of Documents/API_Manual from the compiled
+    library and its XML documentation file.
+
+    The tool is part of the API Reference Manual tooling and must not be
+    compiled into the library itself (see the <Compile Remove="Documents/**" />
+    item in CSLibrary2026.csproj).
+  -->
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <RootNamespace>CslApiDump</RootNamespace>
+    <AssemblyName>CslApiDump</AssemblyName>
+    <Nullable>disable</Nullable>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <LangVersion>latest</LangVersion>
+    <InvariantGlobalization>true</InvariantGlobalization>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\CSLibrary2026.csproj" SetTargetFramework="TargetFramework=net10.0" />
+  </ItemGroup>
+
+</Project>

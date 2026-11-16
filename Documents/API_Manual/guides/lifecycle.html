@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>The connection lifecycle &ndash; CSLibrary2026 API Reference</title>
+<link rel="stylesheet" href="../assets/docs.css" />
+</head>
+<body>
+<header class="topbar">
+<a class="brand" href="../index.html">CSLibrary2026 API Reference</a>
+<form class="searchbox" action="../search.html" method="get">
+<input type="search" name="q" placeholder="Search the API reference" aria-label="Search" />
+</form>
+</header>
+<div class="layout">
+<nav class="sidebar" id="doc-nav" aria-label="Navigation"></nav>
+<main class="content">
+<h1 id="the-connection-lifecycle">The connection lifecycle</h1>
+<p class="lede">Closing a connection cleanly and releasing the resources that the
+reader holds.</p>
+
+<h2 id="disconnecting">Disconnecting</h2>
+<pre><code>reader.DisconnectAsync();</code></pre>
+<p>The method picks the transport that the reader is using, so the same call works for
+Bluetooth LE and for TCP/IP.</p>
+
+<div class="note">
+<p><strong>The method returns nothing.</strong> The previous implementation of the
+library returned <code>Task&lt;bool&gt;</code>. Drop the discard when an application is
+ported:</p>
+<pre><code>-_ = reader.DisconnectAsync();   // previous API
++reader.DisconnectAsync();           // current API</code></pre>
+</div>
+
+<h2 id="what-is-released">What is released</h2>
+<ul>
+<li>the BLE connection is closed and the barcode scanner is powered off,</li>
+<li>the TCP/IP connection is closed,</li>
+<li>the internal timer that drives the command exchange is stopped,</li>
+<li>the send buffer is cleared,</li>
+<li>the reader state returns to <code>DISCONNECT</code>.</li>
+</ul>
+
+<h2 id="removing-the-event-handlers">Removing the event handlers</h2>
+<p>The event handlers are not removed automatically, so an application that keeps the
+reader object alive should remove them itself.</p>
+<pre><code>reader.rfid.ClearEventHandler();      // all RFID events
+reader.rfid.ClearOnAsyncCallback();      // only the inventory callback
+reader.CancelEventOnReaderStateChanged(); // the connection state event</code></pre>
+
+<h2 id="the-reader-object">The reader object</h2>
+<p>A <code>HighLevelInterface</code> instance can be reused: connect it, disconnect it
+and connect it again. Dispose of it only when the application is finished with the
+reader.</p>
+
+<div class="note">
+<p>The finalizer of <code>HighLevelInterface</code> closes the connection when the
+instance is garbage collected. Rely on <code>DisconnectAsync()</code> instead, so that
+the reader is released at a moment the application controls.</p>
+</div>
+
+<p>See <a href="connection.html">Connecting to a reader</a> and
+<a href="events-reference.html">Event reference</a>.</p>
+</main>
+</div>
+<script src="../assets/nav.js"></script>
+<script src="../assets/docs.js"></script>
+</body>
+</html>

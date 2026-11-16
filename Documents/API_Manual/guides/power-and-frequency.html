@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Power and frequency &ndash; CSLibrary2026 API Reference</title>
+<link rel="stylesheet" href="../assets/docs.css" />
+</head>
+<body>
+<header class="topbar">
+<a class="brand" href="../index.html">CSLibrary2026 API Reference</a>
+<form class="searchbox" action="../search.html" method="get">
+<input type="search" name="q" placeholder="Search the API reference" aria-label="Search" />
+</form>
+</header>
+<div class="layout">
+<nav class="sidebar" id="doc-nav" aria-label="Navigation"></nav>
+<main class="content">
+<h1 id="power-and-frequency">Power and frequency</h1>
+<p class="lede">The output power of the reader and the regulatory region it operates
+in.</p>
+
+<h2 id="the-output-power">The output power</h2>
+<p>The power is given in tenths of a decibel milliwatt: 300 means 30.0 dBm.</p>
+<pre><code>reader.rfid.SetPowerLevel(300);        // 30.0 dBm
+reader.rfid.SetPowerLevel(300, 0);     // antenna port 0 only
+
+// A different power for every antenna port.
+reader.rfid.SetPowerLevel(new uint[] { 300, 250, 250 });</code></pre>
+<p><code>GetActiveMaxPowerLevel()</code> returns the highest power that the current
+region allows.</p>
+
+<h2 id="the-power-boost">The power boost</h2>
+<pre><code>reader.rfid.SetPowerBoost(true);</code></pre>
+
+<h2 id="the-country-and-the-region">The country and the region</h2>
+<p>The reader must only operate in the region that the tags of the country use.</p>
+<pre><code>// By country name.
+reader.rfid.SetCountry("USA");
+
+// By country name and, for a fixed channel country, the channel.
+reader.rfid.SetCountry("USA", 0);</code></pre>
+<p>The countries that the connected reader supports are listed by
+<code>GetActiveCountryNameList()</code>, and the current country is returned by
+<code>GetCurrentCountry()</code>.</p>
+
+<h2 id="the-link-profile">The link profile</h2>
+<p>A link profile groups the settings that the reader uses in one regulatory region.
+The profiles that the reader supports in the current country are returned by
+<code>GetActiveLinkProfileName()</code>.</p>
+<pre><code>uint[] profiles = reader.rfid.GetActiveLinkProfile();
+string[] names = reader.rfid.GetActiveLinkProfileName();
+
+reader.rfid.SetCurrentLinkProfile(profiles[0]);</code></pre>
+
+<h2 id="the-frequency-channel">The frequency channel</h2>
+<pre><code>// A fixed channel.
+reader.rfid.SetFixedChannel(RegionCode.FCC, 0);
+
+// Frequency hopping.
+reader.rfid.SetHoppingChannels(RegionCode.FCC);</code></pre>
+
+<h2 id="the-noise-floor">The noise floor</h2>
+<pre><code>decimal noiseFloor = reader.rfid.GetNoiseFloor();</code></pre>
+
+<p>See <a href="../api/rfid.html#power-frequency-and-country">Power, frequency and country</a> in the API
+reference.</p>
+</main>
+</div>
+<script src="../assets/nav.js"></script>
+<script src="../assets/docs.js"></script>
+</body>
+</html>

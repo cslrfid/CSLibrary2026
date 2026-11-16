@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Getting started &ndash; CSLibrary2026 API Reference</title>
+<link rel="stylesheet" href="../assets/docs.css" />
+</head>
+<body>
+<header class="topbar">
+<a class="brand" href="../index.html">CSLibrary2026 API Reference</a>
+<form class="searchbox" action="../search.html" method="get">
+<input type="search" name="q" placeholder="Search the API reference" aria-label="Search" />
+</form>
+</header>
+<div class="layout">
+<nav class="sidebar" id="doc-nav" aria-label="Navigation"></nav>
+<main class="content">
+<h1 id="getting-started">Getting started</h1>
+<p class="lede">Install the package, connect to a reader and run a first inventory.</p>
+
+<h2 id="install-the-package">Install the package</h2>
+<pre><code>dotnet add package CSLibrary2026</code></pre>
+<p>The package supports .NET Standard 2.0, .NET Standard 2.1 and .NET 10, which covers
+Xamarin, .NET MAUI and .NET desktop applications.</p>
+
+<div class="note">
+<p><strong>Bluetooth LE on Windows.</strong> The <code>net48</code> flavour of the
+library uses a different Bluetooth stack and is not published to NuGet. Build the
+library from source when your application targets .NET Framework 4.8.</p>
+</div>
+
+<h2 id="create-a-reader">Create a reader</h2>
+<p>One <code>HighLevelInterface</code> instance represents one reader connection. The
+subsystems of the reader are reached through its properties.</p>
+<pre><code>using CSLibrary;
+
+var reader = new HighLevelInterface();
+
+// The RFID radio.
+RFIDReader rfid = reader.rfid;
+
+// The barcode scanner, the notification handler and the battery monitor.
+BarcodeReader barcode = reader.barcode;
+Notification notification = reader.notification;
+Battery battery = reader.battery;</code></pre>
+
+<h2 id="connect">Connect</h2>
+<p>Bluetooth LE and TCP/IP use the same object, only the connection call differs.</p>
+<pre><code>// Bluetooth LE
+await reader.ConnectAsync(adapter, device, RFIDDEVICE.MODEL.CS108);
+
+// TCP/IP
+await reader.ConnectAsync("192.168.1.100", 2000);</code></pre>
+<p>See <a href="discovery.html">Device discovery</a> for the details of the two
+connection methods and <a href="connection.html">Connecting to a reader</a> for the
+connection lifecycle.</p>
+
+<h2 id="configure-the-radio">Configure the radio</h2>
+<p>The reader is configured through <code>reader.rfid.Options</code>. The options must
+be set before an operation is started.</p>
+<pre><code>reader.rfid.Options.TagRanging.Multibanks = 2;
+reader.rfid.Options.TagRanging.Bank1 = MemoryBank.USER;
+reader.rfid.Options.TagRanging.Offset1 = 0;
+reader.rfid.Options.TagRanging.Count1 = 1;</code></pre>
+
+<h2 id="receive-the-tags">Receive the tags</h2>
+<p>The inventory callback is raised for every tag that the reader reads.</p>
+<pre><code>reader.rfid.OnAsyncCallback += (sender, e) =&gt;
+{
+    if (e.type == CallbackType.TAG_RANGING)
+    {
+        TagCallbackInfo tag = e.info;
+        Console.WriteLine($"{tag.epc.epcString}  {tag.rssi} dBm");
+    }
+};</code></pre>
+
+<h2 id="start-and-stop-the-inventory">Start and stop the inventory</h2>
+<pre><code>reader.rfid.StartOperation(Operation.TAG_RANGING);
+
+// ... the tags arrive through the callback ...
+
+reader.rfid.StopOperation();</code></pre>
+
+<h2 id="disconnect">Disconnect</h2>
+<pre><code>reader.DisconnectAsync();</code></pre>
+<p>See <a href="lifecycle.html">The connection lifecycle</a> for the cleanup rules.</p>
+
+<h2 id="where-to-go-next">Where to go next</h2>
+<ul>
+<li><a href="rfid-inventory.html">Running an inventory</a> &ndash; the inventory options and the callback.</li>
+<li><a href="tag-access.html">Reading and writing a tag</a> &ndash; the tag access operations.</li>
+<li><a href="power-and-frequency.html">Power and frequency</a> &ndash; the output power and the regulatory region.</li>
+<li><a href="events-reference.html">Event reference</a> &ndash; every event and the data it delivers.</li>
+</ul>
+</main>
+</div>
+<script src="../assets/nav.js"></script>
+<script src="../assets/docs.js"></script>
+</body>
+</html>

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Connecting to a reader &ndash; CSLibrary2026 API Reference</title>
+<link rel="stylesheet" href="../assets/docs.css" />
+</head>
+<body>
+<header class="topbar">
+<a class="brand" href="../index.html">CSLibrary2026 API Reference</a>
+<form class="searchbox" action="../search.html" method="get">
+<input type="search" name="q" placeholder="Search the API reference" aria-label="Search" />
+</form>
+</header>
+<div class="layout">
+<nav class="sidebar" id="doc-nav" aria-label="Navigation"></nav>
+<main class="content">
+<h1 id="connecting-to-a-reader">Connecting to a reader</h1>
+<p class="lede">The two connection methods and what happens after the connection is
+established.</p>
+
+<h2 id="the-two-connection-methods">The two connection methods</h2>
+<table class="members">
+<thead><tr><th class="col-member">Method</th><th class="col-description">Description</th></tr></thead>
+<tbody>
+<tr><td><code class="signature">Task&lt;bool&gt; ConnectAsync(IAdapter adapter, IDevice device, RFIDDEVICE.MODEL deviceType)</code></td>
+<td>Connects to a reader over Bluetooth LE. The model tells the library which command set the reader uses.</td></tr>
+<tr><td><code class="signature">Task&lt;bool&gt; ConnectAsync(string ipAddress, int port)</code></td>
+<td>Connects to a fixed reader over TCP/IP.</td></tr>
+</tbody>
+</table>
+
+<h3 id="bluetooth-le">Bluetooth LE</h3>
+<pre><code>bool connected = await reader.ConnectAsync(adapter, device, RFIDDEVICE.MODEL.CS710S);
+if (!connected)
+{
+    // The reader refused the connection or is out of range.
+}</code></pre>
+<p>The <code>MODEL</code> value selects the command set of the reader. Use
+<code>RFIDDEVICE.MODEL.CS108</code> for the CS108, the CS468 and the other Rx000 based
+readers, and <code>RFIDDEVICE.MODEL.CS710S</code> for the CS710S and the CS203XL.</p>
+
+<h3 id="tcp-ip">TCP/IP</h3>
+<pre><code>bool connected = await reader.ConnectAsync("192.168.1.100", 2000);</code></pre>
+
+<h2 id="what-happens-during-the-connection">What happens during the connection</h2>
+<p>When the connection succeeds the library performs the hardware initialisation:
+</p>
+<ul>
+<li>the barcode scanner is powered on,</li>
+<li>the RFID radio is powered off and on again so that it starts from a known state,</li>
+<li>the Bluetooth controller and the reader hardware are queried,</li>
+<li>the radio is configured for the connected reader model,</li>
+<li>the battery reporting is enabled.</li>
+</ul>
+<p>The <code>OnReaderStateChanged</code> event is raised with
+<code>ReaderCallbackType.CONNECT_SUCESS</code> when the reader is ready.</p>
+
+<h2 id="the-reader-state">The reader state</h2>
+<p><code>reader.Status</code> reports the state of the connection.</p>
+<table class="members">
+<thead><tr><th class="col-member">Value</th><th class="col-description">Description</th></tr></thead>
+<tbody>
+<tr><td><code class="signature">READERSTATE.DISCONNECT</code></td><td>The reader is not connected.</td></tr>
+<tr><td><code class="signature">READERSTATE.IDLE</code></td><td>The reader is connected and ready.</td></tr>
+<tr><td><code class="signature">READERSTATE.BUSY</code></td><td>The reader is executing an operation.</td></tr>
+<tr><td><code class="signature">READERSTATE.READYFORDISCONNECT</code></td><td>The connection was lost or is being closed.</td></tr>
+</tbody>
+</table>
+
+<h2 id="losing-the-connection">Losing the connection</h2>
+<p>When the reader goes out of range the library raises
+<code>OnReaderStateChanged</code> with <code>ReaderCallbackType.CONNECTION_LOST</code>
+and puts the reader into the <code>DISCONNECT</code> state. The application decides
+whether to reconnect.</p>
+
+<div class="note">
+<p>Only one connection is active at a time. Call <code>DisconnectAsync()</code> before
+connecting the same instance to another reader.</p>
+</div>
+
+<p>See <a href="lifecycle.html">The connection lifecycle</a> for the cleanup rules and
+<a href="discovery.html">Device discovery</a> for finding a reader.</p>
+</main>
+</div>
+<script src="../assets/nav.js"></script>
+<script src="../assets/docs.js"></script>
+</body>
+</html>

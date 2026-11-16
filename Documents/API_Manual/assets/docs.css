@@ -1,0 +1,364 @@
+/* CSLibrary2026 API Reference Manual - layout and typography. */
+
+:root {
+    --bg: #ffffff;
+    --bg-soft: #f6f7f9;
+    --bg-code: #f2f3f5;
+    --fg: #1c2024;
+    --fg-soft: #5b6570;
+    --border: #dfe3e8;
+    --accent: #0b6ea8;
+    --accent-soft: #e8f2f9;
+    --mono: "Cascadia Mono", "Consolas", "SF Mono", "Menlo", "DejaVu Sans Mono", monospace;
+    --sans: "Segoe UI", -apple-system, "Helvetica Neue", Arial, sans-serif;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --bg: #16191d;
+        --bg-soft: #1d2126;
+        --bg-code: #22272d;
+        --fg: #e2e6ea;
+        --fg-soft: #9aa4b0;
+        --border: #2e343b;
+        --accent: #5cb3ea;
+        --accent-soft: #1b2b38;
+    }
+}
+
+* { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--fg);
+    font-family: var(--sans);
+    font-size: 15px;
+    line-height: 1.6;
+}
+
+/* ------------------------------------------------------------------ topbar */
+
+.topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 10px 20px;
+    border-bottom: 1px solid var(--border);
+    background: var(--bg-soft);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.topbar .brand {
+    font-weight: 600;
+    font-size: 15px;
+    color: var(--fg);
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+.topbar .brand:hover { color: var(--accent); }
+
+.searchbox input {
+    font-family: inherit;
+    font-size: 13px;
+    padding: 6px 10px;
+    width: 230px;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    background: var(--bg);
+    color: var(--fg);
+}
+
+.searchbox input:focus {
+    outline: none;
+    border-color: var(--accent);
+}
+
+/* ------------------------------------------------------------------ layout */
+
+.layout {
+    display: flex;
+    align-items: flex-start;
+    gap: 28px;
+    max-width: 1360px;
+    margin: 0 auto;
+    padding: 24px 20px 64px;
+}
+
+.sidebar {
+    flex: 0 0 250px;
+    position: sticky;
+    top: 68px;
+    max-height: calc(100vh - 88px);
+    overflow-y: auto;
+    font-size: 13px;
+}
+
+.sidebar .nav-section { margin-bottom: 18px; }
+
+.sidebar .nav-title {
+    font-weight: 600;
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--fg-soft);
+    margin: 0 0 6px;
+}
+
+.sidebar ul { list-style: none; margin: 0; padding: 0; }
+
+.sidebar li { margin: 1px 0; }
+
+.sidebar a {
+    display: block;
+    padding: 4px 8px;
+    border-radius: 4px;
+    color: var(--fg);
+    text-decoration: none;
+}
+
+.sidebar a:hover { background: var(--accent-soft); color: var(--accent); }
+
+.sidebar a.current {
+    background: var(--accent-soft);
+    color: var(--accent);
+    font-weight: 600;
+}
+
+.content { flex: 1 1 auto; min-width: 0; }
+
+/* --------------------------------------------------------------- typography */
+
+.content h1 {
+    font-size: 28px;
+    line-height: 1.25;
+    margin: 0 0 10px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border);
+}
+
+.content h2 {
+    font-size: 21px;
+    margin: 36px 0 10px;
+    padding-top: 6px;
+}
+
+.content h3 {
+    font-size: 16px;
+    margin: 26px 0 8px;
+    color: var(--fg);
+}
+
+.content p { margin: 8px 0; }
+
+.lede {
+    color: var(--fg-soft);
+    font-size: 15px;
+    margin: 0 0 18px;
+}
+
+code {
+    font-family: var(--mono);
+    font-size: 0.9em;
+    background: var(--bg-code);
+    padding: 1px 4px;
+    border-radius: 3px;
+}
+
+pre {
+    background: var(--bg-code);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 12px 14px;
+    overflow-x: auto;
+    font-family: var(--mono);
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+pre code { background: none; padding: 0; font-size: inherit; }
+
+a { color: var(--accent); }
+
+hr { border: 0; border-top: 1px solid var(--border); margin: 28px 0; }
+
+/* --------------------------------------------------------------- api tables */
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 12px 0 20px;
+    font-size: 14px;
+}
+
+table th {
+    text-align: left;
+    font-weight: 600;
+    font-size: 11px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--fg-soft);
+    border-bottom: 1px solid var(--border);
+    padding: 6px 10px 6px 0;
+    vertical-align: bottom;
+}
+
+table td {
+    border-bottom: 1px solid var(--border);
+    padding: 8px 10px 8px 0;
+    vertical-align: top;
+}
+
+table.members td:first-child { width: 34%; }
+
+table.meta { font-size: 13px; margin: 10px 0 16px; }
+
+table.meta th {
+    width: 140px;
+    text-transform: none;
+    letter-spacing: 0;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--fg);
+    padding: 3px 12px 3px 0;
+}
+
+table.params {
+    font-size: 13px;
+    margin: 8px 0 4px;
+    background: var(--bg-soft);
+}
+
+table.params th { text-transform: none; letter-spacing: 0; font-size: 12px; }
+
+table.params td { border-bottom: 1px solid var(--border); padding: 5px 10px 5px 0; }
+
+table.index { font-size: 13px; }
+
+table.index td:first-child { white-space: nowrap; }
+
+code.signature {
+    background: none;
+    padding: 0;
+    font-size: 13px;
+    word-break: break-word;
+}
+
+.badge {
+    display: inline-block;
+    margin-left: 6px;
+    padding: 0 5px;
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    font-size: 10px;
+    color: var(--fg-soft);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.default { color: var(--fg-soft); font-size: 12px; }
+
+.label {
+    display: inline-block;
+    min-width: 62px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--fg-soft);
+}
+
+.returns { font-size: 13px; }
+
+.remarks {
+    font-size: 13px;
+    color: var(--fg-soft);
+    border-left: 2px solid var(--border);
+    padding-left: 10px;
+    margin-top: 8px;
+}
+
+/* ------------------------------------------------------------------- notes */
+
+.note {
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent);
+    background: var(--bg-soft);
+    border-radius: 4px;
+    padding: 10px 14px;
+    margin: 16px 0;
+    font-size: 14px;
+}
+
+.note p:first-child { margin-top: 0; }
+.note p:last-child { margin-bottom: 0; }
+
+/* ------------------------------------------------------------------ search */
+
+.searchpage { max-width: 900px; }
+
+.searchpage #search-input {
+    width: 100%;
+    font-family: inherit;
+    font-size: 16px;
+    padding: 10px 12px;
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    background: var(--bg);
+    color: var(--fg);
+}
+
+.searchpage #search-input:focus { outline: none; border-color: var(--accent); }
+
+#search-status { color: var(--fg-soft); font-size: 13px; margin: 10px 0 18px; }
+
+#search-results { list-style: none; margin: 0; padding: 0; }
+
+#search-results li {
+    border-bottom: 1px solid var(--border);
+    padding: 12px 0;
+}
+
+#search-results .hit-title { font-size: 15px; font-weight: 600; }
+
+#search-results .hit-title a { color: var(--accent); text-decoration: none; }
+
+#search-results .hit-title a:hover { text-decoration: underline; }
+
+#search-results .hit-section {
+    font-size: 12px;
+    color: var(--fg-soft);
+    margin-left: 8px;
+    font-weight: 400;
+}
+
+#search-results .hit-snippet { font-size: 13px; color: var(--fg-soft); margin-top: 4px; }
+
+#search-results mark {
+    background: var(--accent-soft);
+    color: var(--accent);
+    font-weight: 600;
+    padding: 0 1px;
+}
+
+/* ------------------------------------------------------------------ footer */
+
+.pagefooter {
+    margin-top: 40px;
+    padding-top: 14px;
+    border-top: 1px solid var(--border);
+    font-size: 13px;
+    color: var(--fg-soft);
+}
+
+@media (max-width: 900px) {
+    .layout { flex-direction: column; gap: 12px; }
+    .sidebar { position: static; flex: 1 1 auto; width: 100%; max-height: none; }
+    table.members td:first-child { width: auto; }
+}

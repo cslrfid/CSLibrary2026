@@ -1,0 +1,71 @@
+name: Publish API Reference Manual
+
+# The manual is a static site: the API reference pages are generated from the
+# library and its XML documentation, the guides are written by hand. The whole
+# Documents/API_Manual folder is published as it is, so the search works from the
+# published site as well as from the file system.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "Source/**"
+      - "Documents/API_Manual/**"
+      - "CSLibrary2026.csproj"
+      - ".github/workflows/publish-docs.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Build the manual
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "10.0"
+
+      - name: Build the API reference
+        shell: pwsh
+        run: ./Documents/API_Manual/build-docs.ps1
+
+      - name: Check that the manual is up to date
+        run: |
+          if [ -n "$(git status --porcelain Documents/API_Manual)" ]; then
+            echo "The generated pages of the manual are not up to date:"
+            git status --porcelain Documents/API_Manual
+            echo "Run 'pwsh -File Documents/API_Manual/build-docs.ps1' and commit the result."
+            exit 1
+          fi
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload the manual
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: Documents/API_Manual
+
+  deploy:
+    name: Deploy the manual
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

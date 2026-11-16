@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Singulation &ndash; CSLibrary2026 API Reference</title>
+<link rel="stylesheet" href="../assets/docs.css" />
+</head>
+<body>
+<header class="topbar">
+<a class="brand" href="../index.html">CSLibrary2026 API Reference</a>
+<form class="searchbox" action="../search.html" method="get">
+<input type="search" name="q" placeholder="Search the API reference" aria-label="Search" />
+</form>
+</header>
+<div class="layout">
+<nav class="sidebar" id="doc-nav" aria-label="Navigation"></nav>
+<main class="content">
+<h1 id="singulation">Singulation</h1>
+<p class="lede">Choosing how the reader separates the tags that it reads.</p>
+
+<h2 id="the-singulation-algorithm">The singulation algorithm</h2>
+<pre><code>reader.rfid.SetCurrentSingulationAlgorithm(SingulationAlgorithm.FIXEDQ);</code></pre>
+<table class="members">
+<thead><tr><th class="col-member">Algorithm</th><th class="col-description">Description</th></tr></thead>
+<tbody>
+<tr><td><code class="signature">SingulationAlgorithm.FIXEDQ</code></td><td>Always uses the same Q value. The simplest and the fastest mode.</td></tr>
+<tr><td><code class="signature">SingulationAlgorithm.DYNAMICQ</code></td><td>Adjusts the Q value while the inventory runs, so that the number of tags per read stays constant.</td></tr>
+</tbody>
+</table>
+
+<h2 id="the-fixed-q-algorithm">The fixed Q algorithm</h2>
+<pre><code>reader.rfid.SetFixedQParms(new FixedQParms
+{
+    qValue = 4,
+    retryCount = 0,
+    toggleTarget = 0,
+    repeatUntilNoTags = 0
+});</code></pre>
+<p>The Q value is the number of bits that the reader sends in the query. A low value
+reads many tags at once, a high value reads fewer tags but reads them faster.</p>
+
+<h2 id="the-dynamic-q-algorithm">The dynamic Q algorithm</h2>
+<pre><code>reader.rfid.SetDynamicQParms(new DynamicQParms
+{
+    startQValue = 4,
+    minQValue = 0,
+    maxQValue = 15,
+    toggleTarget = 0
+});</code></pre>
+
+<h2 id="the-tag-group">The tag group</h2>
+<p>The tags can be split into groups, and an operation can be applied to one group
+only.</p>
+<pre><code>reader.rfid.SetTagGroup(TagGroup.SL_ALL);</code></pre>
+
+<h2 id="the-rssi-filter">The RSSI filter</h2>
+<p>The reader can ignore the tags that are too weak to be useful. The threshold is
+given in dBuV or in dBm.</p>
+<pre><code>reader.rfid.SetRSSIFilter(RSSIFILTERTYPE.ENABLE);
+reader.rfid.SetRSSIdBmFilter(RSSIFILTERTYPE.ENABLE, RSSIFILTEROPTION.GREATER_THAN, -60);</code></pre>
+
+<p>See <a href="../api/rfid.html#singulation">Singulation</a> in the API reference and
+<a href="../api/constants.html">Constants and enumerations</a> for the enumeration
+values.</p>
+</main>
+</div>
+<script src="../assets/nav.js"></script>
+<script src="../assets/docs.js"></script>
+</body>
+</html>

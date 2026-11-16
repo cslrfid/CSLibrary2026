@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Reading and writing a tag &ndash; CSLibrary2026 API Reference</title>
+<link rel="stylesheet" href="../assets/docs.css" />
+</head>
+<body>
+<header class="topbar">
+<a class="brand" href="../index.html">CSLibrary2026 API Reference</a>
+<form class="searchbox" action="../search.html" method="get">
+<input type="search" name="q" placeholder="Search the API reference" aria-label="Search" />
+</form>
+</header>
+<div class="layout">
+<nav class="sidebar" id="doc-nav" aria-label="Navigation"></nav>
+<main class="content">
+<h1 id="reading-and-writing-a-tag">Reading and writing a tag</h1>
+<p class="lede">Addressing a single tag: reading, writing, locking and killing.</p>
+
+<h2 id="the-target-tag">The target tag</h2>
+<p>The tag that an operation applies to is selected with the select criteria or with a
+tag group. Both are set before the operation is started.</p>
+<pre><code>// Select by the EPC of the tag.
+reader.rfid.SetSelectCriteria(new SelectCriterion[]
+{
+    new SelectCriterion
+    {
+        Criterion = SelectFlags.SELECT,
+        Target = Target.SELECT_A,
+        Mask = SelectMask.EPC,
+        Data = new SelectData { EPC = "300833B234DD5F1903718B9B0F0" }
+    }
+});
+
+// Or select a whole group of tags.
+reader.rfid.SetTagGroup(TagGroup.SL_ALL);</code></pre>
+<p><code>CancelAllSelectCriteria()</code> removes the criteria again.</p>
+
+<h2 id="reading-a-tag">Reading a tag</h2>
+<pre><code>reader.rfid.Options.TagReadUser.bank = MemoryBank.USER;
+reader.rfid.Options.TagReadUser.offset = 0;
+reader.rfid.Options.TagReadUser.count = 4;
+reader.rfid.Options.TagReadUser.accessPassword = 0;
+
+reader.rfid.StartOperation(Operation.TAG_READ);</code></pre>
+<p>The result is delivered through <code>OnAccessCompleted</code>.</p>
+<pre><code>reader.rfid.OnAccessCompleted += (sender, e) =&gt;
+{
+    if (!e.success)
+        return;
+
+    if (e.bank == MemoryBank.USER)
+    {
+        IBANK data = e.data;
+        Console.WriteLine($"Read {data.length} words from the USER bank");
+    }
+};</code></pre>
+
+<h2 id="writing-a-tag">Writing a tag</h2>
+<pre><code>reader.rfid.Options.TagWriteUser.bank = MemoryBank.USER;
+reader.rfid.Options.TagWriteUser.offset = 0;
+reader.rfid.Options.TagWriteUser.count = 2;
+reader.rfid.Options.TagWriteUser.pData = new ushort[] { 0x1234, 0x5678 };
+reader.rfid.Options.TagWriteUser.accessPassword = 0;
+
+reader.rfid.StartOperation(Operation.TAG_WRITE);</code></pre>
+
+<h2 id="locking-and-killing-a-tag">Locking and killing a tag</h2>
+<pre><code>reader.rfid.Options.TagLock.lockAction = TagLockAction.LOCK;
+reader.rfid.StartOperation(Operation.TAG_LOCK);
+
+reader.rfid.Options.TagKill.killPassword = 0x12345678;
+reader.rfid.StartOperation(Operation.TAG_KILL);</code></pre>
+
+<div class="note">
+<p>Killing a tag is permanent: the tag stops responding to every read afterwards.
+The kill password of the tag must be known to the application.</p>
+</div>
+
+<h2 id="the-access-result">The access result</h2>
+<table class="members">
+<thead><tr><th class="col-member">Member</th><th class="col-description">Description</th></tr></thead>
+<tbody>
+<tr><td><code class="signature">bool success</code></td><td>Whether the operation succeeded.</td></tr>
+<tr><td><code class="signature">Bank bank</code></td><td>The memory bank that the operation applied to.</td></tr>
+<tr><td><code class="signature">TagAccess access</code></td><td>The operation that was performed: read, write, lock or kill.</td></tr>
+<tr><td><code class="signature">IBANK data</code></td><td>The data that was read. Only set for a read operation.</td></tr>
+</tbody>
+</table>
+
+<p>See <a href="events-reference.html">Event reference</a> and
+<a href="../api/structures-access.html">Tag access structures</a>.</p>
+</main>
+</div>
+<script src="../assets/nav.js"></script>
+<script src="../assets/docs.js"></script>
+</body>
+</html>

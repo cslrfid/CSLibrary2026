@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Troubleshooting &ndash; CSLibrary2026 API Reference</title>
+<link rel="stylesheet" href="../assets/docs.css" />
+</head>
+<body>
+<header class="topbar">
+<a class="brand" href="../index.html">CSLibrary2026 API Reference</a>
+<form class="searchbox" action="../search.html" method="get">
+<input type="search" name="q" placeholder="Search the API reference" aria-label="Search" />
+</form>
+</header>
+<div class="layout">
+<nav class="sidebar" id="doc-nav" aria-label="Navigation"></nav>
+<main class="content">
+<h1 id="troubleshooting">Troubleshooting</h1>
+<p class="lede">The problems that come up most often, and what they mean.</p>
+
+<h2 id="the-connection-fails">The connection fails</h2>
+<p>Check the following in this order.</p>
+<ul>
+<li>The reader is powered on and in range.</li>
+<li>The application holds the Bluetooth permission of the platform. On Android the
+<code>BLUETOOTH_SCAN</code> and <code>BLUETOOTH_CONNECT</code> permissions are needed,
+on iOS the <code>NSBluetoothAlwaysUsageDescription</code> key of the application
+property list is needed.</li>
+<li>The model that is passed to <code>ConnectAsync</code> matches the reader.</li>
+<li>For TCP/IP the reader and the application are on the same network and the port
+is correct.</li>
+</ul>
+
+<h2 id="no-tag-arrives">No tag arrives</h2>
+<ul>
+<li>The inventory was started: <code>StartOperation(Operation.TAG_RANGING)</code>.</li>
+<li>The options were set before the operation was started.</li>
+<li>The country is set correctly: <code>SetCountry("USA")</code>. A reader that is
+set to the wrong region does not read the tags.</li>
+<li>The power is high enough: <code>SetPowerLevel(300)</code>.</li>
+<li>The RSSI filter is not discarding every tag.</li>
+<li>The application subscribed to <code>OnAsyncCallback</code> before the inventory
+was started.</li>
+</ul>
+
+<h2 id="the-operation-returns-failure">The operation returns FAILURE</h2>
+<p>Most of the radio calls return <code>Result.OK</code> or <code>Result.FAILURE</code>.
+<code>Result.FAILURE</code> usually means that the reader model does not support the
+call, for example <code>SetPostMatchCriteria</code> is only implemented by the
+CS108.</p>
+<p>Some calls always return <code>Result.FAILURE</code> even when they did their
+work. <code>AntennaPortSetState</code> is one of them: check the antenna port status
+instead of the return value.</p>
+
+<h2 id="the-callback-does-not-arrive">The callback does not arrive</h2>
+<ul>
+<li>The event handler was removed by <code>ClearEventHandler()</code>.</li>
+<li>The handler was added after the operation was started.</li>
+<li>The handler throws an exception: an exception in a callback handler stops the
+callback, so the following tags are not delivered.</li>
+</ul>
+
+<h2 id="the-application-freezes">The application freezes</h2>
+<p>The callbacks are raised on a background thread. If the handler does slow work the
+reader cannot send the next packet and the inventory slows down. Move the work to
+your own thread.</p>
+
+<h2 id="the-reader-is-not-found-by-the-search">The reader is not found by the search</h2>
+<ul>
+<li>The Bluetooth search finds the reader but the name does not identify the model;
+the name is used to fill <code>DeviceInformation.DeviceType</code>.</li>
+<li>A TCP/IP reader announces itself with a UDP broadcast, which does not cross a
+router. The application must be on the same subnet.</li>
+</ul>
+
+<h2 id="getting-the-reader-information">Getting the reader information</h2>
+<pre><code>Console.WriteLine($"Model   : {reader.rfid.GetModel()}");
+Console.WriteLine($"Country : {reader.rfid.GetCurrentCountry()}");
+Console.WriteLine($"Firmware: {reader.rfid.GetFirmwareVersionString()}");
+Console.WriteLine($"Power   : {reader.rfid.SelectedPowerLevel}");
+Console.WriteLine($"Ports   : {reader.rfid.GetAntennaPort()}");</code></pre>
+
+<p>See <a href="../api/constants.html">Constants and enumerations</a> for the result
+codes and <a href="events-reference.html">Event reference</a> for the callback
+payloads.</p>
+</main>
+</div>
+<script src="../assets/nav.js"></script>
+<script src="../assets/docs.js"></script>
+</body>
+</html>

@@ -188,6 +188,21 @@ reader.barcode.Stop();
 - `OnCapturedNotify` — Captured barcode data
 - `OnStateChanged` — Scanner state
 
+## API Reference Manual
+
+The application programming interface is documented in
+[`Documents/API_Manual/`](Documents/API_Manual/README.md). The manual is a static
+site: open `Documents/API_Manual/index.html` in a browser, no web server is needed,
+and the search works offline.
+
+```powershell
+pwsh -File Documents/API_Manual/build-docs.ps1
+```
+
+The script regenerates the API reference pages from the compiled library and its
+XML documentation, and rebuilds the search index. The guides are written by hand
+and are not touched by the build.
+
 ## Project Structure
 
 ```

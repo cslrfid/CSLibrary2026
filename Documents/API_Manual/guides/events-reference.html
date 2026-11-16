@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Event reference &ndash; CSLibrary2026 API Reference</title>
+<link rel="stylesheet" href="../assets/docs.css" />
+</head>
+<body>
+<header class="topbar">
+<a class="brand" href="../index.html">CSLibrary2026 API Reference</a>
+<form class="searchbox" action="../search.html" method="get">
+<input type="search" name="q" placeholder="Search the API reference" aria-label="Search" />
+</form>
+</header>
+<div class="layout">
+<nav class="sidebar" id="doc-nav" aria-label="Navigation"></nav>
+<main class="content">
+<h1 id="event-reference">Event reference</h1>
+<p class="lede">Every event of the library and the data that it delivers.</p>
+
+<h2 id="the-reader-events">The reader events</h2>
+<table class="members">
+<thead><tr><th class="col-member">Event</th><th class="col-description">Description</th></tr></thead>
+<tbody>
+<tr><td><code class="signature">HighLevelInterface.OnReaderStateChanged</code></td>
+<td>The connection state of the reader changed. The payload carries the new state and the reason.</td></tr>
+<tr><td><code class="signature">RFIDReader.OnAsyncCallback</code></td>
+<td>A tag was read. The payload carries the tag information.</td></tr>
+<tr><td><code class="signature">RFIDReader.OnAccessCompleted</code></td>
+<td>A tag access operation finished. The payload carries the result and the data that was read.</td></tr>
+<tr><td><code class="signature">RFIDReader.OnStateChanged</code></td>
+<td>The state of the radio changed. The payload carries the new radio state.</td></tr>
+<tr><td><code class="signature">RFIDReader.OnInventoryTagRateCallback</code></td>
+<td>The reader reports the number of tags that it reads per second.</td></tr>
+<tr><td><code class="signature">RFIDReader.OnFM13DTAccessCompleted</code></td>
+<td>An FM13DT160 sensor operation finished.</td></tr>
+<tr><td><code class="signature">Notification.OnVoltageEvent</code></td>
+<td>The battery voltage of the reader changed.</td></tr>
+<tr><td><code class="signature">Notification.OnKeyEvent</code></td>
+<td>A hardware key of the reader was pressed or released.</td></tr>
+<tr><td><code class="signature">BarcodeReader.OnCapturedNotify</code></td>
+<td>A barcode was scanned. The payload carries the barcode and its symbology.</td></tr>
+<tr><td><code class="signature">BarcodeReader.OnStateChanged</code></td>
+<td>The state of the barcode scanner changed.</td></tr>
+</tbody>
+</table>
+
+<h2 id="the-inventory-payload">The inventory payload</h2>
+<p><code>OnAsyncCallbackEventArgs</code> carries the tag information and the kind of
+the callback.</p>
+<table class="members">
+<thead><tr><th class="col-member">Member</th><th class="col-description">Description</th></tr></thead>
+<tbody>
+<tr><td><code class="signature">CallbackType type</code></td><td>The kind of the callback: <code>TAG_RANGING</code> or <code>TAG_SEARCHING</code>.</td></tr>
+<tr><td><code class="signature">TagCallbackInfo info</code></td><td>The tag that was read.</td></tr>
+</tbody>
+</table>
+
+<h3 id="the-tag-information">The tag information</h3>
+<table class="members">
+<thead><tr><th class="col-member">Member</th><th class="col-description">Description</th></tr></thead>
+<tbody>
+<tr><td><code class="signature">S_EPC epc</code></td><td>The electronic product code of the tag.</td></tr>
+<tr><td><code class="signature">S_TID TID</code></td><td>The tag identifier of the tag.</td></tr>
+<tr><td><code class="signature">S_PC pc</code></td><td>The protocol control word of the tag.</td></tr>
+<tr><td><code class="signature">S_XPC_W1 xpc_w1</code></td><td>The first extended protocol control word.</td></tr>
+<tr><td><code class="signature">float rssi</code></td><td>The signal strength of the tag, in dBm.</td></tr>
+<tr><td><code class="signature">float rssidBm</code></td><td>The signal strength of the tag, in dBm, as reported by the reader.</td></tr>
+<tr><td><code class="signature">uint antennaPort</code></td><td>The antenna port that read the tag.</td></tr>
+<tr><td><code class="signature">uint freqChannel</code></td><td>The frequency channel that read the tag.</td></tr>
+<tr><td><code class="signature">uint count</code></td><td>The number of reads of the tag in this inventory.</td></tr>
+<tr><td><code class="signature">ushort[] Bank1Data</code></td><td>The data of the first requested memory bank.</td></tr>
+<tr><td><code class="signature">ushort[] Bank2Data</code></td><td>The data of the second requested memory bank.</td></tr>
+<tr><td><code class="signature">ushort[] Bank3Data</code></td><td>The data of the third requested memory bank.</td></tr>
+<tr><td><code class="signature">DateTime receiveTime</code></td><td>The time at which the reader read the tag.</td></tr>
+</tbody>
+</table>
+
+<h2 id="the-access-payload">The access payload</h2>
+<p><code>OnAccessCompletedEventArgs</code> carries the result of a tag access
+operation.</p>
+<table class="members">
+<thead><tr><th class="col-member">Member</th><th class="col-description">Description</th></tr></thead>
+<tbody>
+<tr><td><code class="signature">bool success</code></td><td>Whether the operation succeeded.</td></tr>
+<tr><td><code class="signature">Bank bank</code></td><td>The memory bank that the operation applied to.</td></tr>
+<tr><td><code class="signature">TagAccess access</code></td><td>The operation that was performed.</td></tr>
+<tr><td><code class="signature">IBANK data</code></td><td>The data that was read.</td></tr>
+</tbody>
+</table>
+
+<h2 id="the-battery-payload">The battery payload</h2>
+<p><code>VoltageEventArgs</code> carries the battery voltage in millivolts.</p>
+<p><code>HotKeyEventArgs</code> carries the key that was pressed and whether it went
+down or up.</p>
+
+<p>See <a href="../api/events.html">Events</a> in the API reference for the full
+definition of the payload types.</p>
+</main>
+</div>
+<script src="../assets/nav.js"></script>
+<script src="../assets/docs.js"></script>
+</body>
+</html>

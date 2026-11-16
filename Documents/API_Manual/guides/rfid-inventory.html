@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Running an inventory &ndash; CSLibrary2026 API Reference</title>
+<link rel="stylesheet" href="../assets/docs.css" />
+</head>
+<body>
+<header class="topbar">
+<a class="brand" href="../index.html">CSLibrary2026 API Reference</a>
+<form class="searchbox" action="../search.html" method="get">
+<input type="search" name="q" placeholder="Search the API reference" aria-label="Search" />
+</form>
+</header>
+<div class="layout">
+<nav class="sidebar" id="doc-nav" aria-label="Navigation"></nav>
+<main class="content">
+<h1 id="running-an-inventory">Running an inventory</h1>
+<p class="lede">Reading the tags that are in range of the reader.</p>
+
+<h2 id="starting-the-inventory">Starting the inventory</h2>
+<pre><code>reader.rfid.StartOperation(Operation.TAG_RANGING);</code></pre>
+<p>The inventory runs until it is stopped, until the inventory duration elapses or
+until the reader is disconnected.</p>
+<pre><code>reader.rfid.StopOperation();</code></pre>
+
+<h2 id="the-operations">The operations</h2>
+<table class="members">
+<thead><tr><th class="col-member">Operation</th><th class="col-description">Description</th></tr></thead>
+<tbody>
+<tr><td><code class="signature">Operation.TAG_RANGING</code></td><td>Reads the tags that are in range.</td></tr>
+<tr><td><code class="signature">Operation.TAG_SEARCHING</code></td><td>Reads the tags that match the selection criteria.</td></tr>
+<tr><td><code class="signature">Operation.TAG_READ</code></td><td>Reads the memory of the target tag.</td></tr>
+<tr><td><code class="signature">Operation.TAG_WRITE</code></td><td>Writes the memory of the target tag.</td></tr>
+<tr><td><code class="signature">Operation.TAG_LOCK</code></td><td>Locks the target tag.</td></tr>
+<tr><td><code class="signature">Operation.TAG_KILL</code></td><td>Kills the target tag.</td></tr>
+</tbody>
+</table>
+
+<h2 id="the-inventory-options">The inventory options</h2>
+<p>The options of the radio are held in <code>reader.rfid.Options</code>. They must be
+set before the operation is started.</p>
+<pre><code>CSLibraryOperationParms options = reader.rfid.Options;
+
+options.TagRanging.Multibanks = 2;
+options.TagRanging.Bank1 = MemoryBank.USER;
+options.TagRanging.Offset1 = 0;
+options.TagRanging.Count1 = 1;
+options.TagRanging.Bank2 = MemoryBank.EPC;
+options.TagRanging.Offset2 = 0;
+options.TagRanging.Count2 = 2;</code></pre>
+
+<h3 id="the-inventory-duration">The inventory duration</h3>
+<p>The inventory can be limited to a number of milliseconds.</p>
+<pre><code>reader.rfid.SetInventoryDuration(1000);        // every antenna port
+reader.rfid.SetInventoryDuration(1000, 0);     // antenna port 0 only</code></pre>
+
+<h2 id="the-inventory-callback">The inventory callback</h2>
+<p>Every tag that the reader reads is delivered through
+<code>OnAsyncCallback</code>.</p>
+<pre><code>reader.rfid.OnAsyncCallback += (sender, e) =&gt;
+{
+    if (e.type != CallbackType.TAG_RANGING)
+        return;
+
+    TagCallbackInfo tag = e.info;
+
+    string epc = tag.epc.epcString;
+    string tid = tag.TID.TIDString;
+    float rssi = tag.rssi;
+    uint port = tag.antennaPort;
+    uint channel = tag.freqChannel;
+
+    Console.WriteLine($"{epc}  {rssi} dBm  port {port}");
+};</code></pre>
+<p>See <a href="events-reference.html">Event reference</a> for every field of the
+callback payload.</p>
+
+<h2 id="the-tag-rate">The tag rate</h2>
+<p>The reader reports how many tags it reads per second.</p>
+<pre><code>reader.rfid.OnInventoryTagRateCallback += (sender, e) =&gt;
+{
+    Console.WriteLine($"{e.inventoryTagRate} tags per second");
+};</code></pre>
+
+<h2 id="reading-the-memory-of-a-tag">Reading the memory of a tag</h2>
+<p>The inventory callback also carries the memory banks that were requested. The bank
+data is in <code>Bank1Data</code>, <code>Bank2Data</code> and <code>Bank3Data</code>.</p>
+<pre><code>if (tag.Bank1Data != null &amp;&amp; tag.Bank1Data.Length &gt; 0)
+{
+    Console.WriteLine($"USER bank: {tag.Bank1Data.Length} words");
+}</code></pre>
+
+<div class="note">
+<p>The callback is raised on a background thread. Keep the work in the handler short
+and move anything slow to your own thread.</p>
+</div>
+
+<p>See <a href="tag-access.html">Reading and writing a tag</a> for the operations that
+address a single tag.</p>
+</main>
+</div>
+<script src="../assets/nav.js"></script>
+<script src="../assets/docs.js"></script>
+</body>
+</html>

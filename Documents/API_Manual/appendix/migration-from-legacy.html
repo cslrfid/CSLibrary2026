@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Migration from the legacy library &ndash; CSLibrary2026 API Reference</title>
+<link rel="stylesheet" href="../assets/docs.css" />
+</head>
+<body>
+<header class="topbar">
+<a class="brand" href="../index.html">CSLibrary2026 API Reference</a>
+<form class="searchbox" action="../search.html" method="get">
+<input type="search" name="q" placeholder="Search the API reference" aria-label="Search" />
+</form>
+</header>
+<div class="layout">
+<nav class="sidebar" id="doc-nav" aria-label="Navigation"></nav>
+<main class="content">
+<h1 id="migration-from-the-legacy-library">Migration from the legacy library</h1>
+<p class="lede">What changed between the earlier CSLibrary implementations and this
+one.</p>
+
+<h2 id="the-unified-api">The unified API</h2>
+<p>The earlier implementations exposed a different API per reader model and per
+communication stack. This library presents one API for every reader, and the model
+is only used when the connection is established.</p>
+<pre><code>// The legacy API was per model.
+CSLibrary.RFIDReader cs108 = new CSLibrary.RFIDReader();
+CSLibrary.CS710S.CS710RFIDReader cs710 = new CSLibrary.CS710S.CS710RFIDReader();
+
+// The unified API is the same for every model.
+var reader = new HighLevelInterface();
+await reader.ConnectAsync(adapter, device, RFIDDEVICE.MODEL.CS710S);
+RFIDReader rfid = reader.rfid;</code></pre>
+
+<h2 id="disconnect-returns-nothing">Disconnect returns nothing</h2>
+<p>The most common difference when an application is ported.</p>
+<pre><code>-_ = reader.DisconnectAsync();   // legacy: Task&lt;bool&gt;
++reader.DisconnectAsync();           // current: void</code></pre>
+
+<h2 id="the-discovery-api">The discovery API</h2>
+<p>The Bluetooth discovery moved to <code>DeviceFinder</code> and the TCP/IP discovery
+to <code>NetFinder</code>. Both are documented in
+<a href="../guides/discovery.html">Device discovery</a>.</p>
+
+<h2 id="the-radio-options">The radio options</h2>
+<p>The options of the radio are held in one object that is reached through
+<code>reader.rfid.Options</code>, instead of in the fields of the reader object.</p>
+<pre><code>// The legacy API kept the options in the reader.
+reader.Options.TagRanging.bank1 = MemoryBank.USER;
+
+// The unified API keeps them in the options object.
+reader.rfid.Options.TagRanging.bank1 = MemoryBank.USER;</code></pre>
+
+<h2 id="what-to-do-when-the-application-does-not-compile">What to do when the application does not compile</h2>
+<div class="note">
+<p>The public API of this library is the source of truth: when an application fails to
+compile against it, adjust the application rather than the library signature.</p>
+</div>
+
+<p>See <a href="../guides/getting-started.html">Getting started</a> for the current API.</p>
+</main>
+</div>
+<script src="../assets/nav.js"></script>
+<script src="../assets/docs.js"></script>
+</body>
+</html>

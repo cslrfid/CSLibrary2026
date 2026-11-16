@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Barcode scanner &ndash; CSLibrary2026 API Reference</title>
+<link rel="stylesheet" href="../assets/docs.css" />
+</head>
+<body>
+<header class="topbar">
+<a class="brand" href="../index.html">CSLibrary2026 API Reference</a>
+<form class="searchbox" action="../search.html" method="get">
+<input type="search" name="q" placeholder="Search the API reference" aria-label="Search" />
+</form>
+</header>
+<div class="layout">
+<nav class="sidebar" id="doc-nav" aria-label="Navigation"></nav>
+<main class="content">
+<h1 id="barcode-scanner">Barcode scanner</h1>
+<p class="lede">The barcode scanner of the readers that have one.</p>
+
+<h2 id="reading-a-barcode">Reading a barcode</h2>
+<pre><code>reader.barcode.OnCapturedNotify += (sender, e) =&gt;
+{
+    Console.WriteLine($"Barcode: {e.Barcode}");
+};
+
+reader.barcode.Start();</code></pre>
+<p>The scanner is stopped with <code>reader.barcode.Stop()</code>.</p>
+
+<h2 id="the-scanner-state">The scanner state</h2>
+<p><code>reader.barcode.state</code> reports whether the scanner is running.</p>
+<table class="members">
+<thead><tr><th class="col-member">Value</th><th class="col-description">Description</th></tr></thead>
+<tbody>
+<tr><td><code class="signature">STATE.UNKNOWN</code></td><td>The state of the scanner is not known.</td></tr>
+<tr><td><code class="signature">STATE.IDLE</code></td><td>The scanner is ready.</td></tr>
+<tr><td><code class="signature">STATE.BUSY</code></td><td>The scanner is reading a barcode.</td></tr>
+</tbody>
+</table>
+
+<h2 id="the-scanner-options">The scanner options</h2>
+<pre><code>reader.barcode.FastBarcodeMode(true);</code></pre>
+
+<h2 id="the-buzzer-and-the-vibrator">The buzzer and the vibrator</h2>
+<pre><code>reader.barcode.VibratorOn(VIBRATORMODE.SHORT, 200);
+reader.barcode.VibratorOff();</code></pre>
+
+<div class="note">
+<p>Only the readers with an integrated scanner support this subsystem. On the other
+readers the calls return <code>false</code> and no barcode is ever delivered.</p>
+</div>
+
+<p>See <a href="../api/barcode.html">Barcode scanner</a> in the API reference.</p>
+</main>
+</div>
+<script src="../assets/nav.js"></script>
+<script src="../assets/docs.js"></script>
+</body>
+</html>

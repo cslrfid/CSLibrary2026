@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Notification and battery &ndash; CSLibrary2026 API Reference</title>
+<link rel="stylesheet" href="../assets/docs.css" />
+</head>
+<body>
+<header class="topbar">
+<a class="brand" href="../index.html">CSLibrary2026 API Reference</a>
+<form class="searchbox" action="../search.html" method="get">
+<input type="search" name="q" placeholder="Search the API reference" aria-label="Search" />
+</form>
+</header>
+<div class="layout">
+<nav class="sidebar" id="doc-nav" aria-label="Navigation"></nav>
+<main class="content">
+<h1 id="notification-and-battery">Notification and battery</h1>
+<p class="lede">The battery level, the hardware keys and the other reader
+notifications.</p>
+
+<h2 id="the-battery-level">The battery level</h2>
+<p>The reader reports the battery voltage through the notification subsystem.</p>
+<pre><code>reader.notification.OnVoltageEvent += (sender, e) =&gt;
+{
+    Console.WriteLine($"{e.Voltage} mV");
+};</code></pre>
+<p>The current level can also be read directly.</p>
+<pre><code>uint level = reader.GetCurrentBatteryLevel();</code></pre>
+<p>The battery subsystem controls how often the reader reports its level.</p>
+<pre><code>reader.battery.SetPollingTime(30);   // every 30 seconds</code></pre>
+
+<h2 id="the-hardware-keys">The hardware keys</h2>
+<p>The trigger and the keys of the reader are delivered through the key event.</p>
+<pre><code>reader.notification.OnKeyEvent += (sender, e) =&gt;
+{
+    if (e.KeyCode == Key.KEY1 &amp;&amp; e.KeyDown)
+        Console.WriteLine("The trigger was pressed.");
+};</code></pre>
+
+<h2 id="the-trigger">The trigger</h2>
+<p>The reader can be told to abort the running RFID operation when the trigger is
+released.</p>
+<pre><code>reader.rfid.SetTriggerReleaseAbortRFID(true);</code></pre>
+
+<h2 id="the-reader-information">The reader information</h2>
+<p>The Bluetooth controller and the reader hardware are reached through two more
+subsystems.</p>
+<pre><code>reader.bluetoothIC.GetDeviceName();
+reader.bluetoothIC.GetFirmwareVersion();
+
+reader.siliconlabIC.GetFirmwareVersion();
+reader.siliconlabIC.GetPCBVersion();</code></pre>
+
+<p>See <a href="../api/notification.html">Notification, battery and hardware</a> in the API
+reference.</p>
+</main>
+</div>
+<script src="../assets/nav.js"></script>
+<script src="../assets/docs.js"></script>
+</body>
+</html>

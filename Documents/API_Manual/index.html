@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>CSLibrary2026 API Reference</title>
+<link rel="stylesheet" href="assets/docs.css" />
+</head>
+<body>
+<header class="topbar">
+<a class="brand" href="index.html">CSLibrary2026 API Reference</a>
+<form class="searchbox" action="search.html" method="get">
+<input type="search" name="q" placeholder="Search the API reference" aria-label="Search" />
+</form>
+</header>
+<div class="layout">
+<nav class="sidebar" id="doc-nav" aria-label="Navigation"></nav>
+<main class="content">
+
+<h1>CSLibrary2026 API Reference</h1>
+<p class="lede">The application programming interface of the CSL RFID reader library.</p>
+
+<p>This manual documents the API that an application uses to talk to a CSL RFID reader.
+It is written for the application developer: everything that is needed to write an
+application is here, and nothing about the protocol, the chipset or the transport
+that the library uses internally.</p>
+
+<div class="note">
+<p>The reader is reached through one object, <code>HighLevelInterface</code>. Its
+properties give access to the subsystems of the reader, and the same API works for
+every reader model and for every connection type.</p>
+</div>
+
+<h2>Guides</h2>
+<table class="members">
+<thead><tr><th class="col-member">Page</th><th class="col-description">Description</th></tr></thead>
+<tbody>
+<tr><td><a href="guides/getting-started.html">Getting started</a></td><td>Install the package, connect to a reader and run a first inventory.</td></tr>
+<tr><td><a href="guides/discovery.html">Device discovery</a></td><td>Finding a reader over Bluetooth LE or over TCP/IP.</td></tr>
+<tr><td><a href="guides/connection.html">Connecting to a reader</a></td><td>The two connection methods and the reader state.</td></tr>
+<tr><td><a href="guides/lifecycle.html">The connection lifecycle</a></td><td>Closing a connection cleanly and releasing the resources.</td></tr>
+<tr><td><a href="guides/rfid-inventory.html">Running an inventory</a></td><td>Reading the tags that are in range of the reader.</td></tr>
+<tr><td><a href="guides/tag-access.html">Reading and writing a tag</a></td><td>Addressing a single tag: read, write, lock and kill.</td></tr>
+<tr><td><a href="guides/singulation.html">Singulation</a></td><td>Choosing how the reader separates the tags that it reads.</td></tr>
+<tr><td><a href="guides/power-and-frequency.html">Power and frequency</a></td><td>The output power of the reader and the regulatory region.</td></tr>
+<tr><td><a href="guides/barcode.html">Barcode scanner</a></td><td>The barcode scanner of the readers that have one.</td></tr>
+<tr><td><a href="guides/notification-and-battery.html">Notification and battery</a></td><td>The battery level, the hardware keys and the reader notifications.</td></tr>
+<tr><td><a href="guides/events-reference.html">Event reference</a></td><td>Every event of the library and the data that it delivers.</td></tr>
+<tr><td><a href="guides/troubleshooting.html">Troubleshooting</a></td><td>The problems that come up most often, and what they mean.</td></tr>
+</tbody>
+</table>
+
+<h2>API reference</h2>
+<table class="members">
+<thead><tr><th class="col-member">Page</th><th class="col-description">Description</th></tr></thead>
+<tbody>
+<tr><td><a href="api/reader.html">Reader and connection</a></td><td>The entry point of the library and the connection to a reader.</td></tr>
+<tr><td><a href="api/rfid.html">RFID operations</a></td><td>The RFID radio: inventory, tag access, singulation, power and antenna ports.</td></tr>
+<tr><td><a href="api/events.html">Events</a></td><td>The payloads delivered by the reader events.</td></tr>
+<tr><td><a href="api/structures-inventory.html">Inventory and callback structures</a></td><td>The structures that describe an inventory operation and its callback data.</td></tr>
+<tr><td><a href="api/structures-access.html">Tag access structures</a></td><td>The structures that describe a tag read, write, lock or kill operation.</td></tr>
+<tr><td><a href="api/structures-radio.html">Radio, antenna and configuration structures</a></td><td>The structures that describe the radio, the antenna ports and the link profiles.</td></tr>
+<tr><td><a href="api/constants.html">Constants and enumerations</a></td><td>The enumerations that describe the operations, the results and the protocol values.</td></tr>
+<tr><td><a href="api/barcode.html">Barcode scanner</a></td><td>The barcode scanner of the reader.</td></tr>
+<tr><td><a href="api/notification.html">Notification, battery and hardware</a></td><td>Battery level, hardware keys and the reader hardware information.</td></tr>
+<tr><td><a href="api/discovery.html">Device discovery</a></td><td>Finding a reader over Bluetooth LE or TCP/IP.</td></tr>
+<tr><td><a href="api/special-tags.html">Special tag modules</a></td><td>The FM13DT160 and EM4325 passive sensor modules.</td></tr>
+<tr><td><a href="api/index.html">API index</a></td><td>Every type of the application API.</td></tr>
+</tbody>
+</table>
+
+<h2>Appendix</h2>
+<table class="members">
+<thead><tr><th class="col-member">Page</th><th class="col-description">Description</th></tr></thead>
+<tbody>
+<tr><td><a href="appendix/reader-capability-matrix.html">Reader capability matrix</a></td><td>What the different reader models support.</td></tr>
+<tr><td><a href="appendix/migration-from-legacy.html">Migration from the legacy library</a></td><td>What changed between the earlier implementations and this one.</td></tr>
+</tbody>
+</table>
+
+<h2>The object model</h2>
+<pre><code>HighLevelInterface
+├── .rfid           RFIDReader    inventory, tag access, singulation, power, antenna ports
+├── .barcode        BarcodeReader the barcode scanner
+├── .notification   Notification  battery voltage and hardware keys
+├── .battery        Battery       the battery level and the polling interval
+├── .bluetoothIC    BluetoothIC   the Bluetooth name and firmware version
+├── .siliconlabIC   SiliconLabIC  the reader hardware and firmware information
+└── .Options        CSLibraryOperationParms  the configuration of the radio</code></pre>
+
+<h2>Search</h2>
+<p>The whole manual can be searched from the <a href="search.html">search page</a>. The
+search works offline: open the page directly from the file system, no web server is
+needed.</p>
+
+</main>
+</div>
+<script src="assets/nav.js"></script>
+<script src="assets/docs.js"></script>
+</body>
+</html>

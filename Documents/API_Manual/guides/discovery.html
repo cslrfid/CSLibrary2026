@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Device discovery &ndash; CSLibrary2026 API Reference</title>
+<link rel="stylesheet" href="../assets/docs.css" />
+</head>
+<body>
+<header class="topbar">
+<a class="brand" href="../index.html">CSLibrary2026 API Reference</a>
+<form class="searchbox" action="../search.html" method="get">
+<input type="search" name="q" placeholder="Search the API reference" aria-label="Search" />
+</form>
+</header>
+<div class="layout">
+<nav class="sidebar" id="doc-nav" aria-label="Navigation"></nav>
+<main class="content">
+<h1 id="device-discovery">Device discovery</h1>
+<p class="lede">Finding a reader over Bluetooth LE or over TCP/IP.</p>
+
+<h2 id="bluetooth-le">Bluetooth LE</h2>
+<p>The Bluetooth LE discovery uses <code>DeviceFinder</code>. The search runs in the
+background and reports every reader it finds.</p>
+<pre><code>using CSLibrary;
+using Plugin.BLE.Abstractions;
+using Plugin.BLE.Abstractions.Contracts;
+
+DeviceFinder.Initialize(adapter, bluetoothLe);
+
+DeviceFinder.OnDeviceFound += (sender, e) =&gt;
+{
+    DeviceInformation device = e.Device;
+    Console.WriteLine($"{device.Name}  {device.Rssi} dBm  {device.DeviceType}");
+};
+
+DeviceFinder.OnSearchCompleted += (sender, e) =&gt;
+{
+    if (e.TimedOut)
+        Console.WriteLine("The search finished because of the timeout.");
+};
+
+DeviceFinder.StartDeviceSearch(ScanMode.LowLatency, 5000);
+
+// ... later ...
+DeviceFinder.StopDeviceSearch();</code></pre>
+
+<h3 id="the-device-information">The device information</h3>
+<table class="members">
+<thead><tr><th class="col-member">Member</th><th class="col-description">Description</th></tr></thead>
+<tbody>
+<tr><td><code class="signature">string Id</code></td><td>The platform identifier of the device.</td></tr>
+<tr><td><code class="signature">string Name</code></td><td>The friendly name of the device.</td></tr>
+<tr><td><code class="signature">RFIDDEVICE.MODEL DeviceType</code></td><td>The reader model that the name identifies.</td></tr>
+<tr><td><code class="signature">int Rssi</code></td><td>The signal strength of the advertisement that the reader was found with.</td></tr>
+<tr><td><code class="signature">IDevice NativeDevice</code></td><td>The underlying platform device, used when connecting.</td></tr>
+</tbody>
+</table>
+
+<h2 id="tcp-ip">TCP/IP</h2>
+<p>A fixed reader announces itself with a UDP broadcast. <code>NetFinder</code> collects
+the announcements.</p>
+<pre><code>using CSLibrary.NetFinder;
+
+NetFinder.OnSearchCompleted += (sender, e) =&gt;
+{
+    Console.WriteLine($"{e.DeviceName}  {e.IPAddress}  {e.Port}");
+};
+
+NetFinder.SearchDevice();
+
+// ... later ...
+NetFinder.StopSearch();</code></pre>
+
+<h3 id="the-device-information">The device information</h3>
+<table class="members">
+<thead><tr><th class="col-member">Member</th><th class="col-description">Description</th></tr></thead>
+<tbody>
+<tr><td><code class="signature">string IPAddress</code></td><td>The IP address that the reader announced.</td></tr>
+<tr><td><code class="signature">string MacAddress</code></td><td>The MAC address of the reader.</td></tr>
+<tr><td><code class="signature">string DeviceName</code></td><td>The friendly name of the reader.</td></tr>
+<tr><td><code class="signature">ushort Port</code></td><td>The TCP port that the reader listens on.</td></tr>
+</tbody>
+</table>
+
+<div class="note">
+<p>The search methods are static. <code>NetFinder.Devices</code> holds the readers that
+were found so far and <code>NetFinder.ClearDeviceList()</code> empties it.</p>
+</div>
+
+<p>See <a href="connection.html">Connecting to a reader</a> for the next step.</p>
+</main>
+</div>
+<script src="../assets/nav.js"></script>
+<script src="../assets/docs.js"></script>
+</body>
+</html>
