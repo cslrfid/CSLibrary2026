@@ -2178,7 +2178,6 @@ namespace CSLibrary
         /// <summary>
         /// Set Frequency Band - Basic Function
         /// </summary>
-        /// <param name="m_radioIndex"></param>
         /// <param name="frequencySelector"></param>
         /// <param name="config"></param>
         /// <param name="multdiv"></param>

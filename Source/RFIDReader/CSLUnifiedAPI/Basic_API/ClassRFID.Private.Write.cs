@@ -57,7 +57,6 @@ namespace CSLibrary
         /// <param name="count"></param>
         /// <param name="data"></param>
         /// <param name="password"></param>
-        /// <param name="retry"></param>
         /// <param name="flags"></param>
         /// <returns></returns>
         private CSLibrary.Constants.Result CUST_18K6CTagWrite(

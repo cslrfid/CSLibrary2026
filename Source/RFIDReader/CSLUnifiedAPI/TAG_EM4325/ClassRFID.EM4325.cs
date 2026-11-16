@@ -172,7 +172,7 @@ namespace CSLibrary
 		///	Subsystem Operation
 		///	Sequence
 		/// </summary>
-		/// <param name="operation"></param>
+		/// <param name="mainOperation">The tag operation to perform.</param>
 		/// <param name="TagAccessPacket"></param>
 		/// <returns></returns>
 		//internal int TagAccessProc(CSLibrary.Constants.Operation mainOperation, Operation subOperation, int sqr, byte[] TagAccessPacket)

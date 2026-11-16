@@ -173,13 +173,13 @@ namespace CSLibrary.Barcode.Structures
         /// decoded message data
         /// </summary>
         public String pchMessage;
-        /// <summary>
-        /// AIM Id of symbology
-        /// </summary>
+        // <summary>
+        // AIM Id of symbology
+        // </summary>
         //public AimID chCodeID;
-        /// <summary>
-        /// HHP Id of symbology
-        /// </summary>
+        // <summary>
+        // HHP Id of symbology
+        // </summary>
         //public SymID chSymLetter;
         /// <summary>
         /// Modifier characters.
@@ -543,9 +543,9 @@ namespace CSLibrary.Barcode.Structures
     /// </summary>
     public class SequenceBarcodeParms
     {
-        /// <summary>
-        /// Symbology Identifier SYM_xxxx
-        /// </summary>
+        // <summary>
+        // Symbology Identifier SYM_xxxx
+        // </summary>
         //public Symbol nSymId;
         /// <summary>
         ///  Match length or 9999 to match any length.

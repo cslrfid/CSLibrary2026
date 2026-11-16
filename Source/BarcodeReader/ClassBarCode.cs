@@ -192,9 +192,7 @@ namespace CSLibrary
         /// <summary>
         /// Receive BarCode packet
         /// </summary>
-        /// <param name="recvData"></param>
-        /// <param name="offset"></param>
-        /// <param name="size"></param>
+        /// <param name="recvData">The complete barcode packet received from the reader.</param>
         internal bool DeviceRecvData(byte[] recvData)
         {
             try

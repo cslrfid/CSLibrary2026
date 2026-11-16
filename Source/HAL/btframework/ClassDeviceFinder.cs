@@ -6,6 +6,9 @@ using wclBluetooth;
 
 namespace CSLibrary
 {
+    /// <summary>
+    /// Discovers CSL RFID readers over Bluetooth LE using the Windows 32feet Bluetooth stack.
+    /// </summary>
     public partial class DeviceFinder
     {
         static private wclBluetoothManager Manager = null;
@@ -42,9 +45,21 @@ namespace CSLibrary
         /// </summary>
         public class DeviceInfomation
         {
+            /// <summary>
+            /// The identifier of the discovered device.
+            /// </summary>
             public uint ID;
+            /// <summary>
+            /// The friendly name of the discovered device.
+            /// </summary>
             public string deviceName;
+            /// <summary>
+            /// The Bluetooth address of the discovered device.
+            /// </summary>
             public long macAdd;
+            /// <summary>
+            /// The platform specific device information of the discovered device.
+            /// </summary>
             public object nativeDeviceInformation;
 
             /*
@@ -125,9 +140,16 @@ namespace CSLibrary
 
 	    static List<long> _deviceDB = new List<long>();
         static List<CSLibrary.RFIDDEVICE.MODEL> _deviceTypeDB = new List<CSLibrary.RFIDDEVICE.MODEL>();
+        /// <summary>
+        /// Occurs when the device search has finished.
+        /// </summary>
         static public event EventHandler<DeviceFinderArgs> OnSearchCompleted;
         static bool _macAddressFiltering = true;
 
+        /// <summary>
+        /// Searches for CSL RFID readers over Bluetooth LE.
+        /// </summary>
+        /// <param name="macAddressFiltering">Whether the search filters the results by Bluetooth MAC address.</param>
         static public void SearchDevice(bool macAddressFiltering = true)
         {
             ClearDeviceList();
@@ -179,6 +201,9 @@ namespace CSLibrary
             return null;
         }
 
+        /// <summary>
+        /// Stops the running device search.
+        /// </summary>
         static public void Stop()
         {
 
@@ -217,12 +242,20 @@ namespace CSLibrary
             }
         }
 
+        /// <summary>
+        /// Removes every discovered device from the device list.
+        /// </summary>
         static public void ClearDeviceList()
 	    {
 		    _deviceDB.Clear ();
             _deviceTypeDB.Clear ();
 	    }
 
+        /// <summary>
+        /// Gets the information of the discovered device with the given index.
+        /// </summary>
+        /// <param name="id">The identifier of the device.</param>
+        /// <returns>The device information, or <see langword="null"/> when the index is out of range.</returns>
         static public object GetDeviceInformation(int id)
         {
             if (id < _deviceDB.Count)
@@ -231,6 +264,11 @@ namespace CSLibrary
             return null;
         }
 
+        /// <summary>
+        /// Gets the reader model of the discovered device with the given index.
+        /// </summary>
+        /// <param name="id">The identifier of the device.</param>
+        /// <returns>The reader model of the device.</returns>
         static public CSLibrary.RFIDDEVICE.MODEL GetDeviceModel(int id)
         {
             if (id < _deviceTypeDB.Count)
@@ -239,6 +277,11 @@ namespace CSLibrary
             return CSLibrary.RFIDDEVICE.MODEL.UNKNOWN;
         }
 
+        /// <summary>
+        /// Gets the information of the discovered device with the given Bluetooth address.
+        /// </summary>
+        /// <param name="readername">The friendly name of the device.</param>
+        /// <returns>The device information, or <see langword="null"/> when no device matches.</returns>
         static public object GetDeviceInformation (string readername)
 	    {
 		    foreach (long item in _deviceDB)
@@ -254,6 +297,10 @@ namespace CSLibrary
 		    return null;		
 	    }
 
+	    /// <summary>
+	    /// Gets the information of every discovered device.
+	    /// </summary>
+	    /// <returns>The information of all discovered devices.</returns>
 	    static public List<long> GetAllDeviceInformation ()
 	    {
 		    return _deviceDB;

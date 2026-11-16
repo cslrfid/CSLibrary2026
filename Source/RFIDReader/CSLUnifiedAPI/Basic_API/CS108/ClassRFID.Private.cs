@@ -1000,9 +1000,8 @@ namespace CSLibrary
         /// <summary>
         /// rfid reader packet
         /// </summary>
-        /// <param name="RW"></param>
-        /// <param name="add"></param>
-        /// <param name="value"></param>
+        /// <param name="add">The register address.</param>
+        /// <param name="value">The value to write, or <see langword="null"/> to read the register.</param>
         /// <returns></returns>
         internal byte[] PacketData_CS108(UInt16 add, UInt32? value = null)
         {

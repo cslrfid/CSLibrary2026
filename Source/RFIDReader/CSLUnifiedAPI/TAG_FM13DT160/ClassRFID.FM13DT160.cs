@@ -556,6 +556,7 @@ namespace CSLibrary
 		/// <summary>
 		/// 
 		/// </summary>
+		/// <param name="operation">The tag operation to perform.</param>
 		/// <param name="TagAccessPacket"></param>
 		/// <returns></returns>
 		internal bool TagAccessProc(CSLibrary.Constants.Operation operation, byte[] TagAccessPacket)

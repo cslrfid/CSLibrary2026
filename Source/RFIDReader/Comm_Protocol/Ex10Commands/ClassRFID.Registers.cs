@@ -1488,7 +1488,6 @@ namespace CSLibrary
             /// <param name="NumMinQCycles"></param>
             /// <param name="QDecreaseUseQuery"></param>
             /// <param name="QIncreaseUseQuery"></param>
-            /// <param name="Session"></param>
             /// <param name="QueryTarget"></param>
             /// <returns></returns>
             internal int EnableDynamicQ(uint MinQ, uint MaxQ, uint InitialQ, uint NumMinQCycles, bool QDecreaseUseQuery, bool QIncreaseUseQuery, uint QueryTarget)

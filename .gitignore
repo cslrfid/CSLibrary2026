@@ -12,3 +12,6 @@ nupkg/
 # NuGet API key (never commit - see nuget/api-key.txt.template)
 nuget/api-key.txt
 /UITest
+
+# API Reference Manual: generated audit report
+Documents/API_Manual/tools/*.csv

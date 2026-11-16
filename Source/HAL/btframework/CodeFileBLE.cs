@@ -68,6 +68,12 @@ namespace CSLibrary
             FServices = null;
         }
 
+        /// <summary>
+        /// Connects to a reader over Bluetooth LE.
+        /// </summary>
+        /// <param name="macAdd">The Bluetooth address of the reader.</param>
+        /// <param name="deviceType">The model of the reader.</param>
+        /// <returns><see langword="true"/> when the connection succeeded.</returns>
         public async Task<bool> ConnectAsync(object macAdd, MODEL deviceType)
         {
             if (_readerState != READERSTATE.DISCONNECT)

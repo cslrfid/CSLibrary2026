@@ -19,10 +19,6 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-/// <summary>
-/// Provides static device information for Convergence Systems Limited (CSL) RFID readers
-/// Includes model numbers, antenna counts and basic specifications
-/// </summary>
 
 using System;
 using System.Collections.Generic;
@@ -32,6 +28,10 @@ namespace CSLibrary
 {
     using Constants;
 
+    /// <summary>
+    /// Provides static device information for Convergence Systems Limited (CSL) RFID readers.
+    /// Includes model numbers, antenna counts and basic specifications.
+    /// </summary>
     /// <summary>
     /// Provides the model and connection information of the CSL RFID readers.
     /// </summary>

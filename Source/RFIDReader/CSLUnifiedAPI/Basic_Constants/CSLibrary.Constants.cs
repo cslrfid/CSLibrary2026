@@ -36,9 +36,9 @@ namespace CSLibrary.Constants
     /// </summary>
     public enum CallbackType
     {
-        /// <summary>
-        /// Tag Inventory, Only PC and EPC will backscatter
-        /// </summary>
+        // <summary>
+        // Tag Inventory, Only PC and EPC will backscatter
+        // </summary>
         //TAG_INVENTORY,
         /// <summary>
         /// Specific-Tag Searching, Only PC , EPC and RSSI will backscatter

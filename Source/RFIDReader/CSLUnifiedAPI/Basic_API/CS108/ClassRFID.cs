@@ -630,9 +630,8 @@ namespace CSLibrary
         /// <summary>
         /// Transfer BT API packet to R2000 packet
         /// </summary>
-        /// <param name="recvData"></param>
-        /// <param name="offset"></param>
-        /// <param name="size"></param>
+        /// <param name="recvData1">The complete packet received from the reader.</param>
+        /// <param name="currentCommandResponse">The command response state accumulated so far.</param>
         internal CSLibrary.HighLevelInterface.BTWAITCOMMANDRESPONSETYPE DeviceRecvData_CS108(byte[] recvData1, HighLevelInterface.BTWAITCOMMANDRESPONSETYPE currentCommandResponse)
         {
             CSLibrary.HighLevelInterface.BTWAITCOMMANDRESPONSETYPE result = HighLevelInterface.BTWAITCOMMANDRESPONSETYPE.NOWAIT;
@@ -721,7 +720,7 @@ namespace CSLibrary
 
                             switch (pkt_type)
                             {
-                                case 0x0005:    /// inventory packet
+                                case 0x0005:    // inventory packet
 									{
                                         InventoryDebug.InventoryPackerCountInc();
 
@@ -1010,7 +1009,7 @@ namespace CSLibrary
 
                                     break;
 
-                                case 0x0005:    /// inventory packet
+                                case 0x0005:    // inventory packet
 									{
                                         InventoryDebug.InventoryPackerCountInc();
 
@@ -1700,6 +1699,7 @@ namespace CSLibrary
         /// <summary>
         /// This is used to set inventory duration
         /// </summary>
+        /// <param name="antennaPort">The antenna port the duration applies to, or 0 for every port.</param>
         /// <param name="duration"></param>
         /// <returns></returns>
         public Result SetInventoryDuration_CS108(uint duration, uint antennaPort = 0)

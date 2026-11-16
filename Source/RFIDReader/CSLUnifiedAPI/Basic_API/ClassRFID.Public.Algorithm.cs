@@ -111,12 +111,6 @@ namespace CSLibrary
         /// If running a same operation, it only need to config once times
         /// </summary>
         /// <param name="QValue">The Q value to use.  Valid values are 0-15, inclusive.</param>
-        /// <param name="RetryCount">Specifies the number of times to try another execution 
-        /// of the singulation algorithm for the specified 
-        /// session/target before either toggling the target (if 
-        /// toggleTarget is non-zero) or terminating the 
-        /// inventory/tag access operation.  Valid values are 0-
-        /// 255, inclusive. Valid values are 0-255, inclusive.</param>
         /// <param name="ToggleTarget"> A non-zero value indicates that the target should
         /// be toggled.A zero value indicates that the target should not be toggled.
         /// Note that if the target is toggled, retryCount and repeatUntilNoTags will also apply

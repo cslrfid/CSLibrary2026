@@ -112,6 +112,14 @@ namespace CSLibrary
         /// <param name="state"></param>
         /// <param name="powerLevel"></param>
         /// <param name="dwellTime"></param>
+        /// <param name="easAlarm">Whether the electronic shelf alarm is enabled on the port.</param>
+        /// <param name="enableLocalInv">Whether the port runs its own inventory session.</param>
+        /// <param name="invAlgo">The singulation algorithm used by the port.</param>
+        /// <param name="startQ">The initial Q value of the port.</param>
+        /// <param name="enableLocalProfile">Whether the port uses its own link profile.</param>
+        /// <param name="linkProfile">The link profile of the port.</param>
+        /// <param name="enableLocalFreq">Whether the port uses its own frequency channel.</param>
+        /// <param name="freqChannel">The frequency channel of the port.</param>
         /// <param name="numberInventoryCycles"></param>
         /// <param name="antennaSenseThreshold"></param>
         public Antenna
