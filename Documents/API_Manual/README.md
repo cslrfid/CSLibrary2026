@@ -41,12 +41,29 @@ The script
 1. builds the library with the XML documentation file,
 2. builds the `CslApiDump` tool,
 3. renders the pages of `api/` and refreshes `assets/nav.js`,
-4. rebuilds `searchindex.js`.
+4. rebuilds `searchindex.js`,
+5. checks every link of the manual and fails when one of them is broken.
 
 Add `-Serve 8080` to browse the manual on another machine.
 
 Requirements: the .NET SDK (the .NET 10 target is used to build the library) and
 PowerShell. Nothing else.
+
+### The links of the manual
+
+The navigation and the search results are built in the browser, so the links of
+the manual are not only the ones in the HTML. The check resolves them the same way
+a browser does, relative to the directory of the page that holds them.
+
+Every page declares how deep it is below the root of the manual:
+
+```html
+<script>window.DOCS_PREFIX = "../";</script>
+```
+
+The prefix must **not** be derived from `window.location`: the location of a
+`file://` URL holds the whole path of the drive, and a prefix computed from it
+points out of the manual.
 
 ## Maintaining the manual
 

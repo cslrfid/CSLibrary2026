@@ -29,6 +29,7 @@ namespace CslApiDump
             string listType = null;
             var listAll = false;
             var indexOnly = false;
+            var checkLinks = false;
 
             for (var index = 0; index < args.Length; index++)
             {
@@ -52,6 +53,9 @@ namespace CslApiDump
                     case "--index":
                         indexOnly = true;
                         break;
+                    case "--check-links":
+                        checkLinks = true;
+                        break;
                     default:
                         Console.Error.WriteLine("CslApiDump: unknown argument '" + args[index] + "'");
                         return 1;
@@ -61,6 +65,17 @@ namespace CslApiDump
             if (listAll || listType != null)
             {
                 return List(args, listType, listAll);
+            }
+
+            if (checkLinks)
+            {
+                if (root == null)
+                {
+                    Console.Error.WriteLine("CslApiDump: --check-links needs --root");
+                    return 1;
+                }
+
+                return LinkChecker.Check(root);
             }
 
             if (indexOnly)

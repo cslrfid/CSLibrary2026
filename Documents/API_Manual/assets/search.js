@@ -172,7 +172,7 @@
             title.className = "hit-title";
 
             var link = document.createElement("a");
-            link.href = page[0];
+            link.href = (window.DOCS_PREFIX || "") + page[0];
             link.textContent = page[1];
             title.appendChild(link);
 

@@ -71,6 +71,12 @@ try {
         throw 'The build of the search index failed.'
     }
 
+    Write-Host 'Checking the links of the manual ...' -ForegroundColor Cyan
+    & $tool --root $manualRoot --check-links
+    if ($LASTEXITCODE -ne 0) {
+        throw 'The manual holds broken links.'
+    }
+
     Write-Host ''
     Write-Host 'The manual is ready:' -ForegroundColor Green
     Write-Host ("  {0}" -f (Join-Path $manualRoot 'index.html'))

@@ -312,6 +312,10 @@ namespace CslApiDump
             html.Append("<main class=\"content\">\n");
             html.Append(body).Append("\n");
             html.Append("</main>\n</div>\n");
+            // The page declares how deep it is, so that the navigation links
+            // resolve correctly no matter how the manual is opened: over a web
+            // server or directly from the file system.
+            html.Append("<script>window.DOCS_PREFIX = \"").Append(prefix).Append("\";</script>\n");
             html.Append("<script src=\"").Append(prefix).Append("assets/nav.js\"></script>\n");
             html.Append("<script src=\"").Append(prefix).Append("assets/docs.js\"></script>\n");
             html.Append("</body>\n</html>\n");

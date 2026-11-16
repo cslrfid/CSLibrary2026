@@ -17,14 +17,12 @@
     }
 
     function rootPrefix() {
-        var path = window.location.pathname;
-        var depth = path.split("/").length - 1;
-        // The manual lives in a directory that is one level below the site root.
-        var prefix = "";
-        for (var index = 1; index < depth; index++) {
-            prefix += "../";
-        }
-        return prefix;
+        // The prefix is declared by the page itself: it is the number of
+        // directories the page is below the root of the manual. It must not be
+        // derived from the location, because the location of a file:// URL
+        // contains the whole path of the drive and would shift the links out
+        // of the manual.
+        return window.DOCS_PREFIX || "";
     }
 
     function build() {
